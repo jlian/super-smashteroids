@@ -1,1 +1,0 @@
-SRS Asteroids - John.pdf is the tentative final SRS document.

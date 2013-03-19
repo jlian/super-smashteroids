@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -11,14 +12,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	long startTime, endTime, frameRate;
 	Thread thread;
-	Ship ship;
+	//Ship ship;
 	
 	public void init(){
 		startTime = 0;
 		endTime = 0;
 		frameRate = 25;
 		addKeyListener(this);
-		ship = new Ship(400, 300, 0, .35, .98, .1);
+		//ship = new Ship(400, 300, 0, .35, .98, .1);
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -45,25 +46,32 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_A:
-				ship.setTurningLeft(true);
+				Constants.SHIP.setTurningLeft(true);
 				break;
 			case KeyEvent.VK_D:
-				ship.setTurningRight(true);
+				Constants.SHIP.setTurningRight(true);
 				break;
 			case KeyEvent.VK_W:
-				ship.setAccelerating(true);
+				Constants.SHIP.setAccelerating(true);
+				break;
+			case KeyEvent.VK_SPACE:
+				if(Constants.SHIP.shotWaitLeft <= 0){
+					System.out.println("CHECK3");
+					Constants.SHIP.makeItRain(true);
+				}
+				
 				break;
 			}
 		}else{
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_LEFT:
-				ship.setTurningLeft(true);
+				Constants.SHIP.setTurningLeft(true);
 				break;
 			case KeyEvent.VK_RIGHT:
-				ship.setTurningRight(true);
+				Constants.SHIP.setTurningRight(true);
 				break;
 			case KeyEvent.VK_UP:
-				ship.setAccelerating(true);
+				Constants.SHIP.setAccelerating(true);
 				break;
 			}
 		}
@@ -78,25 +86,30 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_A:
-				ship.setTurningLeft(false);
+				Constants.SHIP.setTurningLeft(false);
 				break;
 			case KeyEvent.VK_D:
-				ship.setTurningRight(false);
+				Constants.SHIP.setTurningRight(false);
 				break;
 			case KeyEvent.VK_W:
-				ship.setAccelerating(false);
+				Constants.SHIP.setAccelerating(false);
+				break;
+			case KeyEvent.VK_SPACE:
+				if(Constants.SHIP.shotWaitLeft <= 0){
+					Constants.SHIP.makeItRain(false);
+				}
 				break;
 			}
 		}else{
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_LEFT:
-				ship.setTurningLeft(false);
+				Constants.SHIP.setTurningLeft(false);
 				break;
 			case KeyEvent.VK_RIGHT:
-				ship.setTurningRight(false);
+				Constants.SHIP.setTurningRight(false);
 				break;
 			case KeyEvent.VK_UP:
-				ship.setAccelerating(false);
+				Constants.SHIP.setAccelerating(false);
 				break;
 			}
 		}
@@ -108,7 +121,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		System.out.println("Check");
 		while (true){
 			startTime = System.currentTimeMillis();
-			ship.move(getWidth(), getHeight());
+			Constants.SHIP.move(getWidth(), getHeight());
+			
+			
 			repaint();
 			endTime = System.currentTimeMillis();
 			try {
@@ -119,7 +134,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
 		}
 	}
 
@@ -130,7 +144,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 800, 600);
-		ship.drawShip(g);
+		Constants.SHIP.drawShip(g);
+		if(Constants.SHIP.getProjectiles().size() > 0){
+			for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
+					Constants.SHIP.getProjectiles().get(i).move();
+			}
+			Projectiles.drawProjectiles(g);	
+		}
+		
 	}
 	
 	

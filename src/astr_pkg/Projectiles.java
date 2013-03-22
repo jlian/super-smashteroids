@@ -1,5 +1,6 @@
 package astr_pkg;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -10,7 +11,7 @@ import javax.swing.ImageIcon;
 
 public class Projectiles {
 	private double x, y, theta, xVelocity, yVelocity;
-	private Image pImage;
+	private static Image pImage;
 	boolean onScreen;
 	private final int BOARD_WIDTH = 800;
 	private final int BOARD_HEIGHT = 600;
@@ -62,8 +63,9 @@ public class Projectiles {
 		shootArray = Constants.SHIP.getProjectiles();
 		for(int i = 0; i<shootArray.size(); i++){
 			Projectiles p = shootArray.get(i);
+			g2D.setColor(new Color(51, 153, 255));
 			g2D.fillOval((int) p.getX(),  (int)p.getY(), 4, 4);
-//			g2D.drawImage(p.getPImage(), (int)p.getX(), (int)p.getY(), this);
+//			g2D.drawImage(pImage, (int)p.getX(), (int)p.getY(), null);
 			
 		}
 		

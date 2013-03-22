@@ -1,33 +1,79 @@
 package astr_pkg;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 //I'm mostly just copying the attributes and methods from the Ship class
 //Feel free to edit as you please.
-public class Asteroid {
 
-	private int[] initialXPts = {400, 410, 422, 425, 420, 407, 400}, //Asteroid will initially spawn off-screen
-				initialYPts = {300, 296, 296, 304, 314, 317, 300}; 
+
+
+public class Asteroid {
+	
+	private static ArrayList<Asteroid> arrayAsteroid = new ArrayList<Asteroid>();
+	
+	private int[] xPtsS 	= {0, 10, 22, 25, 20, 7, 0, 0}, //Asteroid will initially spawn off-screen
+				yPtsS 	= {0, -4, -4, 4, 14, 17, 0, 0};
+	private int[] xPtsM 	= {0, 15, 32, 56, 48, 34, 8, 0}, //med
+				yPtsM 		= {0, -12, -12, 10, 36, 36, 25, 0};
+	private int[] 	xPtsL	= {0, 25, 64, 98, 113, 92, 42, 0}, //large
+					yPtsL	= {0, -33, -22, -35, -22, 32, 43, 0};
+	private int[] initialXPts,
+					initialYPts;
+
 	
 	private double x, y, thetaImage, thetaVelocity, xVelocity, yVelocity; //Asteroid has a constant velocity so no acceleration. Also no rotation.
 	
 	private int size; // size of the Asteroid 1-3, 1 being smallest
 	
-	private boolean active;
+	private boolean onScreen;
 	
 	private int[] xPts, yPts;
 	
-	public Asteroid(double x, double y, double thetaImage, double thetaVelocity, double xVelocity, double yVelocity, int size) { //Constructor
-		this.x = x;
+	private double speed = 1*Math.random() + 1;
+	
+	public Asteroid(double x, double y, double thetaImage, double thetaVelocity, int size) { //Constructor
+		this.x = x; 
 		this.y = y;
 		this.thetaImage = thetaImage;
 		this.thetaVelocity = thetaVelocity;
-		this.xVelocity = xVelocity;
-		this.yVelocity = yVelocity;
+		this.xVelocity = speed*Math.cos(thetaVelocity);
+		this.yVelocity = speed*Math.sin(thetaVelocity);
 		this.size = size;
-		active = true;
-		xPts = new int[7]; //Insert number of polygon points here
-		yPts = new int[7]; //Insert number of polygon points here
+		onScreen = true;
+		xPts = new int[8]; //Insert number of polygon points here
+		yPts = new int[8]; //Insert number of polygon points here
+	}
+	
+	public boolean isOnScreen()	{ return onScreen;}
+	
+	public static ArrayList<Asteroid> getAsteroids(){
+		return arrayAsteroid;
+	}
+	
+	public static void generateAsteroids(int numberOfAsteroids){
+		
+		for(int i = 0; i< numberOfAsteroids; i++){
+			int random = (int) (Math.random() * 8);
+			double newX;
+			double newY;
+			if(random <= 2){
+				newX = 0;
+				newY = Math.random()*Constants.HEIGHT;
+			}else if(random > 2 && random <= 4){
+				newY = 0;
+				newX = Math.random()*Constants.WIDTH;
+			}else if(random > 4 && random <= 6){
+				newX = Constants.WIDTH;
+				newY = Math.random()*Constants.HEIGHT;
+			}else{
+				newY = Constants.HEIGHT;
+				
+				newX = Math.random()*Constants.WIDTH;
+			}
+			System.out.println(random);
+			arrayAsteroid.add(new Asteroid(newX, newY, Math.random()*2*Math.PI, Math.random()*2*Math.PI, 3));
+		}
 	}
 	
 	public void move(int screenWidth, int screenHeight) {
@@ -48,7 +94,11 @@ public class Asteroid {
 		}
 		
 		//Change points
-		for(int i = 0; i < 7; i++){
+		if(size == 1){ initialXPts = xPtsS; initialYPts = yPtsS;}
+		if(size == 2){ initialXPts = xPtsM; initialYPts = yPtsM;}
+		if(size == 3){ initialXPts = xPtsL; initialYPts = yPtsL;}
+		
+		for(int i = 0; i < 8; i++){
 			xPts[i] = (int) (initialXPts[i] * Math.cos(thetaVelocity) - 
 					initialYPts[i] * Math.sin(thetaVelocity) + x + 0.5);
 			yPts[i] = (int) (initialYPts[i] * Math.cos(thetaVelocity) + 
@@ -56,32 +106,42 @@ public class Asteroid {
 		}
 	}
 	
-	public void drawAsteroid(Graphics g){
+	public static void drawAsteroid(Graphics g){
 		if(g instanceof Graphics2D){
 			Graphics2D g2d = (Graphics2D)g;
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		}
+		for(int i = 0; i < arrayAsteroid.size(); i++){
+			Asteroid a = arrayAsteroid.get(i);
+			g.setColor(Color.MAGENTA); //Are the asteroids also going to be white?
+			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
+		}
+		
 
-		g.setColor(Color.MAGENTA); //Are the asteroids also going to be white?
-		g.fillPolygon(xPts, yPts, 7); //Probably needs to be changed.
 	}
 	
-	//collision stuff
-	public Asteroid whenHit(boolean firstAsteroid){
-		if(this.size==1){return null;}
-		else{
-			int popPop = 1;
-			if(!firstAsteroid){popPop = -1;} 
-			
-			double newThetaImage = Math.random()*2*Math.PI;
-			double newThetaVelocity = popPop*Math.random()*Math.PI/4+this.thetaVelocity;
-			//ADJUST Speed constant i.e 1
-			double newSpeed = 1*Math.random();
-			double newVx = newSpeed*Math.cos(newThetaVelocity);
-			double newVy = newSpeed*Math.sin(newThetaVelocity);
-			
-			Asteroid breakup = new Asteroid(this.x, this.y, newThetaImage, newThetaVelocity, newVx, newVy, this.size--);
-			return breakup;
-		}
+	public void whenHit(){
+		onScreen = false;
+		if (size <2) { return;}
 	}
+	
+
+	//collision stuff
+//	public Asteroid whenHit(boolean firstAsteroid){
+//		if(this.size==1){return null;}
+//		else{
+//			int popPop = 1;
+//			if(!firstAsteroid){popPop = -1;} 
+//			
+//			double newThetaImage = Math.random()*2*Math.PI;
+//			double newThetaVelocity = popPop*Math.random()*Math.PI/4+this.thetaVelocity;
+//			//ADJUST Speed constant i.e 1
+//			double newSpeed = 1*Math.random();
+//			double newVx = newSpeed*Math.cos(newThetaVelocity);
+//			double newVy = newSpeed*Math.sin(newThetaVelocity);
+//			
+//			Asteroid breakup = new Asteroid(this.x, this.y, newThetaImage, newThetaVelocity, newVx, newVy, this.size--);
+//			return breakup;
+//		}
+//	}
 }

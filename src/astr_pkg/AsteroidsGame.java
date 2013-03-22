@@ -2,6 +2,7 @@ package astr_pkg;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -10,20 +11,25 @@ import javax.swing.JPanel;
 public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	long startTime, endTime, frameRate;
-	Thread thread;
-//	Ship ship;
+	Thread A1;
+        Thread thread;
+	Ship ship;
 //	Asteroid asteroid;
 
+        static Rectangle AlienImage = new Rectangle(250, 250, 16, 16);
+        static Alien AI;
+        
 	public void init(){
 		startTime = 0;
 		endTime = 0;
 		frameRate = 25;
 		addKeyListener(this);
-		//ship = new Ship(400, 300, 0, .35, .98, .1);
+		ship = new Ship(400, 300, 0, .35, .98, .1);
 		//double speed = 20*Math.random();
 		//double asteroidTheta = Math.random()*2*Math.PI;
 		Asteroid.generateAsteroids(25);
-		thread = new Thread(this);
+		AI = new Alien(AlienImage, Constants.SHIP.getX(), Constants.SHIP.getY());
+                thread = new Thread(this);
 		thread.start();
 	}
 
@@ -126,8 +132,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			for(int i = 0; i < Asteroid.getAsteroids().size(); i++){
 				Asteroid.getAsteroids().get(i).move(getWidth(), getHeight());
 			}
-			
 			Constants.SHIP.move(getWidth(), getHeight());
+			AI.xCoor = Constants.SHIP.getX();
+            AI.yCoor = Constants.SHIP.getY();
+                        AI.find();
+                        AI.move();
+                        AI.detectEdges();
 			repaint();
 			endTime = System.currentTimeMillis();
 			try {
@@ -150,7 +160,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 800, 600);
 		Asteroid.drawAsteroid(g);
-		Constants.SHIP.drawShip(g);
+		AI.drawAlien(g);
+                Constants.SHIP.drawShip(g);
 		if(Constants.SHIP.getProjectiles().size() > 0){
 			for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 					Constants.SHIP.getProjectiles().get(i).move();

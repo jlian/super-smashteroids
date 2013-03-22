@@ -1,3 +1,6 @@
-Team 3
-=====
-This is our main development branch for the SuperSmashteroids game.
+Team 3 - SuperSmashteroids
+===========
+
+The Game
+-----------
+SuperSmashteroids is a replica of the original Asteroids game.

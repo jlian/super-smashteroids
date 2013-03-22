@@ -14,7 +14,7 @@ public class Alien implements Runnable {
         xCoor = B;
         yCoor = C;
         AI = A;
-        AlienImage = new ImageIcon("/Users/Andrew/Documents/Java/astr_pkg/src/astr_pkg/Alien.png").getImage();
+        AlienImage = new ImageIcon("src/astr_pkg/Alien.png").getImage();
     }
     
     public void drawAlien(Graphics g){

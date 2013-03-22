@@ -13,7 +13,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	long startTime, endTime, frameRate;
 	Thread A1;
         Thread thread;
-//	Ship ship;
+	Ship ship;
 //	Asteroid asteroid;
 
         static Rectangle AlienImage = new Rectangle(250, 250, 16, 16);
@@ -24,7 +24,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		endTime = 0;
 		frameRate = 25;
 		addKeyListener(this);
-		//ship = new Ship(400, 300, 0, .35, .98, .1);
+		ship = new Ship(400, 300, 0, .35, .98, .1);
 		//double speed = 20*Math.random();
 		//double asteroidTheta = Math.random()*2*Math.PI;
 		Asteroid.generateAsteroids(25);
@@ -132,12 +132,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			for(int i = 0; i < Asteroid.getAsteroids().size(); i++){
 				Asteroid.getAsteroids().get(i).move(getWidth(), getHeight());
 			}
-			AI.xCoor = ship.getX();
-                        AI.yCoor = ship.getY();
+			Constants.SHIP.move(getWidth(), getHeight());
+			AI.xCoor = Constants.SHIP.getX();
+            AI.yCoor = Constants.SHIP.getY();
                         AI.find();
                         AI.move();
                         AI.detectEdges();
-			Constants.SHIP.move(getWidth(), getHeight());
 			repaint();
 			endTime = System.currentTimeMillis();
 			try {

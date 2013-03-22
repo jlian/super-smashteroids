@@ -6,8 +6,8 @@ import java.awt.*;
 //Feel free to edit as you please.
 public class Asteroid {
 
-	private int[] initialXPts = {400, 410, 422, 425, 420, 407}, //Asteroid will initially spawn off-screen
-				initialYPts = {300, 296, 296, 304, 314, 317}; 
+	private int[] initialXPts = {400, 410, 422, 425, 420, 407, 400}, //Asteroid will initially spawn off-screen
+				initialYPts = {300, 296, 296, 304, 314, 317, 300}; 
 	
 	private double x, y, thetaImage, thetaVelocity, xVelocity, yVelocity; //Asteroid has a constant velocity so no acceleration. Also no rotation.
 	
@@ -26,8 +26,8 @@ public class Asteroid {
 		this.yVelocity = yVelocity;
 		this.size = size;
 		active = true;
-		xPts = new int[6]; //Insert number of polygon points here
-		yPts = new int[6]; //Insert number of polygon points here
+		xPts = new int[7]; //Insert number of polygon points here
+		yPts = new int[7]; //Insert number of polygon points here
 	}
 	
 	public void move(int screenWidth, int screenHeight) {
@@ -48,7 +48,7 @@ public class Asteroid {
 		}
 		
 		//Change points
-		for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 7; i++){
 			xPts[i] = (int) (initialXPts[i] * Math.cos(thetaVelocity) - 
 					initialYPts[i] * Math.sin(thetaVelocity) + x + 0.5);
 			yPts[i] = (int) (initialYPts[i] * Math.cos(thetaVelocity) + 
@@ -63,7 +63,7 @@ public class Asteroid {
 		}
 
 		g.setColor(Color.MAGENTA); //Are the asteroids also going to be white?
-		g.fillPolygon(xPts, yPts, 6); //Probably needs to be changed.
+		g.fillPolygon(xPts, yPts, 7); //Probably needs to be changed.
 	}
 	
 	//collision stuff

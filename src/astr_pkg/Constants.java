@@ -3,7 +3,7 @@ package astr_pkg;
 import java.awt.Font;
 
 public interface Constants {
-	
+
 	static final Font MENU_FONT = new Font("Times-Roman", Font.BOLD, 36);
 	static final Font SELECTIONS_FONT = new Font("Dialog", Font.BOLD, 24);
 	static final MainMenuPanel MAIN_MENU_PANEL = new MainMenuPanel();

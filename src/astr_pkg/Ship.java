@@ -1,6 +1,7 @@
 package astr_pkg;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class Ship {
@@ -16,6 +17,8 @@ public class Ship {
 	
 	private double x, y, theta, acceleration, rotationSpeed, 
 			decelerationRate, xVelocity, yVelocity;
+	
+	private Rectangle2D rect;
 	
 	private boolean accelerating, turningLeft, turningRight, active;
 	
@@ -83,9 +86,9 @@ public class Ship {
 		return acceleration;
 	}
 	
-//	public Rectangle getBounds(){
-//
-//	}
+	public Rectangle2D getBounds(){
+		return rect;
+	}
 	
 	public void makeItRain(boolean fire){
 		this.fire = fire;
@@ -150,7 +153,8 @@ public class Ship {
 			yThrusters[i] = (int) (initialThrusterYPts[i] * Math.cos(theta) + 
 					initialThrusterXPts[i] * Math.sin(theta) + y + 0.5);
 		}
-
+		Polygon ship = new Polygon(xPts, yPts, 4);
+		rect = ship.getBounds2D();
 //		if(fire){
 //			System.out.println("CHECK");
 //			fire();
@@ -171,8 +175,10 @@ public class Ship {
 
 		g.setColor(Color.WHITE);
 		g.fillPolygon(xPts, yPts, 4);
+		
 		g.setColor(Color.RED);
-		g.drawPolygon(hitXPts, hitYPts, 4);
+		Graphics2D g2D = (Graphics2D) g;
+		g2D.draw(rect);
 		if(accelerating){
 //			if(g instanceof Graphics2D){
 //				Graphics2D g2d = (Graphics2D)g;

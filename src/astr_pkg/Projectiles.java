@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 
@@ -16,6 +18,7 @@ public class Projectiles {
 	private final int BOARD_WIDTH = 800;
 	private final int BOARD_HEIGHT = 600;
 	private final int PROJECTILE_SPEED = 10;
+	private Rectangle2D rect;
 	
 	
 	public Projectiles(double x, double y, double theta){
@@ -43,6 +46,10 @@ public class Projectiles {
 	public Image getPImage(){
 		return pImage;
 	}
+	public Rectangle2D getProjectileBounds(){
+		rect = new Rectangle((int) getX()-2,  (int) getY()-2, 4, 4);
+		return rect;
+	}
 	public void move(){
 		x+= xVelocity;
 		y+= yVelocity;
@@ -55,6 +62,7 @@ public class Projectiles {
 			onScreen = false;
 			Constants.SHIP.getProjectiles().remove(this);
 		}
+
 	}
 	
 	public static void drawProjectiles(Graphics g){

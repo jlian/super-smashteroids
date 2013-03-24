@@ -27,7 +27,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		ship = new Ship(400, 300, 0, .35, .98, .1);
 		//double speed = 20*Math.random();
 		//double asteroidTheta = Math.random()*2*Math.PI;
-		Asteroid.generateAsteroids(25);
+		Asteroid.generateAsteroids(10);
 		AI = new Alien(AlienImage, Constants.SHIP.getX(), Constants.SHIP.getY());
                 thread = new Thread(this);
 		thread.start();

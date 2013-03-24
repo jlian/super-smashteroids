@@ -80,7 +80,7 @@ public class Asteroid {
 				newX = Math.random()*Constants.WIDTH;
 			}
 			System.out.println(random);
-			arrayAsteroid.add(new Asteroid(newX, newY, Math.random()*2*Math.PI, Math.random()*2*Math.PI, 2));
+			arrayAsteroid.add(new Asteroid(newX, newY, Math.random()*2*Math.PI, Math.random()*2*Math.PI, 3));
 		}
 	}
 	
@@ -132,6 +132,11 @@ public class Asteroid {
 		for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 			if(p.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
 				Constants.SHIP.getProjectiles().remove(i);
+				arrayAsteroid.remove(this);
+				if(this.size>=2){
+					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1));
+					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1));
+				}
 				return true;
 			}
 		}

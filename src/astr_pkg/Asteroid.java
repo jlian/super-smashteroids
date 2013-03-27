@@ -1,7 +1,11 @@
 package astr_pkg;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.sound.sampled.*;
 
 //I'm mostly just copying the attributes and methods from the Ship class
 //Feel free to edit as you please.
@@ -34,9 +38,13 @@ public class Asteroid {
 	
 	private boolean onScreen;
 	
+	private Clip clip;
+	
 	private int[] xPts, yPts;// hitXPts, hitYPts;
 //	int[] hitXPts, hitYPts;
 	private double speed = 1*Math.random() + 1;
+	
+	private static int pointsPlayer1 = 0;
 	
 	public Asteroid(double x, double y, double thetaImage, double thetaVelocity, int size) { //Constructor
 		this.x = x; 
@@ -51,6 +59,34 @@ public class Asteroid {
 		yPts = new int[8]; //Insert number of polygon points here
 //		hitXPts = new int[4];
 //		hitYPts = new int[4];
+		initializeSound();
+	}
+	
+	public static int getPointsP1(){
+		return pointsPlayer1;
+	}
+	
+	private void initializeSound(){
+		try {
+			File menuSelection = new File("src/bangLarge.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+			clip = AudioSystem.getClip();
+			clip.open(audioIn);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	public void playHitSound(){
+		clip.setFramePosition(0);
+		clip.start();
 	}
 	
 	public boolean isOnScreen()	{ return onScreen;}
@@ -132,7 +168,9 @@ public class Asteroid {
 		for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 			if(p.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
 				Constants.SHIP.getProjectiles().remove(i);
+				this.playHitSound();
 				arrayAsteroid.remove(this);
+				pointsPlayer1 += 20;
 				if(this.size>=2){
 					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1));
 					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1));
@@ -153,7 +191,8 @@ public class Asteroid {
 			if(a.collisionShip() || a.collisionProjectile()){
 				g.setColor(Color.red);
 			}
-			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
+//			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
+			g.drawPolygon(a.xPts, a.yPts, 8);
 //			g.setColor(Color.GREEN);
 //			g.drawPolygon(a.hitXPts, a.hitYPts, 4);
 		}

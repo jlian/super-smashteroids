@@ -1,25 +1,33 @@
 package astr_pkg;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.*;
 
+import javax.sound.sampled.*;
 import javax.swing.JPanel;
 
 public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	long startTime, endTime, frameRate;
-	Thread A1;
-        Thread thread;
+    Thread thread;
 	Ship ship;
-//	Asteroid asteroid;
+	
+//	private static int score1;
+	private static Font scoreFont;
 
         static Rectangle AlienImage = new Rectangle(250, 250, 16, 16);
         static Alien AI;
+//        Clip clip;
         
 	public void init(){
+		setScoreFont();
 		startTime = 0;
 		endTime = 0;
 		frameRate = 25;
@@ -33,7 +41,23 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		thread.start();
 	}
 
-
+	private void setScoreFont(){
+		try {
+			scoreFont = Font.createFont(Font.TRUETYPE_FONT, 
+					new File("src/arcadeClassic.ttf"));
+			scoreFont = scoreFont.deriveFont(Font.PLAIN, 26);
+		GraphicsEnvironment ge = 
+				GraphicsEnvironment.getLocalGraphicsEnvironment();
+		ge.registerFont(scoreFont);
+		} catch (FontFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
@@ -63,6 +87,11 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(true);
 				break;
+			case KeyEvent.VK_SPACE:
+				if(Constants.SHIP.shotWaitLeft <= 0){
+					Constants.SHIP.makeItRain(true);
+				}
+				break;
 			}
 		}else{
 			switch(e.getKeyCode()){
@@ -77,11 +106,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			}
 		}
-		if(e.getKeyCode() == KeyEvent.VK_SPACE){
-			if(Constants.SHIP.shotWaitLeft <= 0){
-			Constants.SHIP.makeItRain(true);
-			}
-		}
+//		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+//			if(Constants.SHIP.shotWaitLeft <= 0){
+//				Constants.SHIP.makeItRain(true);
+////				System.out.println(clip.getMicrosecondLength());
+////				clip.setFramePosition(0);
+////				clip.start();
+//			}
+//		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			System.exit(0);
@@ -116,9 +148,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_SPACE){
-			if(Constants.SHIP.shotWaitLeft <= 0){
-			Constants.SHIP.makeItRain(false);
-			}
+//			if(Constants.SHIP.shotWaitLeft <= 0){
+//				Constants.SHIP.makeItRain(false);
+//				
+//			}
+//			if(clip.isRunning()){
+//				clip.stop();
+//			}
+//			clip.setFramePosition(0);
 		}
 	}
 
@@ -168,6 +205,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			}
 			Projectiles.drawProjectiles(g);	
 		}
+		
+		g.setColor(Color.CYAN);
+		g.setFont(scoreFont);
+		g.drawString("SCORE   " + Asteroid.getPointsP1(), 10, 20);
 		
 	}
 

@@ -78,6 +78,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
+			case KeyEvent.VK_SPACE:
+				Constants.SHIP.makeItRain(true);
+				break;
 			case KeyEvent.VK_A:
 				Constants.SHIP.setTurningLeft(true);
 				break;
@@ -87,13 +90,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(true);
 				break;
-			case KeyEvent.VK_SPACE:
-				if(Constants.SHIP.shotWaitLeft <= 0){
-					Constants.SHIP.makeItRain(true);
-				}
-				break;
+
 			}
-		}else{
+		}else{ 
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_LEFT:
 				Constants.SHIP.setTurningLeft(true);
@@ -124,6 +123,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	public void keyReleased(KeyEvent e) {
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
+			case KeyEvent.VK_SPACE:
+				Constants.SHIP.makeItRain(false);
+				break;
 			case KeyEvent.VK_A:
 				Constants.SHIP.setTurningLeft(false);
 				break;
@@ -147,18 +149,16 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			}
 		}
-		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+//		if(e.getKeyCode() == KeyEvent.VK_SPACE){
 //			if(Constants.SHIP.shotWaitLeft <= 0){
-//				Constants.SHIP.makeItRain(false);
-//				
+//				Constants.SHIP.makeItRain(false);				
 //			}
+			
 //			if(clip.isRunning()){
 //				clip.stop();
 //			}
 //			clip.setFramePosition(0);
-		}
 	}
-
 
 	@Override
 	public void run() {

@@ -9,6 +9,7 @@ public interface Constants {
 	static final MainMenuPanel MAIN_MENU_PANEL = new MainMenuPanel();
 	static final PlayGamePanel PLAY_GAME_PANEL = new PlayGamePanel();
 	static final OptionsPanel OPTIONS_PANEL = new OptionsPanel();
+	static final HighScoresPanel HIGH_SCORES_PANEL = new HighScoresPanel();
 	static final Ship SHIP = new Ship(400, 300, 0, .35, .98, .1);
 	static final int WIDTH = 800;
 	static final int HEIGHT = 600;

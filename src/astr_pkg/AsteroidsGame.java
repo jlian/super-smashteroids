@@ -20,7 +20,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     Thread thread;
 	Ship ship;
 	int delay, level, difficulty, startAstr;
-	boolean nextWave;
+	boolean nextWave, levelUp;
 //	private static int score1;
 	private static Font scoreFont;
 
@@ -30,6 +30,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
         
 	public void init(){
 		nextWave = false;
+		levelUp = true;
 		delay = 100;
 		level = 1;
 		startAstr = 1;
@@ -179,6 +180,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			}
 			if(Asteroid.getAsteroids().isEmpty()){
 				nextWave = true;
+				if(levelUp){
+					level ++;
+					levelUp = false;
+				}
 				if(delay > 0){
 					delay--;
 				}
@@ -188,6 +193,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					startAstr += difficulty;
 					Asteroid.generateAsteroids(startAstr);
 					nextWave = false;
+					levelUp = true;
 					
 				}
 			}
@@ -231,11 +237,11 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		g.setColor(Color.CYAN);
 		g.setFont(scoreFont);
 		g.drawString("SCORE   " + Asteroid.getPointsP1(), 10, 40);
-		g.drawString("WAVE   " + level, Constants.WIDTH - 110, 40);
+		g.drawString("Level   " + level, Constants.WIDTH - 110, 40);
 		if(nextWave){
 			g.setFont(Constants.MENU_FONT);
 			FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
-			String strLevel = "Level   " + (level+1);
+			String strLevel = "Level   " + (level);
 			g.setColor(Color.orange);
 			g.drawString(strLevel, 400-(metrics.stringWidth(strLevel)/2), 300);
 		}

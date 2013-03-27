@@ -1,6 +1,8 @@
 package astr_pkg;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+
 import javax.swing.ImageIcon;
 
 public class Alien implements Runnable {
@@ -9,16 +11,28 @@ public class Alien implements Runnable {
     Image AlienImage;
     Rectangle AI, Ship;
     double xCoor, yCoor;
+    private Ellipse2D.Double circle;
+    private double height;
+    private double width;
     
     public Alien(Rectangle A, Double B, Double C){
         xCoor = B;
         yCoor = C;
         AI = A;
         AlienImage = new ImageIcon("src/astr_pkg/Alien.png").getImage();
+        height = AlienImage.getHeight(null);
+        width = AlienImage.getWidth(null);
     }
     
     public void drawAlien(Graphics g){
         g.drawImage(AlienImage, AI.x, AI.y, null);
+        
+        Graphics2D g2D = (Graphics2D) g;
+        
+        if(collisionShip() || collisionProjectile()){
+            g.setColor(Color.red);
+        	g2D.draw(circle);
+        }
     }
 
     public void find(){
@@ -61,9 +75,27 @@ public class Alien implements Runnable {
 
     public void move(){
         AI.x += xDIR;
-        AI.y += yDIR;     
+        AI.y += yDIR;
+       
+        circle = new Ellipse2D.Double(AI.x, AI.y, width, height);
     }
-
+    public Ellipse2D getBounds(){
+    	return circle;
+    }
+    
+    public boolean collisionShip(){
+    	return circle.intersects(Constants.SHIP.getBounds());
+    }
+    public boolean collisionProjectile(){
+        for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
+    		if(circle.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
+				Constants.SHIP.getProjectiles().remove(i);
+				return true;
+			}
+    	}
+    	return false;
+    }
+    
     public void run(){
         try{
             while(true){

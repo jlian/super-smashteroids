@@ -30,6 +30,8 @@ public class Ship {
 	
 	private ArrayList<Projectiles> projectiles;
 	
+	private int score;
+	
 	public Ship(double x, double y, double theta, double acceleration,
 			double decelerationRate, double rotationSpeed){
 		this.x = x;
@@ -49,6 +51,7 @@ public class Ship {
 		xThrusters = new int[6];
 		yThrusters = new int[6];
 		projectiles = new ArrayList<Projectiles>();
+		score = 0;
 	}
 	public double getX(){
 		return x;
@@ -93,8 +96,10 @@ public class Ship {
 	public void makeItRain(boolean fire){
 		this.fire = fire;
 		shotWaitLeft = shotWait;
-		projectiles.add(new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
-				theta));
+		Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
+				theta);
+		projectiles.add(p);
+		p.playShotSound();
 	}
 	public void move(int screenWidth, int screenHeight){
 		if(shotWaitLeft > 0){
@@ -176,9 +181,9 @@ public class Ship {
 		g.setColor(Color.WHITE);
 		g.fillPolygon(xPts, yPts, 4);
 		
-		g.setColor(Color.RED);
-		Graphics2D g2D = (Graphics2D) g;
-		g2D.draw(rect);
+//		g.setColor(Color.RED);
+//		Graphics2D g2D = (Graphics2D) g;
+//		g2D.draw(rect);
 		if(accelerating){
 //			if(g instanceof Graphics2D){
 //				Graphics2D g2d = (Graphics2D)g;

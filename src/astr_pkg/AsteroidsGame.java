@@ -3,6 +3,7 @@ package astr_pkg;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -18,7 +19,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	long startTime, endTime, frameRate;
     Thread thread;
 	Ship ship;
-	
+	int delay, level, difficulty, startAstr;
+	boolean nextWave;
 //	private static int score1;
 	private static Font scoreFont;
 
@@ -27,6 +29,11 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 //        Clip clip;
         
 	public void init(){
+		nextWave = false;
+		delay = 100;
+		level = 1;
+		startAstr = 1;
+		difficulty = 1; //change when implement difficulty selection
 		setScoreFont();
 		startTime = 0;
 		endTime = 0;
@@ -35,7 +42,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		ship = new Ship(400, 300, 0, .35, .98, .1);
 		//double speed = 20*Math.random();
 		//double asteroidTheta = Math.random()*2*Math.PI;
-		Asteroid.generateAsteroids(10);
+		Asteroid.generateAsteroids(startAstr);
 		AI = new Alien(AlienImage, Constants.SHIP.getX(), Constants.SHIP.getY());
                 thread = new Thread(this);
 		thread.start();
@@ -164,10 +171,25 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	public void run() {
 		// TODO Auto-generated method stub
 		System.out.println("Check");
+		delay = 200;
 		while (true){
 			startTime = System.currentTimeMillis();
 			for(int i = 0; i < Asteroid.getAsteroids().size(); i++){
 				Asteroid.getAsteroids().get(i).move(getWidth(), getHeight());
+			}
+			if(Asteroid.getAsteroids().isEmpty()){
+				nextWave = true;
+				if(delay > 0){
+					delay--;
+				}
+				if(delay <= 0){
+					delay = 100;
+					level++;
+					startAstr += difficulty;
+					Asteroid.generateAsteroids(startAstr);
+					nextWave = false;
+					
+				}
 			}
 			Constants.SHIP.move(getWidth(), getHeight());
 			AI.xCoor = Constants.SHIP.getX();
@@ -208,10 +230,15 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		
 		g.setColor(Color.CYAN);
 		g.setFont(scoreFont);
-		g.drawString("SCORE   " + Asteroid.getPointsP1(), 10, 20);
+		g.drawString("SCORE   " + Asteroid.getPointsP1(), 10, 40);
+		g.drawString("WAVE   " + level, Constants.WIDTH - 110, 40);
+		if(nextWave){
+			g.setFont(Constants.MENU_FONT);
+			FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
+			String strLevel = "Level   " + (level+1);
+			g.setColor(Color.orange);
+			g.drawString(strLevel, 400-(metrics.stringWidth(strLevel)/2), 300);
+		}
 		
 	}
-
-
-
 }

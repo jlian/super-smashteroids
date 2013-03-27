@@ -1,7 +1,11 @@
 package astr_pkg;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.sound.sampled.*;
 
 //I'm mostly just copying the attributes and methods from the Ship class
 //Feel free to edit as you please.
@@ -20,7 +24,13 @@ public class Asteroid {
 					yPtsL	= {0, -33, -22, -35, -22, 32, 43, 0};
 	private int[] initialXPts,
 					initialYPts;
-
+//	private int[] hitXS = {25, 25, 0, 0},
+//			hitYS = {17, -4, -4, 17};
+//	private int[] hitXM = {56, 56, 0, 0},
+//			hitYM = {36, -12, -12, 36};
+//	private int[] hitXL = {113, 113, 0, 0},
+//			hitYL = {43, -35, -35, 43};
+//	private int[] initHitX, initHitY;
 	
 	private double x, y, thetaImage, thetaVelocity, xVelocity, yVelocity; //Asteroid has a constant velocity so no acceleration. Also no rotation.
 	
@@ -28,9 +38,13 @@ public class Asteroid {
 	
 	private boolean onScreen;
 	
-	private int[] xPts, yPts;
+	private Clip clip;
 	
+	private int[] xPts, yPts;// hitXPts, hitYPts;
+//	int[] hitXPts, hitYPts;
 	private double speed = 1*Math.random() + 1;
+	
+	private static int pointsPlayer1 = 0;
 	
 	public Asteroid(double x, double y, double thetaImage, double thetaVelocity, int size) { //Constructor
 		this.x = x; 
@@ -43,6 +57,36 @@ public class Asteroid {
 		onScreen = true;
 		xPts = new int[8]; //Insert number of polygon points here
 		yPts = new int[8]; //Insert number of polygon points here
+//		hitXPts = new int[4];
+//		hitYPts = new int[4];
+		initializeSound();
+	}
+	
+	public static int getPointsP1(){
+		return pointsPlayer1;
+	}
+	
+	private void initializeSound(){
+		try {
+			File menuSelection = new File("src/bangLarge.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+			clip = AudioSystem.getClip();
+			clip.open(audioIn);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	public void playHitSound(){
+		clip.setFramePosition(0);
+		clip.start();
 	}
 	
 	public boolean isOnScreen()	{ return onScreen;}
@@ -95,8 +139,11 @@ public class Asteroid {
 		
 		//Change points
 		if(size == 1){ initialXPts = xPtsS; initialYPts = yPtsS;}
+						//initHitX = hitXS; initHitY = hitYS;}
 		if(size == 2){ initialXPts = xPtsM; initialYPts = yPtsM;}
+						//initHitX = hitXM; initHitY = hitYM;}
 		if(size == 3){ initialXPts = xPtsL; initialYPts = yPtsL;}
+						//initHitX = hitXL; initHitY = hitYL;}
 		
 		for(int i = 0; i < 8; i++){
 			xPts[i] = (int) (initialXPts[i] * Math.cos(thetaVelocity) - 
@@ -104,8 +151,43 @@ public class Asteroid {
 			yPts[i] = (int) (initialYPts[i] * Math.cos(thetaVelocity) + 
 					initialXPts[i] * Math.sin(thetaVelocity) + y + 0.5);
 		}
+//		for(int i = 0; i < 4; i++){
+//			hitXPts[i] = (int) (initHitX[i] * Math.cos(thetaVelocity) - 
+//					initHitY[i] * Math.sin(thetaVelocity) + x + 0.5);
+//			hitYPts[i] = (int) (initHitY[i] * Math.cos(thetaVelocity) + 
+//					initHitX[i] * Math.sin(thetaVelocity) + y + 0.5);
+//		}
 	}
 	
+	public boolean collisionShip(){
+		Polygon p = new Polygon(this.xPts, this.yPts, 8);
+		return p.intersects(Constants.SHIP.getBounds());
+	}
+	public boolean collisionProjectile(){
+		Polygon p = new Polygon(this.xPts, this.yPts, 8);
+		for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
+			if(p.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
+				Constants.SHIP.getProjectiles().remove(i);
+				this.playHitSound();
+				arrayAsteroid.remove(this);
+				if(this.size == 1){
+					pointsPlayer1 += 10;
+				}
+				else if(this.size == 2){
+					pointsPlayer1 += 20;
+				}
+				else if(this.size == 3){
+					pointsPlayer1 += 40;
+				}
+				if(this.size>=2){
+					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1));
+					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1));
+				}
+				return true;
+			}
+		}
+		return false;
+	}
 	public static void drawAsteroid(Graphics g){
 		if(g instanceof Graphics2D){
 			Graphics2D g2d = (Graphics2D)g;
@@ -113,11 +195,15 @@ public class Asteroid {
 		}
 		for(int i = 0; i < arrayAsteroid.size(); i++){
 			Asteroid a = arrayAsteroid.get(i);
-			g.setColor(Color.MAGENTA); //Are the asteroids also going to be white?
-			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
+			g.setColor(Color.WHITE); //Are the asteroids also going to be white?
+			if(a.collisionShip() || a.collisionProjectile()){
+				g.setColor(Color.red);
+			}
+//			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
+			g.drawPolygon(a.xPts, a.yPts, 8);
+//			g.setColor(Color.GREEN);
+//			g.drawPolygon(a.hitXPts, a.hitYPts, 4);
 		}
-		
-
 	}
 	
 	public void whenHit(){

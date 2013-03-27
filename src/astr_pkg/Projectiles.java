@@ -4,9 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 
 public class Projectiles {
@@ -16,7 +25,9 @@ public class Projectiles {
 	private final int BOARD_WIDTH = 800;
 	private final int BOARD_HEIGHT = 600;
 	private final int PROJECTILE_SPEED = 10;
+	private Rectangle2D rect;
 	
+	private Clip clip;
 	
 	public Projectiles(double x, double y, double theta){
 		this.x = x;
@@ -27,7 +38,33 @@ public class Projectiles {
 		onScreen = true;
 		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
 		pImage = ii.getImage();
+		
+		initializeSound();
 	}
+	
+	private void initializeSound(){
+		try {
+			File menuSelection = new File("src/fire.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+			clip = AudioSystem.getClip();
+			clip.open(audioIn);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	public void playShotSound(){
+		clip.setFramePosition(0);
+		clip.start();
+	}
+	
 	public double getX(){
 		return x;
 	}
@@ -43,6 +80,10 @@ public class Projectiles {
 	public Image getPImage(){
 		return pImage;
 	}
+	public Rectangle2D getProjectileBounds(){
+		rect = new Rectangle((int) getX()-2,  (int) getY()-2, 4, 4);
+		return rect;
+	}
 	public void move(){
 		x+= xVelocity;
 		y+= yVelocity;
@@ -55,6 +96,7 @@ public class Projectiles {
 			onScreen = false;
 			Constants.SHIP.getProjectiles().remove(this);
 		}
+
 	}
 	
 	public static void drawProjectiles(Graphics g){

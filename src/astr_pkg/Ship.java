@@ -95,15 +95,24 @@ public class Ship {
 	
 	public void makeItRain(boolean fire){
 		this.fire = fire;
-		shotWaitLeft = shotWait;
-		Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
-				theta);
-		projectiles.add(p);
-		p.playShotSound();
+//		System.out.println("FIRING");
+
 	}
+	
 	public void move(int screenWidth, int screenHeight){
 		if(shotWaitLeft > 0){
 			shotWaitLeft--;
+		}
+		
+		if(fire) {
+			if(shotWaitLeft <= 0){
+				Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
+						theta);
+				projectiles.add(p);
+				p.playShotSound();
+//				System.out.println("Actually firing");
+				shotWaitLeft = shotWait;
+			}
 		}
 		
 		if(turningLeft){
@@ -160,11 +169,6 @@ public class Ship {
 		}
 		Polygon ship = new Polygon(xPts, yPts, 4);
 		rect = ship.getBounds2D();
-//		if(fire){
-//			System.out.println("CHECK");
-//			fire();
-
-		//}
 	}
 	
 //	public void fire(){

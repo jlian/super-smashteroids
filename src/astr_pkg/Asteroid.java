@@ -170,7 +170,15 @@ public class Asteroid {
 				Constants.SHIP.getProjectiles().remove(i);
 				this.playHitSound();
 				arrayAsteroid.remove(this);
-				pointsPlayer1 += 20;
+				if(this.size == 1){
+					pointsPlayer1 += 10;
+				}
+				else if(this.size == 2){
+					pointsPlayer1 += 20;
+				}
+				else if(this.size == 3){
+					pointsPlayer1 += 40;
+				}
 				if(this.size>=2){
 					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1));
 					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1));

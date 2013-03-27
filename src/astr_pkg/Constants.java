@@ -13,5 +13,6 @@ public interface Constants {
 	static final Ship SHIP = new Ship(400, 300, 0, .35, .98, .1);
 	static final int WIDTH = 800;
 	static final int HEIGHT = 600;
+	static final int DEFAULT_RESPAWN_WAIT = 40;
 
 }

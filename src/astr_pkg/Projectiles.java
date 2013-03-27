@@ -39,31 +39,31 @@ public class Projectiles {
 		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
 		pImage = ii.getImage();
 		
-		initializeSound();
+//		initializeSound();
 	}
 	
-	private void initializeSound(){
-		try {
-			File menuSelection = new File("src/fire.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
-			clip = AudioSystem.getClip();
-			clip.open(audioIn);
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
+//	private void initializeSound(){
+//		try {
+//			File menuSelection = new File("src/fire.wav");
+//			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+//			clip = AudioSystem.getClip();
+//			clip.open(audioIn);
+//		} catch (UnsupportedAudioFileException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (LineUnavailableException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//	}
 	
-	public void playShotSound(){
-		clip.setFramePosition(0);
-		clip.start();
-	}
+//	public void playShotSound(){
+//		clip.setFramePosition(0);
+//		clip.start();
+//	}
 	
 	public double getX(){
 		return x;

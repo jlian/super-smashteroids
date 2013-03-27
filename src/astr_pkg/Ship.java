@@ -53,6 +53,7 @@ public class Ship {
 		projectiles = new ArrayList<Projectiles>();
 		score = 0;
 	}
+	
 	public double getX(){
 		return x;
 	}
@@ -95,26 +96,25 @@ public class Ship {
 	
 	public void makeItRain(boolean fire){
 		this.fire = fire;
-//		System.out.println("FIRING");
-
+//		shotWaitLeft = shotWait;
+//		Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
+//				theta);
+//		projectiles.add(p);
+//		p.playShotSound();
 	}
-	
 	public void move(int screenWidth, int screenHeight){
 		if(shotWaitLeft > 0){
 			shotWaitLeft--;
 		}
-		
-		if(fire) {
+		if(fire){
 			if(shotWaitLeft <= 0){
 				Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
 						theta);
 				projectiles.add(p);
-				p.playShotSound();
-//				System.out.println("Actually firing");
+//				p.playShotSound();
 				shotWaitLeft = shotWait;
 			}
 		}
-		
 		if(turningLeft){
 			theta -= rotationSpeed;
 		}

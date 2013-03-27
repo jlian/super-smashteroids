@@ -45,6 +45,14 @@ public class Asteroid {
 	private double speed = 1*Math.random() + 1;
 	
 	private static int pointsPlayer1 = 0;
+	private static int scoreTimeOnScreen = 0;
+	
+	private static int[] scoreX;
+	private static int[] scoreY;
+	private static int[] scoreTime;
+	private static int[] scoreValue;
+	
+	private int invulnerable = 0;
 	
 	public Asteroid(double x, double y, double thetaImage, double thetaVelocity, int size) { //Constructor
 		this.x = x; 
@@ -59,30 +67,30 @@ public class Asteroid {
 		yPts = new int[8]; //Insert number of polygon points here
 //		hitXPts = new int[4];
 //		hitYPts = new int[4];
-		initializeSound();
+//		initializeSound();
 	}
 	
 	public static int getPointsP1(){
 		return pointsPlayer1;
 	}
 	
-	private void initializeSound(){
-		try {
-			File menuSelection = new File("src/bangLarge.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
-			clip = AudioSystem.getClip();
-			clip.open(audioIn);
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
+//	private void initializeSound(){
+//		try {
+//			File menuSelection = new File("src/bangLarge.wav");
+//			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+//			clip = AudioSystem.getClip();
+//			clip.open(audioIn);
+//		} catch (UnsupportedAudioFileException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (LineUnavailableException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//	}
 	
 	public void playHitSound(){
 		clip.setFramePosition(0);
@@ -115,9 +123,12 @@ public class Asteroid {
 				
 				newX = Math.random()*Constants.WIDTH;
 			}
-			System.out.println(random);
 			arrayAsteroid.add(new Asteroid(newX, newY, Math.random()*2*Math.PI, Math.random()*2*Math.PI, 3));
 		}
+		scoreX = new int[5 * numberOfAsteroids];
+		scoreY = new int[5 * numberOfAsteroids];
+		scoreTime = new int[5 * numberOfAsteroids];
+		scoreValue = new int[5 * numberOfAsteroids];
 	}
 	
 	public void move(int screenWidth, int screenHeight) {
@@ -159,26 +170,36 @@ public class Asteroid {
 //		}
 	}
 	
+	public int getSize(){
+		return this.size;
+	}
+	
 	public boolean collisionShip(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
-		return p.intersects(Constants.SHIP.getBounds());
+		if(p.intersects(Constants.SHIP.getBounds()) && invulnerable <= 0){
+			
+			return true;
+		}
+		return false;
 	}
 	public boolean collisionProjectile(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
 		for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 			if(p.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
 				Constants.SHIP.getProjectiles().remove(i);
-				this.playHitSound();
-				arrayAsteroid.remove(this);
+//				this.playHitSound();
+				scoreX[i] = (int) this.x;
+				scoreY[i] = (int) this.y;
+				scoreTime[i] = 160;
 				if(this.size == 1){
-					pointsPlayer1 += 10;
+					scoreValue[i] = 10;
+				}else if(this.size == 2){
+					scoreValue[i] = 20;
+				}else if(this.size == 3){
+					scoreValue[i] = 40;
 				}
-				else if(this.size == 2){
-					pointsPlayer1 += 20;
-				}
-				else if(this.size == 3){
-					pointsPlayer1 += 40;
-				}
+				arrayAsteroid.remove(this);
+				pointsPlayer1 += scoreValue[i];
 				if(this.size>=2){
 					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1));
 					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1));
@@ -199,10 +220,23 @@ public class Asteroid {
 			if(a.collisionShip() || a.collisionProjectile()){
 				g.setColor(Color.red);
 			}
-//			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
-			g.drawPolygon(a.xPts, a.yPts, 8);
+			
+			g.setColor(Color.WHITE);
+			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
+//			g.drawPolygon(a.xPts, a.yPts, 8);
 //			g.setColor(Color.GREEN);
 //			g.drawPolygon(a.hitXPts, a.hitYPts, 4);
+		}
+		for(int i = 0; i < scoreX.length; i++){
+			if(scoreX[i] != 0 || scoreY[i] != 0){ //There is a score
+				if(scoreTime[i] > 0){
+					g.setFont(new Font("Times-Roman", Font.BOLD, 12));
+					g.setColor(Color.RED);
+					g.drawString("" + scoreValue[i], scoreX[i], scoreY[i]);
+					scoreTime[i]--;
+					scoreY[i] -= 1;
+				}
+			}
 		}
 	}
 	

@@ -87,8 +87,11 @@ public class Alien implements Runnable {
     	return circle.intersects(Constants.SHIP.getBounds());
     }
     public boolean collisionProjectile(){
-    	if(circle.intersects(Constants.SHIP.getBounds())){
-    		return true;
+        for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
+    		if(circle.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
+				Constants.SHIP.getProjectiles().remove(i);
+				return true;
+			}
     	}
     	return false;
     }

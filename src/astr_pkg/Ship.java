@@ -111,7 +111,7 @@ public class Ship {
 				Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
 						theta);
 				projectiles.add(p);
-//				p.playShotSound();
+				p.playShotSound();
 				shotWaitLeft = shotWait;
 			}
 		}
@@ -189,12 +189,6 @@ public class Ship {
 //		Graphics2D g2D = (Graphics2D) g;
 //		g2D.draw(rect);
 		if(accelerating){
-//			if(g instanceof Graphics2D){
-//				Graphics2D g2d = (Graphics2D)g;
-//				g2d.setPaint(new GradientPaint(xThrusters[0], yThrusters[0], Color.BLUE,
-//						xThrusters[4], yThrusters[4], Color.WHITE));
-//				g2d.fillPolygon(xThrusters, yThrusters, 6);
-//			}
 			g.setColor(Color.RED);
 			g.fillPolygon(xThrusters, yThrusters, 6);
 		}

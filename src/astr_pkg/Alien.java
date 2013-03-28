@@ -71,7 +71,9 @@ public class Alien {
         for(int i = 0; i < aliens.length; i++){
         	if(aliens[i] != null){
         		g.drawImage(AlienImage, (int)aliens[i].xPos, (int)aliens[i].yPos, null);
+        		aliens[i].collisionShip();
         		aliens[i].checkCollisionProjectile();
+        		
         	}  
         }
         if(drawDelay < 0 && alienCount < aliens.length){
@@ -132,10 +134,10 @@ public class Alien {
     }
     
     public void shoot(){
-        if(shoot >= 50){
+        if(shoot >= 50 && Constants.SHIP.isAlive()){
         	double deltaX = shipX - xPos;
         	double deltaY = shipY - yPos;
-            double theta = Math.atan2(deltaY, deltaX); //need function
+            double theta = Math.atan2(deltaY, deltaX);
             ProjectilesAliens AlienProjectiles = 
             		new ProjectilesAliens(xPos, yPos, theta, xVelocity, yVelocity);
             projectiles.add(AlienProjectiles);
@@ -180,7 +182,12 @@ public class Alien {
     }
     
     public boolean collisionShip(){
-    	return circle.intersects(Constants.SHIP.getBounds());
+    	if(Constants.SHIP.getBounds() != null && circle.intersects(Constants.SHIP.getBounds()) && 
+				Constants.SHIP.isAlive()){
+			Constants.SHIP.setAlive(false);
+			return true;
+    	}
+    	return false;
     }
     
     public void checkCollisionProjectile(){

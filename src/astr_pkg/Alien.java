@@ -198,7 +198,7 @@ public class Alien {
 					if(aliens[j] != null && aliens[j].equals(this)){
 						scoreX[j] = (int) this.xPos;
 						scoreY[j] = (int) this.yPos;
-						scoreTime[j] = 160;
+						scoreTime[j] = 80;
 						aliens[j] = null;
 						numberOfAliens--;
 						pointsPlayer1 += scoreValue;

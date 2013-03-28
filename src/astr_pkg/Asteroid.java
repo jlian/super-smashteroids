@@ -38,11 +38,11 @@ public class Asteroid {
 	
 	private boolean onScreen;
 	
-	private Clip clip;
+	private Clip asteroidSound;
 	
 	private int[] xPts, yPts;// hitXPts, hitYPts;
 //	int[] hitXPts, hitYPts;
-	private double speed = 1*Math.random() + 1;
+	private double speed;
 	
 	private static int pointsPlayer1 = 0;
 	private static int scoreTimeOnScreen = 0;
@@ -54,7 +54,8 @@ public class Asteroid {
 	
 	private int invulnerable = 0;
 	
-	public Asteroid(double x, double y, double thetaImage, double thetaVelocity, int size) { //Constructor
+	public Asteroid(double x, double y, double thetaImage, 
+			double thetaVelocity, int size, double speed) { //Constructor
 		this.x = x; 
 		this.y = y;
 		this.thetaImage = thetaImage;
@@ -62,39 +63,42 @@ public class Asteroid {
 		this.xVelocity = speed*Math.cos(thetaVelocity);
 		this.yVelocity = speed*Math.sin(thetaVelocity);
 		this.size = size;
+		this.speed = speed;
+		
+		
 		onScreen = true;
 		xPts = new int[8]; //Insert number of polygon points here
 		yPts = new int[8]; //Insert number of polygon points here
 //		hitXPts = new int[4];
 //		hitYPts = new int[4];
-//		initializeSound();
+		initializeSound();
 	}
 	
 	public static int getPointsP1(){
 		return pointsPlayer1;
 	}
 	
-//	private void initializeSound(){
-//		try {
-//			File menuSelection = new File("src/bangLarge.wav");
-//			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
-//			clip = AudioSystem.getClip();
-//			clip.open(audioIn);
-//		} catch (UnsupportedAudioFileException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		} catch (LineUnavailableException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//	}
+	private void initializeSound(){
+		try {
+			File asteroidHit = new File("src/bangLarge.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
+			asteroidSound = AudioSystem.getClip();
+			asteroidSound.open(audioIn);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	
 	public void playHitSound(){
-		clip.setFramePosition(0);
-		clip.start();
+		asteroidSound.setFramePosition(0);
+		asteroidSound.start();
 	}
 	
 	public boolean isOnScreen()	{ return onScreen;}
@@ -123,7 +127,11 @@ public class Asteroid {
 				
 				newX = Math.random()*Constants.WIDTH;
 			}
-			arrayAsteroid.add(new Asteroid(newX, newY, Math.random()*2*Math.PI, Math.random()*2*Math.PI, 3));
+			double astrTheta = Math.random() * 2 * Math.PI;
+			int astrSize = ((int) (Math.random() * 10) % 3) + 1;
+			double astrSpeed = ((Math.random() * 10) % 4) + 1;
+			arrayAsteroid.add(new Asteroid(newX, newY, astrTheta, 
+					astrTheta, astrSize, astrSpeed));
 		}
 		scoreX = new int[5 * numberOfAsteroids];
 		scoreY = new int[5 * numberOfAsteroids];
@@ -187,7 +195,7 @@ public class Asteroid {
 		for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 			if(p.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
 				Constants.SHIP.getProjectiles().remove(i);
-//				this.playHitSound();
+				this.playHitSound();
 				scoreX[i] = (int) this.x;
 				scoreY[i] = (int) this.y;
 				scoreTime[i] = 160;
@@ -201,8 +209,8 @@ public class Asteroid {
 				arrayAsteroid.remove(this);
 				pointsPlayer1 += scoreValue[i];
 				if(this.size>=2){
-					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1));
-					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1));
+					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1, this.speed));
+					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1, this.speed));
 				}
 				return true;
 			}

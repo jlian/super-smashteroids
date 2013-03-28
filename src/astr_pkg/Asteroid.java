@@ -205,7 +205,7 @@ public class Asteroid {
 				}
 				scoreX[i] = (int) this.x;
 				scoreY[i] = (int) this.y;
-				scoreTime[i] = 160;
+				scoreTime[i] = 80;
 				if(this.size == 1){
 					scoreValue[i] = 10;
 				}else if(this.size == 2){

@@ -38,15 +38,25 @@ public class Asteroid {
 	
 	private boolean onScreen;
 	
-	private Clip clip;
+	private Clip asteroidSound;
+	
 	
 	private int[] xPts, yPts;// hitXPts, hitYPts;
 //	int[] hitXPts, hitYPts;
-	private double speed = 1*Math.random() + 1;
+	private double speed;
 	
 	private static int pointsPlayer1 = 0;
+	private static int scoreTimeOnScreen = 0;
 	
-	public Asteroid(double x, double y, double thetaImage, double thetaVelocity, int size) { //Constructor
+	private static int[] scoreX;
+	private static int[] scoreY;
+	private static int[] scoreTime;
+	private static int[] scoreValue;
+	
+	private int invulnerable = 0;
+	
+	public Asteroid(double x, double y, double thetaImage, 
+			double thetaVelocity, int size, double speed) { //Constructor
 		this.x = x; 
 		this.y = y;
 		this.thetaImage = thetaImage;
@@ -54,12 +64,18 @@ public class Asteroid {
 		this.xVelocity = speed*Math.cos(thetaVelocity);
 		this.yVelocity = speed*Math.sin(thetaVelocity);
 		this.size = size;
+		this.speed = speed;
+		
+		
 		onScreen = true;
 		xPts = new int[8]; //Insert number of polygon points here
 		yPts = new int[8]; //Insert number of polygon points here
 //		hitXPts = new int[4];
 //		hitYPts = new int[4];
-		initializeSound();
+		
+		if(MainMenu.isSfxOn() && !Constants.LINUX){
+			initializeSound();
+		}
 	}
 	
 	public static int getPointsP1(){
@@ -68,10 +84,10 @@ public class Asteroid {
 	
 	private void initializeSound(){
 		try {
-			File menuSelection = new File("src/bangLarge.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
-			clip = AudioSystem.getClip();
-			clip.open(audioIn);
+			File asteroidHit = new File("src/bangLarge.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
+			asteroidSound = AudioSystem.getClip();
+			asteroidSound.open(audioIn);
 		} catch (UnsupportedAudioFileException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -85,8 +101,8 @@ public class Asteroid {
 	}
 	
 	public void playHitSound(){
-		clip.setFramePosition(0);
-		clip.start();
+		asteroidSound.setFramePosition(0);
+		asteroidSound.start();
 	}
 	
 	public boolean isOnScreen()	{ return onScreen;}
@@ -115,9 +131,16 @@ public class Asteroid {
 				
 				newX = Math.random()*Constants.WIDTH;
 			}
-			System.out.println(random);
-			arrayAsteroid.add(new Asteroid(newX, newY, Math.random()*2*Math.PI, Math.random()*2*Math.PI, 3));
+			double astrTheta = Math.random() * 2 * Math.PI;
+			int astrSize = ((int) (Math.random() * 10) % 3) + 1;
+			double astrSpeed = ((Math.random() * 10) % 4) + 1;
+			arrayAsteroid.add(new Asteroid(newX, newY, astrTheta, 
+					astrTheta, astrSize, astrSpeed));
 		}
+		scoreX = new int[5 * numberOfAsteroids];
+		scoreY = new int[5 * numberOfAsteroids];
+		scoreTime = new int[5 * numberOfAsteroids];
+		scoreValue = new int[5 * numberOfAsteroids];
 	}
 	
 	public void move(int screenWidth, int screenHeight) {
@@ -159,29 +182,42 @@ public class Asteroid {
 //		}
 	}
 	
+	public int getSize(){
+		return this.size;
+	}
+	
 	public boolean collisionShip(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
-		return p.intersects(Constants.SHIP.getBounds());
+		if(Constants.SHIP.getBounds() != null && p.intersects(Constants.SHIP.getBounds()) && 
+				Constants.SHIP.isAlive()){
+			Constants.SHIP.setAlive(false);
+			return true;
+		}
+		return false;
 	}
 	public boolean collisionProjectile(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
 		for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 			if(p.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
 				Constants.SHIP.getProjectiles().remove(i);
-				this.playHitSound();
-				arrayAsteroid.remove(this);
+				if(MainMenu.isSfxOn() && !Constants.LINUX){
+					this.playHitSound();
+				}
+				scoreX[i] = (int) this.x;
+				scoreY[i] = (int) this.y;
+				scoreTime[i] = 80;
 				if(this.size == 1){
-					pointsPlayer1 += 10;
+					scoreValue[i] = 10;
+				}else if(this.size == 2){
+					scoreValue[i] = 20;
+				}else if(this.size == 3){
+					scoreValue[i] = 40;
 				}
-				else if(this.size == 2){
-					pointsPlayer1 += 20;
-				}
-				else if(this.size == 3){
-					pointsPlayer1 += 40;
-				}
+				arrayAsteroid.remove(this);
+				pointsPlayer1 += scoreValue[i];
 				if(this.size>=2){
-					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1));
-					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1));
+					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage+(Math.PI/4), this.thetaVelocity+(Math.PI/4), this.size-1, this.speed));
+					arrayAsteroid.add(new Asteroid(this.x, this.y,this.thetaImage-(Math.PI/4), this.thetaVelocity-(Math.PI/4), this.size-1, this.speed));
 				}
 				return true;
 			}
@@ -196,38 +232,29 @@ public class Asteroid {
 		for(int i = 0; i < arrayAsteroid.size(); i++){
 			Asteroid a = arrayAsteroid.get(i);
 			g.setColor(Color.WHITE); //Are the asteroids also going to be white?
-			if(a.collisionShip() || a.collisionProjectile()){
-				g.setColor(Color.red);
-			}
-//			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
-			g.drawPolygon(a.xPts, a.yPts, 8);
+//			if(a.collisionShip() || a.collisionProjectile()){
+//				g.setColor(Color.red);
+//			}
+			a.collisionShip();
+			a.collisionProjectile();
+			
+			g.setColor(Color.WHITE);
+			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
+//			g.drawPolygon(a.xPts, a.yPts, 8);
 //			g.setColor(Color.GREEN);
 //			g.drawPolygon(a.hitXPts, a.hitYPts, 4);
 		}
+		for(int i = 0; i < scoreX.length; i++){
+			if(scoreX[i] != 0 || scoreY[i] != 0){ //There is a score
+				if(scoreTime[i] > 0){
+					g.setFont(new Font("Times-Roman", Font.BOLD, 12));
+					g.setColor(Color.RED);
+					g.drawString("" + scoreValue[i], scoreX[i], scoreY[i]);
+					scoreTime[i]--;
+					scoreY[i] -= 1;
+				}
+			}
+		}
 	}
-	
-	public void whenHit(){
-		onScreen = false;
-		if (size <2) { return;}
-	}
-	
 
-	//collision stuff
-//	public Asteroid whenHit(boolean firstAsteroid){
-//		if(this.size==1){return null;}
-//		else{
-//			int popPop = 1;
-//			if(!firstAsteroid){popPop = -1;} 
-//			
-//			double newThetaImage = Math.random()*2*Math.PI;
-//			double newThetaVelocity = popPop*Math.random()*Math.PI/4+this.thetaVelocity;
-//			//ADJUST Speed constant i.e 1
-//			double newSpeed = 1*Math.random();
-//			double newVx = newSpeed*Math.cos(newThetaVelocity);
-//			double newVy = newSpeed*Math.sin(newThetaVelocity);
-//			
-//			Asteroid breakup = new Asteroid(this.x, this.y, newThetaImage, newThetaVelocity, newVx, newVy, this.size--);
-//			return breakup;
-//		}
-//	}
 }

@@ -30,66 +30,18 @@ public class MainMenu extends JFrame{
 	private static boolean musicVolume = true; //Controls if background music is on or off
 	private static boolean sfxVolume = true; // Controls if sound effects are on or off
 	private static boolean wasd = true; //Controls if the user has selected WASD or Arrow Keys controls
+	private static int difficultyLevel = 1;
 	private static Font titleFont; //The custom font for the title of the game
 	private static Clip menu_select; //Sound effect for when options are scrolled in the Main Menu
 	private static Clip menu_validate;
 	private static Clip background_music;
 
 	public MainMenu(){
-
-		/*
-		 * Code for getting an audio file to be accessible for playback
-		 * Clip Class is used for this.
-		 */
-		try {
-			File menuSelection = new File("src/astr_pkg/menu_select.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
-			menu_select = AudioSystem.getClip();
-			menu_select.open(audioIn);
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		
+		if(!Constants.LINUX){
+			initializeSounds();
 		}
 		
-		try {
-			File menuValidation = new File("src/astr_pkg/menu_validate.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuValidation);
-			menu_validate = AudioSystem.getClip();
-			menu_validate.open(audioIn);
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			File backgroundMusic = new File("src/astr_pkg/background_music.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(backgroundMusic);
-			background_music = AudioSystem.getClip();
-			background_music.open(audioIn);
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-
 		add(Constants.MAIN_MENU_PANEL); //Add panel, which has main menu options, to the frame
 		Constants.MAIN_MENU_PANEL.setFocusable(true);//Make this panel able to detect key presses
 		Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
@@ -99,7 +51,7 @@ public class MainMenu extends JFrame{
 				switch(e.getKeyCode()){
 				case KeyEvent.VK_DOWN: //If down arrow key pressed,
 					countMain++; //increment count --> move down the list of options
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ //If the clip is still running
 							menu_select.stop(); //Stop playback
 						}
@@ -112,7 +64,7 @@ public class MainMenu extends JFrame{
 					if (countMain < 0){ //Keep value positive as to keep proper track of the
 						countMain = 3; //keyboard pointer location.				
 					}
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop();
 						}
@@ -121,7 +73,7 @@ public class MainMenu extends JFrame{
 					}
 					break;
 				case KeyEvent.VK_ENTER: //If the Enter key is pressed, depending on the option selected
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_validate.isRunning()){ 
 							menu_validate.stop(); 
 						}
@@ -164,7 +116,7 @@ public class MainMenu extends JFrame{
 				switch(e.getKeyCode()){
 				case KeyEvent.VK_DOWN: //If down arrow key pressed
 					countPlay++; // move down list of options
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop(); 
 						}
@@ -175,9 +127,9 @@ public class MainMenu extends JFrame{
 				case KeyEvent.VK_UP: //If up arrow key pressed
 					countPlay--; // move up list of options
 					if(countPlay < 0){ //Keep value positive as to keep proper track of the
-						countPlay = 2; //keyboard pointer location.	
+						countPlay = 3; //keyboard pointer location.	
 					}
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop(); 
 						}
@@ -186,37 +138,48 @@ public class MainMenu extends JFrame{
 					}
 					break;
 				case KeyEvent.VK_ENTER://If enter key pressed
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_validate.isRunning()){ 
 							menu_validate.stop(); 
 						}
 						menu_validate.setFramePosition(0); 
 						menu_validate.start(); 
 					}
-					switch(countPlay % 3){
-					case 0: //If first option selected "Single Player"
+					switch(countPlay % 4){
+					case 0:
+						difficultyLevel = (difficultyLevel + 1) % 4;
+						if(difficultyLevel == 0){
+							difficultyLevel = 1;
+						}
+						break;
+					case 1: //If first option selected "Single Player"
 						//Start a Single Player game
 						System.out.println("Single Player Game Selected");
 						remove(Constants.PLAY_GAME_PANEL);
 						AsteroidsGame game = new AsteroidsGame();
 						add(game);
 						revalidate();
-						if (musicVolume) {
-//							if(background_music.isRunning()){ 
-//								background_music.stop(); 
-//							}
-//							background_music.setFramePosition(0); 
+						if (musicVolume && !Constants.LINUX) {
 							background_music.loop(Clip.LOOP_CONTINUOUSLY);
 						}
 						game.setFocusable(true);
 						game.requestFocusInWindow();
 						game.init();
+						if(AsteroidsGame.getNumLivesP1() == 0){
+							remove(game); //remove the Play Game sub-menu from frame
+							add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+							revalidate(); //refresh frame
+							Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+							Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+							countPlay = 0; //reset pointer position in Play Game sub-menu to top option
+						}
+						
 						break;
-					case 1: //If second option selected "Multiplayer"
+					case 2: //If second option selected "Multiplayer"
 						//Start a Multiplayer game
 						System.out.println("Multiplayer Game Selected");
 						break;
-					case 2: //If third option selected "Back to Main Menu"
+					case 3: //If third option selected "Back to Main Menu"
 						remove(Constants.PLAY_GAME_PANEL); //remove the Play Game sub-menu from frame
 						add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
 						revalidate(); //refresh frame
@@ -236,7 +199,7 @@ public class MainMenu extends JFrame{
 				switch(e.getKeyCode()){
 				case KeyEvent.VK_DOWN: //If down arrow key pressed
 					countOptions++; //move down list of options
-					if(sfxVolume) {
+					if(sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop(); 
 						}
@@ -249,7 +212,7 @@ public class MainMenu extends JFrame{
 					if(countOptions < 0){ //Keep value positive as to keep proper track of the
 						countOptions = 3; //keyboard pointer location
 					}
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop(); 
 						}
@@ -258,7 +221,7 @@ public class MainMenu extends JFrame{
 					}
 					break;
 				case KeyEvent.VK_ENTER: //If Enter key pressed
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_validate.isRunning()){ 
 							menu_validate.stop(); 
 						}
@@ -314,7 +277,7 @@ public class MainMenu extends JFrame{
 			public void keyPressed(KeyEvent e){
 				switch(e.getKeyCode()){
 				case KeyEvent.VK_ENTER://If enter key pressed
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_validate.isRunning()){ 
 							menu_validate.stop(); 
 						}
@@ -336,6 +299,44 @@ public class MainMenu extends JFrame{
 		
 	}
 
+	public static void initializeSounds(){
+		/*
+		 * Code for getting an audio file to be accessible for playback
+		 * Clip Class is used for this.
+		 */
+		try {
+			File menuSelection = new File("src/astr_pkg/menu_select.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+			menu_select = AudioSystem.getClip();
+			menu_select.open(audioIn);
+			
+			File menuValidation = new File("src/astr_pkg/menu_validate.wav");
+			AudioInputStream audioIn2 = AudioSystem.getAudioInputStream(menuValidation);
+			menu_validate = AudioSystem.getClip();
+			menu_validate.open(audioIn2);
+			
+			File backgroundMusic = new File("src/astr_pkg/background_music.wav");
+			AudioInputStream audioIn3 = AudioSystem.getAudioInputStream(backgroundMusic);
+			background_music = AudioSystem.getClip();
+			background_music.open(audioIn3);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+
+	}
+	
+	public static int getDifficulty(){
+		return difficultyLevel;
+	}
+	
 	//Return the background Image
 	public static ImageIcon getBackgroundImage(){
 		return background;
@@ -543,41 +544,86 @@ class PlayGamePanel extends JPanel{
 		g.setFont(Constants.MENU_FONT);
 		//Used to obtain measurements of the Font used in the Play Game Sub-menu
 		FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
+		
+		int difficultyX = 10;
+		int difficultyY = getHeight() / 5;
+		int easyX = getWidth() - metrics.stringWidth("EASY") - 20;
+		int normalX = getWidth() - metrics.stringWidth("NORMAL") - 20;
+		int hardX = getWidth() - metrics.stringWidth("HARD") - 20;
 		//X and Y positions of the Single Player option calculated
 		int singlePlayerX = getWidth()/2 - metrics.stringWidth("Single Player")/2; //Center text
-		int singlePlayerY = getHeight() / 4;
+		int singlePlayerY = 2 * getHeight() / 5;
 		//X and Y positions of the Multiplayer option calculated
 		int multiplayerX = getWidth() / 2 - metrics.stringWidth("Multiplayer") / 2; //Center text
-		int multiplayerY = 2 * getHeight() / 4;
+		int multiplayerY = 3 * getHeight() / 5;
 		//X and Y positions of the Back to Main Menu option calculated
 		int mainMenuX = getWidth() / 2 - metrics.stringWidth("Back to Main Menu") / 2; //Center text
-		int mainMenuY = 3 * getHeight() / 4;
-
+		int mainMenuY = 4 * getHeight() / 5;
+		
 		/*
 		 * This set of code is conditions to check where the pointer position
 		 * is in the Main Menu. The text is added accordingly with the option
 		 * corresponding to the pointer position having a White text color and
 		 * the other options remaining grayed out (Gray font color)
 		 */
-		switch(MainMenu.getPlayGamePointerPosition() % 3){
+		switch(MainMenu.getPlayGamePointerPosition() % 4){
 		case 0:
 			g.setColor(Color.WHITE);
-			g.drawString("Single Player", singlePlayerX, singlePlayerY);
+			g.drawString("Difficulty", difficultyX, difficultyY);
+			if(MainMenu.getDifficulty() == 1){
+				g.drawString("EASY", easyX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 2){
+				g.drawString("NORMAL", normalX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 3){
+				g.drawString("HARD", hardX, difficultyY);
+			}
 			g.setColor(Color.GRAY);
+			g.drawString("Single Player", singlePlayerX, singlePlayerY);
 			g.drawString("Multiplayer", multiplayerX, multiplayerY);
 			g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
 			break;
 		case 1:
 			g.setColor(Color.WHITE);
-			g.drawString("Multiplayer", multiplayerX, multiplayerY);
-			g.setColor(Color.GRAY);
 			g.drawString("Single Player", singlePlayerX, singlePlayerY);
+			g.setColor(Color.GRAY);
+			g.drawString("Difficulty", difficultyX, difficultyY);
+			if(MainMenu.getDifficulty() == 1){
+				g.drawString("EASY", easyX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 2){
+				g.drawString("NORMAL", normalX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 3){
+				g.drawString("HARD", hardX, difficultyY);
+			}
+			g.drawString("Multiplayer", multiplayerX, multiplayerY);
 			g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
 			break;
 		case 2:
 			g.setColor(Color.WHITE);
+			g.drawString("Multiplayer", multiplayerX, multiplayerY);
+			g.setColor(Color.GRAY);
+			g.drawString("Difficulty", difficultyX, difficultyY);
+			if(MainMenu.getDifficulty() == 1){
+				g.drawString("EASY", easyX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 2){
+				g.drawString("NORMAL", normalX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 3){
+				g.drawString("HARD", hardX, difficultyY);
+			}
+			g.drawString("Single Player", singlePlayerX, singlePlayerY);
+			g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
+			break;
+		case 3:
+			g.setColor(Color.WHITE);
 			g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
 			g.setColor(Color.GRAY);
+			g.drawString("Difficulty", difficultyX, difficultyY);
+			if(MainMenu.getDifficulty() == 1){
+				g.drawString("EASY", easyX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 2){
+				g.drawString("NORMAL", normalX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 3){
+				g.drawString("HARD", hardX, difficultyY);
+			}
 			g.drawString("Single Player", singlePlayerX, singlePlayerY);
 			g.drawString("Multiplayer", multiplayerX, multiplayerY);
 			break;

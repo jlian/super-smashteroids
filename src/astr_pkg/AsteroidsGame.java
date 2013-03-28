@@ -19,36 +19,64 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	long startTime, endTime, frameRate;
     Thread thread;
 	Ship ship;
-	int delay, level, difficulty, startAstr;
-	boolean nextWave, levelUp;
-//	private static int score1;
-	private static Font scoreFont;
+	
+	static Font scoreFont;
+	
+	static Rectangle AlienImage = new Rectangle(250, 250, 16, 16);
+    static Alien AI;
 
-        static Rectangle AlienImage = new Rectangle(250, 250, 16, 16);
-        static Alien AI;
-//        Clip clip;
+    private static int respawnTime;
+    private static int delay, level, difficulty, startAstr, numAliens;
+    private static boolean nextWave, levelUp;
+    private static int numLivesP1;
+    private Clip thrusterSound;
+     
         
 	public void init(){
 		nextWave = false;
 		levelUp = true;
 		delay = 100;
 		level = 1;
-		startAstr = 1;
-		difficulty = 1; //change when implement difficulty selection
+		numLivesP1 = 3;
+		startAstr = MainMenu.getDifficulty() * 5;
+		numAliens = MainMenu.getDifficulty();
+		difficulty = MainMenu.getDifficulty();
+		
 		setScoreFont();
+		if(MainMenu.isSfxOn() && !Constants.LINUX){
+			initializeSounds();
+		}
+		
+		
 		startTime = 0;
 		endTime = 0;
 		frameRate = 25;
+		respawnTime = 0;
 		addKeyListener(this);
-		ship = new Ship(400, 300, 0, .35, .98, .1);
-		//double speed = 20*Math.random();
-		//double asteroidTheta = Math.random()*2*Math.PI;
 		Asteroid.generateAsteroids(startAstr);
-		AI = new Alien(AlienImage, Constants.SHIP.getX(), Constants.SHIP.getY());
-                thread = new Thread(this);
+		Alien.generateAliens(numAliens);
+        thread = new Thread(this);
 		thread.start();
 	}
 
+	private void initializeSounds(){
+		try {
+			File thrusters = new File("src/thrust.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(thrusters);
+			thrusterSound = AudioSystem.getClip();
+			thrusterSound.open(audioIn);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
 	private void setScoreFont(){
 		try {
 			scoreFont = Font.createFont(Font.TRUETYPE_FONT, 
@@ -66,6 +94,20 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		}
 	}
 	
+
+	public void playThrusterSound(){
+		thrusterSound.setFramePosition(0);
+		thrusterSound.loop(Clip.LOOP_CONTINUOUSLY);
+	}
+	
+	public static void setRespawnTime(int time){
+		respawnTime = time;
+	}
+	
+	public static int getNumLivesP1(){
+		return numLivesP1;
+	}
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
@@ -74,21 +116,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-//		if(e.getKeyCode() == KeyEvent.VK_LEFT && !MainMenu.isControlWasd()){
-//			ship.setTurningLeft(true);
-//		}else if(e.getKeyCode() == KeyEvent.VK_A && MainMenu.isControlWasd()){
-//			ship.setTurningLeft(true);
-//		}else if(e.getKeyCode() == KeyEvent.VK_RIGHT && !MainMenu.isControlWasd()){
-//			ship.setTurningRight(true);
-//		}else if(e.getKeyCode() == KeyEvent.VK_D && MainMenu.isControlWasd()){
-//			ship.setTurningRight(true);
-//		}
-
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
-			case KeyEvent.VK_SPACE:
-				Constants.SHIP.makeItRain(true);
-				break;
 			case KeyEvent.VK_A:
 				Constants.SHIP.setTurningLeft(true);
 				break;
@@ -97,10 +126,13 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(true);
+//				if(MainMenu.isSfxOn() && !Constants.LINUX){
+//					playThrusterSound();
+//				}
 				break;
-
+			
 			}
-		}else{ 
+		}else{
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_LEFT:
 				Constants.SHIP.setTurningLeft(true);
@@ -110,17 +142,15 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_UP:
 				Constants.SHIP.setAccelerating(true);
+//				if(MainMenu.isSfxOn() && !Constants.LINUX){
+//					playThrusterSound();
+//				}
 				break;
 			}
 		}
-//		if(e.getKeyCode() == KeyEvent.VK_SPACE){
-//			if(Constants.SHIP.shotWaitLeft <= 0){
-//				Constants.SHIP.makeItRain(true);
-////				System.out.println(clip.getMicrosecondLength());
-////				clip.setFramePosition(0);
-////				clip.start();
-//			}
-//		}
+		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			Constants.SHIP.makeItRain(true);
+		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			System.exit(0);
@@ -131,9 +161,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	public void keyReleased(KeyEvent e) {
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
-			case KeyEvent.VK_SPACE:
-				Constants.SHIP.makeItRain(false);
-				break;
 			case KeyEvent.VK_A:
 				Constants.SHIP.setTurningLeft(false);
 				break;
@@ -142,6 +169,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(false);
+//				if(MainMenu.isSfxOn() && !Constants.LINUX){
+//					thrusterSound.stop();
+//					thrusterSound.setFramePosition(0);
+//				}
 				break;
 			}
 		}else{
@@ -154,31 +185,34 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_UP:
 				Constants.SHIP.setAccelerating(false);
+//				if(MainMenu.isSfxOn() && !Constants.LINUX){
+//					thrusterSound.stop();
+//					thrusterSound.setFramePosition(0);
+//				}
+			
 				break;
 			}
 		}
-//		if(e.getKeyCode() == KeyEvent.VK_SPACE){
-//			if(Constants.SHIP.shotWaitLeft <= 0){
-//				Constants.SHIP.makeItRain(false);				
-//			}
-			
-//			if(clip.isRunning()){
-//				clip.stop();
-//			}
-//			clip.setFramePosition(0);
+		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			Constants.SHIP.makeItRain(false);
+		}
+		
 	}
+
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		System.out.println("Check");
-		delay = 200;
-		while (true){
+		
+		while (numLivesP1 > 0){
 			startTime = System.currentTimeMillis();
+			if(Constants.SHIP.isAlive()){
+				Constants.SHIP.move(getWidth(), getHeight());
+			}
 			for(int i = 0; i < Asteroid.getAsteroids().size(); i++){
 				Asteroid.getAsteroids().get(i).move(getWidth(), getHeight());
 			}
-			if(Asteroid.getAsteroids().isEmpty()){
+			if(Asteroid.getAsteroids().isEmpty() && Alien.getNumAliens() == 0){
 				nextWave = true;
 				if(levelUp){
 					level ++;
@@ -189,20 +223,25 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				}
 				if(delay <= 0){
 					delay = 100;
-					level++;
 					startAstr += difficulty;
+					numAliens += difficulty;
 					Asteroid.generateAsteroids(startAstr);
+					Alien.generateAliens(numAliens);
 					nextWave = false;
 					levelUp = true;
-					
+				}
+			} 
+			
+			for (int i = 0; i < numAliens; i++){
+				if(Alien.getAliens()[i] != null){
+					Alien.getAliens()[i].shipX = Constants.SHIP.getX();
+					Alien.getAliens()[i].shipY = Constants.SHIP.getY();
+					Alien.getAliens()[i].find();
+					Alien.getAliens()[i].shoot();
+					Alien.getAliens()[i].move();
+					Alien.getAliens()[i].detectEdges();
 				}
 			}
-			Constants.SHIP.move(getWidth(), getHeight());
-			AI.xCoor = Constants.SHIP.getX();
-            AI.yCoor = Constants.SHIP.getY();
-                        AI.find();
-                        AI.move();
-                        AI.detectEdges();
 			repaint();
 			endTime = System.currentTimeMillis();
 			try {
@@ -225,26 +264,58 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 800, 600);
 		Asteroid.drawAsteroid(g);
-		AI.drawAlien(g);
-                Constants.SHIP.drawShip(g);
+		Alien.drawAlien(g);
+        if(Constants.SHIP.isAlive()){
+        	Constants.SHIP.drawShip(g);
+        }else{
+        	Constants.SHIP.reset();
+        }
+        if(!Constants.SHIP.isAlive()){
+			if(Constants.SHIP.getRespawnTime() < 80){
+				Constants.SHIP.incrementRespawnTime();
+			}else{
+				Constants.SHIP.resetRespawnTime();
+				Constants.SHIP.setAlive(true);
+				numLivesP1--;
+			}
+		}
 		if(Constants.SHIP.getProjectiles().size() > 0){
 			for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 					Constants.SHIP.getProjectiles().get(i).move();
 			}
 			Projectiles.drawProjectiles(g);	
 		}
+		/*
+		 * ADDED THIS
+		 */
+		for(int i = 0; i < Alien.getAliens().length; i++){
+			if(Alien.getAliens()[i] != null && 
+					Alien.getAliens()[i].getShots().size() > 0){
+				for(int j = 0; j < Alien.getAliens()[i].getShots().size(); j++){
+					Alien.getAliens()[i].getShots().get(j).move();
+				}
+				ProjectilesAliens.drawProjectiles(g);
+			}
+		}
+		
 		
 		g.setColor(Color.CYAN);
 		g.setFont(scoreFont);
-		g.drawString("SCORE   " + Asteroid.getPointsP1(), 10, 40);
+
+		g.drawString("SCORE   " + (Asteroid.getPointsP1() + Alien.getPointsP1()),
+				10, 40);
 		g.drawString("Level   " + level, Constants.WIDTH - 110, 40);
+		g.drawString("Lives Left  " + numLivesP1, Constants.WIDTH - 160, Constants.HEIGHT - 20);
+		
 		if(nextWave){
 			g.setFont(Constants.MENU_FONT);
 			FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
 			String strLevel = "Level   " + (level);
 			g.setColor(Color.orange);
 			g.drawString(strLevel, 400-(metrics.stringWidth(strLevel)/2), 300);
-		}
-		
+		} 
 	}
+
+
+
 }

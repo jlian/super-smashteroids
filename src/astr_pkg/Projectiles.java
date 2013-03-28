@@ -39,13 +39,16 @@ public class Projectiles {
 		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
 		pImage = ii.getImage();
 		
-		initializeSound();
+		if(MainMenu.isSfxOn() && !Constants.LINUX){
+			initializeSound();
+		}
+		
 	}
 	
 	private void initializeSound(){
 		try {
-			File menuSelection = new File("src/fire.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+			File shotSound = new File("src/fire.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(shotSound);
 			clip = AudioSystem.getClip();
 			clip.open(audioIn);
 		} catch (UnsupportedAudioFileException e1) {
@@ -107,7 +110,6 @@ public class Projectiles {
 			Projectiles p = shootArray.get(i);
 			g2D.setColor(new Color(51, 153, 255));
 			g2D.fillOval((int) p.getX(),  (int)p.getY(), 4, 4);
-//			g2D.drawImage(pImage, (int)p.getX(), (int)p.getY(), null);
 			
 		}
 		

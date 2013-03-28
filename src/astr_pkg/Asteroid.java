@@ -40,6 +40,7 @@ public class Asteroid {
 	
 	private Clip asteroidSound;
 	
+	
 	private int[] xPts, yPts;// hitXPts, hitYPts;
 //	int[] hitXPts, hitYPts;
 	private double speed;
@@ -187,8 +188,9 @@ public class Asteroid {
 	
 	public boolean collisionShip(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
-		if(Constants.SHIP.getBounds() != null && p.intersects(Constants.SHIP.getBounds()) && invulnerable <= 0){
-			
+		if(Constants.SHIP.getBounds() != null && p.intersects(Constants.SHIP.getBounds()) && 
+				Constants.SHIP.isAlive()){
+			Constants.SHIP.setAlive(false);
 			return true;
 		}
 		return false;

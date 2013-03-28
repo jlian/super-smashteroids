@@ -28,6 +28,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static int respawnTime;
     private static int delay, level, difficulty, startAstr, numAliens;
     private static boolean nextWave, levelUp;
+    private static int numLivesP1;
     private Clip thrusterSound;
      
         
@@ -36,9 +37,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		levelUp = true;
 		delay = 100;
 		level = 1;
-		startAstr = 10;
-		numAliens = 1;
-		difficulty = 1; //change when implement difficulty selection 
+		numLivesP1 = 3;
+		startAstr = MainMenu.getDifficulty() * 5;
+		numAliens = MainMenu.getDifficulty();
+		difficulty = MainMenu.getDifficulty();
 		
 		setScoreFont();
 		if(MainMenu.isSfxOn() && !Constants.LINUX){
@@ -100,6 +102,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	
 	public static void setRespawnTime(int time){
 		respawnTime = time;
+	}
+	
+	public static int getNumLivesP1(){
+		return numLivesP1;
 	}
 	
 	@Override
@@ -198,12 +204,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	public void run() {
 		// TODO Auto-generated method stub
 		
-		while (true){
+		while (numLivesP1 > 0){
 			startTime = System.currentTimeMillis();
-			if(respawnTime <= 0){
+			if(Constants.SHIP.isAlive()){
 				Constants.SHIP.move(getWidth(), getHeight());
-			}else{
-				respawnTime--;
 			}
 			for(int i = 0; i < Asteroid.getAsteroids().size(); i++){
 				Asteroid.getAsteroids().get(i).move(getWidth(), getHeight());
@@ -261,10 +265,20 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		g.fillRect(0, 0, 800, 600);
 		Asteroid.drawAsteroid(g);
 		Alien.drawAlien(g);
-        if(respawnTime <= 0){
+        if(Constants.SHIP.isAlive()){
         	Constants.SHIP.drawShip(g);
+        }else{
+        	Constants.SHIP.reset();
         }
-		
+        if(!Constants.SHIP.isAlive()){
+			if(Constants.SHIP.getRespawnTime() < 80){
+				Constants.SHIP.incrementRespawnTime();
+			}else{
+				Constants.SHIP.resetRespawnTime();
+				Constants.SHIP.setAlive(true);
+				numLivesP1--;
+			}
+		}
 		if(Constants.SHIP.getProjectiles().size() > 0){
 			for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 					Constants.SHIP.getProjectiles().get(i).move();
@@ -291,6 +305,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		g.drawString("SCORE   " + (Asteroid.getPointsP1() + Alien.getPointsP1()),
 				10, 40);
 		g.drawString("Level   " + level, Constants.WIDTH - 110, 40);
+		g.drawString("Lives Left  " + numLivesP1, Constants.WIDTH - 160, Constants.HEIGHT - 20);
 		
 		if(nextWave){
 			g.setFont(Constants.MENU_FONT);

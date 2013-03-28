@@ -14,6 +14,6 @@ public interface Constants {
 	static final int WIDTH = 800;
 	static final int HEIGHT = 600;
 	static final int DEFAULT_RESPAWN_WAIT = 40;
-	static final boolean LINUX = false;
+	static final boolean LINUX = true;
 
 }

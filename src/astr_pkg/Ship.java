@@ -137,6 +137,13 @@ public class Ship {
 	public void checkCollisionProjectile(){
 		Polygon shipPoly = new Polygon(xPts, yPts, 4);
 		for(int j = 0; j < Alien.getAliens().length; j++){
+			while(Alien.getAliens()[j] == null){
+				if(j < Alien.getAliens().length - 1){
+					j++;
+				}else{
+					return;
+				}
+			}
 			for(int i = 0; i < Alien.getAliens()[j].getShots().size(); i++){
 				if(shipPoly.intersects(Alien.getAliens()[j].getShots().get(i).getProjectileBounds())){
 					Alien.getAliens()[j].getShots().remove(i);

@@ -19,11 +19,11 @@ public class Alien implements Runnable {
     private double height;
     private double width;
     
-    public Alien(double A, double B, double C, double D){
+    public Alien(double A, double B, double shipXPos, double shipYPos){
         AIx = A;
         AIy = B;
-        xCoor = C;
-        yCoor = D;
+        xCoor = shipXPos;
+        yCoor = shipYPos;
         AlienImage = new ImageIcon("src/astr_pkg/Alien.png").getImage();
         height = AlienImage.getHeight(null);
         width = AlienImage.getWidth(null);
@@ -59,12 +59,12 @@ public class Alien implements Runnable {
             drawDelay--;
         }
         Graphics2D g2D = (Graphics2D) g;
-        for(int i = 0; i < aliens.length; i++){
-            if(aliens[i].collisionProjectile() || aliens[i].collisionShip()){
-                g.setColor(Color.red);
-                g2D.draw(aliens[i].circle);
-            }
-        }
+//        for(int i = 0; i < aliens.length; i++){
+//            if(aliens[i].collisionProjectile() || aliens[i].collisionShip()){
+//                g.setColor(Color.red);
+//                g2D.draw(aliens[i].circle);
+//            }
+//        }
     }
     
     public void find(){

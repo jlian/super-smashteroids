@@ -30,6 +30,7 @@ public class MainMenu extends JFrame{
 	private static boolean musicVolume = true; //Controls if background music is on or off
 	private static boolean sfxVolume = true; // Controls if sound effects are on or off
 	private static boolean wasd = true; //Controls if the user has selected WASD or Arrow Keys controls
+	private static int difficultyLevel = 1;
 	private static Font titleFont; //The custom font for the title of the game
 	private static Clip menu_select; //Sound effect for when options are scrolled in the Main Menu
 	private static Clip menu_validate;
@@ -126,7 +127,7 @@ public class MainMenu extends JFrame{
 				case KeyEvent.VK_UP: //If up arrow key pressed
 					countPlay--; // move up list of options
 					if(countPlay < 0){ //Keep value positive as to keep proper track of the
-						countPlay = 2; //keyboard pointer location.	
+						countPlay = 3; //keyboard pointer location.	
 					}
 					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
@@ -144,8 +145,14 @@ public class MainMenu extends JFrame{
 						menu_validate.setFramePosition(0); 
 						menu_validate.start(); 
 					}
-					switch(countPlay % 3){
-					case 0: //If first option selected "Single Player"
+					switch(countPlay % 4){
+					case 0:
+						difficultyLevel = (difficultyLevel + 1) % 4;
+						if(difficultyLevel == 0){
+							difficultyLevel = 1;
+						}
+						break;
+					case 1: //If first option selected "Single Player"
 						//Start a Single Player game
 						System.out.println("Single Player Game Selected");
 						remove(Constants.PLAY_GAME_PANEL);
@@ -158,12 +165,21 @@ public class MainMenu extends JFrame{
 						game.setFocusable(true);
 						game.requestFocusInWindow();
 						game.init();
+						if(AsteroidsGame.getNumLivesP1() == 0){
+							remove(game); //remove the Play Game sub-menu from frame
+							add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+							revalidate(); //refresh frame
+							Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+							Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+							countPlay = 0; //reset pointer position in Play Game sub-menu to top option
+						}
+						
 						break;
-					case 1: //If second option selected "Multiplayer"
+					case 2: //If second option selected "Multiplayer"
 						//Start a Multiplayer game
 						System.out.println("Multiplayer Game Selected");
 						break;
-					case 2: //If third option selected "Back to Main Menu"
+					case 3: //If third option selected "Back to Main Menu"
 						remove(Constants.PLAY_GAME_PANEL); //remove the Play Game sub-menu from frame
 						add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
 						revalidate(); //refresh frame
@@ -315,6 +331,10 @@ public class MainMenu extends JFrame{
 		}
 		
 
+	}
+	
+	public static int getDifficulty(){
+		return difficultyLevel;
 	}
 	
 	//Return the background Image
@@ -524,41 +544,86 @@ class PlayGamePanel extends JPanel{
 		g.setFont(Constants.MENU_FONT);
 		//Used to obtain measurements of the Font used in the Play Game Sub-menu
 		FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
+		
+		int difficultyX = 10;
+		int difficultyY = getHeight() / 5;
+		int easyX = getWidth() - metrics.stringWidth("EASY") - 20;
+		int normalX = getWidth() - metrics.stringWidth("NORMAL") - 20;
+		int hardX = getWidth() - metrics.stringWidth("HARD") - 20;
 		//X and Y positions of the Single Player option calculated
 		int singlePlayerX = getWidth()/2 - metrics.stringWidth("Single Player")/2; //Center text
-		int singlePlayerY = getHeight() / 4;
+		int singlePlayerY = 2 * getHeight() / 5;
 		//X and Y positions of the Multiplayer option calculated
 		int multiplayerX = getWidth() / 2 - metrics.stringWidth("Multiplayer") / 2; //Center text
-		int multiplayerY = 2 * getHeight() / 4;
+		int multiplayerY = 3 * getHeight() / 5;
 		//X and Y positions of the Back to Main Menu option calculated
 		int mainMenuX = getWidth() / 2 - metrics.stringWidth("Back to Main Menu") / 2; //Center text
-		int mainMenuY = 3 * getHeight() / 4;
-
+		int mainMenuY = 4 * getHeight() / 5;
+		
 		/*
 		 * This set of code is conditions to check where the pointer position
 		 * is in the Main Menu. The text is added accordingly with the option
 		 * corresponding to the pointer position having a White text color and
 		 * the other options remaining grayed out (Gray font color)
 		 */
-		switch(MainMenu.getPlayGamePointerPosition() % 3){
+		switch(MainMenu.getPlayGamePointerPosition() % 4){
 		case 0:
 			g.setColor(Color.WHITE);
-			g.drawString("Single Player", singlePlayerX, singlePlayerY);
+			g.drawString("Difficulty", difficultyX, difficultyY);
+			if(MainMenu.getDifficulty() == 1){
+				g.drawString("EASY", easyX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 2){
+				g.drawString("NORMAL", normalX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 3){
+				g.drawString("HARD", hardX, difficultyY);
+			}
 			g.setColor(Color.GRAY);
+			g.drawString("Single Player", singlePlayerX, singlePlayerY);
 			g.drawString("Multiplayer", multiplayerX, multiplayerY);
 			g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
 			break;
 		case 1:
 			g.setColor(Color.WHITE);
-			g.drawString("Multiplayer", multiplayerX, multiplayerY);
-			g.setColor(Color.GRAY);
 			g.drawString("Single Player", singlePlayerX, singlePlayerY);
+			g.setColor(Color.GRAY);
+			g.drawString("Difficulty", difficultyX, difficultyY);
+			if(MainMenu.getDifficulty() == 1){
+				g.drawString("EASY", easyX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 2){
+				g.drawString("NORMAL", normalX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 3){
+				g.drawString("HARD", hardX, difficultyY);
+			}
+			g.drawString("Multiplayer", multiplayerX, multiplayerY);
 			g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
 			break;
 		case 2:
 			g.setColor(Color.WHITE);
+			g.drawString("Multiplayer", multiplayerX, multiplayerY);
+			g.setColor(Color.GRAY);
+			g.drawString("Difficulty", difficultyX, difficultyY);
+			if(MainMenu.getDifficulty() == 1){
+				g.drawString("EASY", easyX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 2){
+				g.drawString("NORMAL", normalX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 3){
+				g.drawString("HARD", hardX, difficultyY);
+			}
+			g.drawString("Single Player", singlePlayerX, singlePlayerY);
+			g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
+			break;
+		case 3:
+			g.setColor(Color.WHITE);
 			g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
 			g.setColor(Color.GRAY);
+			g.drawString("Difficulty", difficultyX, difficultyY);
+			if(MainMenu.getDifficulty() == 1){
+				g.drawString("EASY", easyX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 2){
+				g.drawString("NORMAL", normalX, difficultyY);
+			}else if(MainMenu.getDifficulty() == 3){
+				g.drawString("HARD", hardX, difficultyY);
+			}
 			g.drawString("Single Player", singlePlayerX, singlePlayerY);
 			g.drawString("Multiplayer", multiplayerX, multiplayerY);
 			break;

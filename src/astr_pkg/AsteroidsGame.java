@@ -31,6 +31,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static int respawnTime;
     private static int delay, level, difficulty, startAstr;
     private static boolean nextWave, levelUp;
+    private Clip thrusterSound;
      
         
 	public void init(){
@@ -38,23 +39,41 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		levelUp = true;
 		delay = 100;
 		level = 1;
-		startAstr = 1;
+		startAstr = 10;
 		difficulty = 1; //change when implement difficulty selection 
+		
 		setScoreFont();
+		initializeSounds();
+		
 		startTime = 0;
 		endTime = 0;
 		frameRate = 25;
 		respawnTime = 0;
 		addKeyListener(this);
-		ship = new Ship(400, 300, 0, .35, .98, .1);
-		//double speed = 20*Math.random();
-		//double asteroidTheta = Math.random()*2*Math.PI;
 		Asteroid.generateAsteroids(startAstr);
 		Alien.generateAliens(count);
         thread = new Thread(this);
 		thread.start();
 	}
 
+	private void initializeSounds(){
+		try {
+			File thrusters = new File("src/thrust.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(thrusters);
+			thrusterSound = AudioSystem.getClip();
+			thrusterSound.open(audioIn);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
 	private void setScoreFont(){
 		try {
 			scoreFont = Font.createFont(Font.TRUETYPE_FONT, 
@@ -72,6 +91,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		}
 	}
 	
+
+	public void playThrusterSound(){
+		thrusterSound.setFramePosition(0);
+		thrusterSound.loop(Clip.LOOP_CONTINUOUSLY);
+	}
+	
 	public static void setRespawnTime(int time){
 		respawnTime = time;
 	}
@@ -84,21 +109,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-//		if(e.getKeyCode() == KeyEvent.VK_LEFT && !MainMenu.isControlWasd()){
-//			ship.setTurningLeft(true);
-//		}else if(e.getKeyCode() == KeyEvent.VK_A && MainMenu.isControlWasd()){
-//			ship.setTurningLeft(true);
-//		}else if(e.getKeyCode() == KeyEvent.VK_RIGHT && !MainMenu.isControlWasd()){
-//			ship.setTurningRight(true);
-//		}else if(e.getKeyCode() == KeyEvent.VK_D && MainMenu.isControlWasd()){
-//			ship.setTurningRight(true);
-//		}
-
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
-			case KeyEvent.VK_SPACE:
-				Constants.SHIP.makeItRain(true);
-				break;
 			case KeyEvent.VK_A:
 				Constants.SHIP.setTurningLeft(true);
 				break;
@@ -107,13 +119,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(true);
+//				playThrusterSound();
 				break;
 			
 			}
 		}else{
 			switch(e.getKeyCode()){
-			case KeyEvent.VK_SPACE:
-				Constants.SHIP.makeItRain(true);
 			case KeyEvent.VK_LEFT:
 				Constants.SHIP.setTurningLeft(true);
 				break;
@@ -122,17 +133,13 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_UP:
 				Constants.SHIP.setAccelerating(true);
+//				playThrusterSound();
 				break;
 			}
 		}
-//		if(e.getKeyCode() == KeyEvent.VK_SPACE){
-//			if(Constants.SHIP.shotWaitLeft <= 0){
-//				Constants.SHIP.makeItRain(true);
-////				System.out.println(clip.getMicrosecondLength());
-////				clip.setFramePosition(0);
-////				clip.start();
-//			}
-//		}
+		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			Constants.SHIP.makeItRain(true);
+		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			System.exit(0);
@@ -142,10 +149,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if(MainMenu.isControlWasd()){
-			
 			switch(e.getKeyCode()){
-			case KeyEvent.VK_SPACE:
-				Constants.SHIP.makeItRain(false);
 			case KeyEvent.VK_A:
 				Constants.SHIP.setTurningLeft(false);
 				break;
@@ -154,12 +158,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(false);
+//				thrusterSound.stop();
+//				thrusterSound.setFramePosition(0);
 				break;
 			}
 		}else{
 			switch(e.getKeyCode()){
-			case KeyEvent.VK_SPACE:
-				Constants.SHIP.makeItRain(false);
 			case KeyEvent.VK_LEFT:
 				Constants.SHIP.setTurningLeft(false);
 				break;
@@ -168,8 +172,13 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_UP:
 				Constants.SHIP.setAccelerating(false);
+//				thrusterSound.stop();
+//				thrusterSound.setFramePosition(0);
 				break;
 			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			Constants.SHIP.makeItRain(false);
 		}
 		
 	}
@@ -195,7 +204,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				}
 				if(delay <= 0){
 					delay = 100;
-					level++;
 					startAstr += difficulty;
 					Asteroid.generateAsteroids(startAstr);
 					nextWave = false;

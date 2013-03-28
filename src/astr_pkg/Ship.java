@@ -30,8 +30,6 @@ public class Ship {
 	
 	private ArrayList<Projectiles> projectiles;
 	
-	private int score;
-	
 	public Ship(double x, double y, double theta, double acceleration,
 			double decelerationRate, double rotationSpeed){
 		this.x = x;
@@ -51,7 +49,6 @@ public class Ship {
 		xThrusters = new int[6];
 		yThrusters = new int[6];
 		projectiles = new ArrayList<Projectiles>();
-		score = 0;
 	}
 	
 	public double getX(){
@@ -111,7 +108,9 @@ public class Ship {
 				Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
 						theta);
 				projectiles.add(p);
-				p.playShotSound();
+				if(MainMenu.isSfxOn() && !Constants.LINUX){
+					p.playShotSound();
+				}
 				shotWaitLeft = shotWait;
 			}
 		}

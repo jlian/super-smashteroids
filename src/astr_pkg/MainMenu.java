@@ -36,60 +36,11 @@ public class MainMenu extends JFrame{
 	private static Clip background_music;
 
 	public MainMenu(){
-
-		/*
-		 * Code for getting an audio file to be accessible for playback
-		 * Clip Class is used for this.
-		 */
-		try {
-			File menuSelection = new File("src/astr_pkg/menu_select.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
-			menu_select = AudioSystem.getClip();
-			menu_select.open(audioIn);
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		
+		if(!Constants.LINUX){
+			initializeSounds();
 		}
 		
-		try {
-			File menuValidation = new File("src/astr_pkg/menu_validate.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuValidation);
-			menu_validate = AudioSystem.getClip();
-			menu_validate.open(audioIn);
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			File backgroundMusic = new File("src/astr_pkg/background_music.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(backgroundMusic);
-			background_music = AudioSystem.getClip();
-			background_music.open(audioIn);
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-
 		add(Constants.MAIN_MENU_PANEL); //Add panel, which has main menu options, to the frame
 		Constants.MAIN_MENU_PANEL.setFocusable(true);//Make this panel able to detect key presses
 		Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
@@ -99,7 +50,7 @@ public class MainMenu extends JFrame{
 				switch(e.getKeyCode()){
 				case KeyEvent.VK_DOWN: //If down arrow key pressed,
 					countMain++; //increment count --> move down the list of options
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ //If the clip is still running
 							menu_select.stop(); //Stop playback
 						}
@@ -112,7 +63,7 @@ public class MainMenu extends JFrame{
 					if (countMain < 0){ //Keep value positive as to keep proper track of the
 						countMain = 3; //keyboard pointer location.				
 					}
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop();
 						}
@@ -121,7 +72,7 @@ public class MainMenu extends JFrame{
 					}
 					break;
 				case KeyEvent.VK_ENTER: //If the Enter key is pressed, depending on the option selected
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_validate.isRunning()){ 
 							menu_validate.stop(); 
 						}
@@ -164,7 +115,7 @@ public class MainMenu extends JFrame{
 				switch(e.getKeyCode()){
 				case KeyEvent.VK_DOWN: //If down arrow key pressed
 					countPlay++; // move down list of options
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop(); 
 						}
@@ -177,7 +128,7 @@ public class MainMenu extends JFrame{
 					if(countPlay < 0){ //Keep value positive as to keep proper track of the
 						countPlay = 2; //keyboard pointer location.	
 					}
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop(); 
 						}
@@ -186,7 +137,7 @@ public class MainMenu extends JFrame{
 					}
 					break;
 				case KeyEvent.VK_ENTER://If enter key pressed
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_validate.isRunning()){ 
 							menu_validate.stop(); 
 						}
@@ -201,11 +152,7 @@ public class MainMenu extends JFrame{
 						AsteroidsGame game = new AsteroidsGame();
 						add(game);
 						revalidate();
-						if (musicVolume) {
-//							if(background_music.isRunning()){ 
-//								background_music.stop(); 
-//							}
-//							background_music.setFramePosition(0); 
+						if (musicVolume && !Constants.LINUX) {
 							background_music.loop(Clip.LOOP_CONTINUOUSLY);
 						}
 						game.setFocusable(true);
@@ -236,7 +183,7 @@ public class MainMenu extends JFrame{
 				switch(e.getKeyCode()){
 				case KeyEvent.VK_DOWN: //If down arrow key pressed
 					countOptions++; //move down list of options
-					if(sfxVolume) {
+					if(sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop(); 
 						}
@@ -249,7 +196,7 @@ public class MainMenu extends JFrame{
 					if(countOptions < 0){ //Keep value positive as to keep proper track of the
 						countOptions = 3; //keyboard pointer location
 					}
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_select.isRunning()){ 
 							menu_select.stop(); 
 						}
@@ -258,7 +205,7 @@ public class MainMenu extends JFrame{
 					}
 					break;
 				case KeyEvent.VK_ENTER: //If Enter key pressed
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_validate.isRunning()){ 
 							menu_validate.stop(); 
 						}
@@ -314,7 +261,7 @@ public class MainMenu extends JFrame{
 			public void keyPressed(KeyEvent e){
 				switch(e.getKeyCode()){
 				case KeyEvent.VK_ENTER://If enter key pressed
-					if (sfxVolume) {
+					if (sfxVolume && !Constants.LINUX) {
 						if(menu_validate.isRunning()){ 
 							menu_validate.stop(); 
 						}
@@ -336,6 +283,40 @@ public class MainMenu extends JFrame{
 		
 	}
 
+	public static void initializeSounds(){
+		/*
+		 * Code for getting an audio file to be accessible for playback
+		 * Clip Class is used for this.
+		 */
+		try {
+			File menuSelection = new File("src/astr_pkg/menu_select.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+			menu_select = AudioSystem.getClip();
+			menu_select.open(audioIn);
+			
+			File menuValidation = new File("src/astr_pkg/menu_validate.wav");
+			AudioInputStream audioIn2 = AudioSystem.getAudioInputStream(menuValidation);
+			menu_validate = AudioSystem.getClip();
+			menu_validate.open(audioIn2);
+			
+			File backgroundMusic = new File("src/astr_pkg/background_music.wav");
+			AudioInputStream audioIn3 = AudioSystem.getAudioInputStream(backgroundMusic);
+			background_music = AudioSystem.getClip();
+			background_music.open(audioIn3);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+
+	}
+	
 	//Return the background Image
 	public static ImageIcon getBackgroundImage(){
 		return background;

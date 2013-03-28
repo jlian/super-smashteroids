@@ -20,7 +20,7 @@ public class Ship {
 	
 	private Rectangle2D rect;
 	
-	private boolean accelerating, turningLeft, turningRight, active;
+	private boolean accelerating, turningLeft, turningRight, active, alive;
 	
 	boolean fire;
 	
@@ -29,6 +29,9 @@ public class Ship {
 	private int[] xPts, yPts, xThrusters, yThrusters, hitXPts, hitYPts;
 	
 	private ArrayList<Projectiles> projectiles;
+	
+	public static final int RESPAWN_TIME = 80;
+	private int respawnTime;
 	
 	public Ship(double x, double y, double theta, double acceleration,
 			double decelerationRate, double rotationSpeed){
@@ -39,9 +42,11 @@ public class Ship {
 		this.rotationSpeed = rotationSpeed;
 		this.decelerationRate = decelerationRate;
 		xVelocity = yVelocity = 0;
+		respawnTime = 0;
 		turningLeft = turningRight = false;
 		accelerating = false;
 		active = true;
+		alive = true;
 		xPts = new int[4];
 		yPts = new int[4];
 		hitXPts = new int[4];
@@ -87,6 +92,35 @@ public class Ship {
 		return acceleration;
 	}
 	
+	public void incrementRespawnTime(){
+		respawnTime++;
+	}
+	
+	public void resetRespawnTime(){
+		respawnTime = 0;
+	}
+	
+	public int getRespawnTime(){
+		return respawnTime;
+	}
+	
+	public void setAlive(boolean isAlive){
+		alive = isAlive;
+	}
+	
+	public boolean isAlive(){
+		return alive;
+	}
+	
+	public void reset(){
+		x = 400;
+		y = 300;
+		theta = 0;
+		xVelocity = yVelocity = 0;
+		turningLeft = turningRight = false;
+		accelerating = false;
+	}
+	
 	public Rectangle2D getBounds(){
 		return rect;
 	}
@@ -99,6 +133,21 @@ public class Ship {
 //		projectiles.add(p);
 //		p.playShotSound();
 	}
+	
+	public void checkCollisionProjectile(){
+		Polygon shipPoly = new Polygon(xPts, yPts, 4);
+		for(int j = 0; j < Alien.getAliens().length; j++){
+			for(int i = 0; i < Alien.getAliens()[j].getShots().size(); i++){
+				if(shipPoly.intersects(Alien.getAliens()[j].getShots().get(i).getProjectileBounds())){
+					Alien.getAliens()[j].getShots().remove(i);
+					Constants.SHIP.setAlive(false);
+					return;
+				}
+			}
+		}
+        
+    }
+	
 	public void move(int screenWidth, int screenHeight){
 		if(shotWaitLeft > 0){
 			shotWaitLeft--;
@@ -183,7 +232,7 @@ public class Ship {
 
 		g.setColor(Color.WHITE);
 		g.fillPolygon(xPts, yPts, 4);
-		
+		checkCollisionProjectile();
 //		g.setColor(Color.RED);
 //		Graphics2D g2D = (Graphics2D) g;
 //		g2D.draw(rect);

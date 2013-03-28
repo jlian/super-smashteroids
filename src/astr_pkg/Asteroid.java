@@ -71,7 +71,10 @@ public class Asteroid {
 		yPts = new int[8]; //Insert number of polygon points here
 //		hitXPts = new int[4];
 //		hitYPts = new int[4];
-		initializeSound();
+		
+		if(MainMenu.isSfxOn() && !Constants.LINUX){
+			initializeSound();
+		}
 	}
 	
 	public static int getPointsP1(){
@@ -184,7 +187,7 @@ public class Asteroid {
 	
 	public boolean collisionShip(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
-		if(p.intersects(Constants.SHIP.getBounds()) && invulnerable <= 0){
+		if(Constants.SHIP.getBounds() != null && p.intersects(Constants.SHIP.getBounds()) && invulnerable <= 0){
 			
 			return true;
 		}
@@ -195,7 +198,9 @@ public class Asteroid {
 		for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 			if(p.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
 				Constants.SHIP.getProjectiles().remove(i);
-				this.playHitSound();
+				if(MainMenu.isSfxOn() && !Constants.LINUX){
+					this.playHitSound();
+				}
 				scoreX[i] = (int) this.x;
 				scoreY[i] = (int) this.y;
 				scoreTime[i] = 160;
@@ -225,9 +230,11 @@ public class Asteroid {
 		for(int i = 0; i < arrayAsteroid.size(); i++){
 			Asteroid a = arrayAsteroid.get(i);
 			g.setColor(Color.WHITE); //Are the asteroids also going to be white?
-			if(a.collisionShip() || a.collisionProjectile()){
-				g.setColor(Color.red);
-			}
+//			if(a.collisionShip() || a.collisionProjectile()){
+//				g.setColor(Color.red);
+//			}
+			a.collisionShip();
+			a.collisionProjectile();
 			
 			g.setColor(Color.WHITE);
 			g.fillPolygon(a.xPts, a.yPts, 8); //Probably needs to be changed.
@@ -247,29 +254,5 @@ public class Asteroid {
 			}
 		}
 	}
-	
-	public void whenHit(){
-		onScreen = false;
-		if (size <2) { return;}
-	}
-	
 
-	//collision stuff
-//	public Asteroid whenHit(boolean firstAsteroid){
-//		if(this.size==1){return null;}
-//		else{
-//			int popPop = 1;
-//			if(!firstAsteroid){popPop = -1;} 
-//			
-//			double newThetaImage = Math.random()*2*Math.PI;
-//			double newThetaVelocity = popPop*Math.random()*Math.PI/4+this.thetaVelocity;
-//			//ADJUST Speed constant i.e 1
-//			double newSpeed = 1*Math.random();
-//			double newVx = newSpeed*Math.cos(newThetaVelocity);
-//			double newVy = newSpeed*Math.sin(newThetaVelocity);
-//			
-//			Asteroid breakup = new Asteroid(this.x, this.y, newThetaImage, newThetaVelocity, newVx, newVy, this.size--);
-//			return breakup;
-//		}
-//	}
 }

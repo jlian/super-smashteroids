@@ -32,7 +32,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static int numLivesP1;
     private Clip thrusterSound;
     private static ImageIcon gameBackground = new ImageIcon("src/astr_pkg/BG-game.jpg");
-        
+    private boolean blowup = true;
+    private static ImageIcon explosion = new ImageIcon("src/astr_pkg/explosion.gif");
+    private static int count = 0;
 	public void init(){
 		nextWave = false;
 		levelUp = true;
@@ -111,6 +113,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	
 	public static ImageIcon getGameBackground(){
 		return gameBackground;
+	}
+	
+	public static ImageIcon getExplosion(){
+		return explosion;
 	}
 	
 	@Override
@@ -274,8 +280,15 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		Alien.drawAlien(g);
         if(Constants.SHIP.isAlive()){
         	Constants.SHIP.drawShip(g);
-        }else{
-        	Constants.SHIP.reset();
+        }else if(blowup){
+        	if(count<283){
+        		g.drawImage(getExplosion().getImage(), (int) Constants.SHIP.getX()-180, (int) Constants.SHIP.getY()-180, this);
+        		count++;
+        	}
+        	else{
+        		blowup = false;
+        		count = 0;
+        	}
         }
         if(!Constants.SHIP.isAlive()){
 			if(Constants.SHIP.getRespawnTime() < 80){
@@ -283,6 +296,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			}else{
 				Constants.SHIP.resetRespawnTime();
 				Constants.SHIP.setAlive(true);
+				blowup = true;
 				numLivesP1--;
 			}
 		}

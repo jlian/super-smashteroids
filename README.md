@@ -11,7 +11,7 @@ This game is developed by Omar Abdelkader, John Lian, Henry Lu, Charlie Marokhov
 How to Run
 ---------------
 
- git clone https://github.com/winter2013-ecse321-mcgill/team3.git
+	git clone https://github.com/winter2013-ecse321-mcgill/team3.git
 	cd team3/src
 	javac astr_pkg/MainMenu.java
 	java astr_pkg/MainMenu

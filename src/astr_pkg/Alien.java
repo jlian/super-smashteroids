@@ -85,7 +85,7 @@ public class Alien {
         for(int i = 0; i < scoreX.length; i++){
 			if(scoreX[i] != 0 || scoreY[i] != 0){ //There is a score
 				if(scoreTime[i] > 0){
-					g.setFont(new Font("Times-Roman", Font.BOLD, 12));
+					g.setFont(new Font("Arial", Font.BOLD, 12));
 					g.setColor(Color.RED);
 					g.drawString("" + scoreValue, scoreX[i], scoreY[i]);
 					scoreTime[i]--;

@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.io.*;
 
 import javax.sound.sampled.*;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
@@ -30,7 +31,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static boolean nextWave, levelUp;
     private static int numLivesP1;
     private Clip thrusterSound;
-     
+    private static ImageIcon gameBackground = new ImageIcon("src/astr_pkg/BG-game.jpg");
         
 	public void init(){
 		nextWave = false;
@@ -106,6 +107,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	
 	public static int getNumLivesP1(){
 		return numLivesP1;
+	}
+	
+	public static ImageIcon getGameBackground(){
+		return gameBackground;
 	}
 	
 	@Override
@@ -262,7 +267,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		// TODO Auto-generated method stub
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
+		
 		g.fillRect(0, 0, 800, 600);
+		g.drawImage(getGameBackground().getImage(), 0, 0, getWidth(), getHeight(), this);
 		Asteroid.drawAsteroid(g);
 		Alien.drawAlien(g);
         if(Constants.SHIP.isAlive()){

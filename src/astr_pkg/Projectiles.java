@@ -108,7 +108,7 @@ public class Projectiles {
 		shootArray = Constants.SHIP.getProjectiles();
 		for(int i = 0; i<shootArray.size(); i++){
 			Projectiles p = shootArray.get(i);
-			g2D.setColor(new Color(51, 153, 255));
+			g2D.setColor(new Color(0, 216, 65));
 			g2D.fillOval((int) p.getX(),  (int)p.getY(), 4, 4);
 			
 		}

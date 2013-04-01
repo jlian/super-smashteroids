@@ -109,7 +109,7 @@ public class ProjectilesAliens {
 				shootArray = Alien.getAliens()[i].getShots();
 				for(int j = 0; j < shootArray.size(); j++){
 					ProjectilesAliens p = shootArray.get(j);
-					g2D.setColor(new Color(51, 153, 255));
+					g2D.setColor(new Color(255, 0, 0));
 					g2D.fillOval((int) p.getX(),  (int)p.getY(), 4, 4);
 				}
 			}

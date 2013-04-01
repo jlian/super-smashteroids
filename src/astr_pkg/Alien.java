@@ -31,7 +31,7 @@ public class Alien {
         yPos = alienYPos;
         shipX = shipXPos;
         shipY = shipYPos;
-        AlienImage = new ImageIcon("src/astr_pkg/Alien.png").getImage();
+        AlienImage = new ImageIcon("src/astr_pkg/AlienM.png").getImage();
         alienHeight = AlienImage.getHeight(null);
         alienWidth = AlienImage.getWidth(null);
         projectiles = new ArrayList<ProjectilesAliens>();

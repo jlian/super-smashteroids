@@ -1,129 +1,54 @@
-Team 3 - SuperSmashteroids
-===========
+Team 3 - Super Smashteroids
+===============
 
-The Game
------------
-SuperSmashteroids is a replica of the original Asteroids game.
+An Asteroids-inspired (1979 game, by Atari) game written in Java.
 
-Paragraphs are separated by a blank line.
+Implementers
+------------------
 
-2nd paragraph. *Italic*, **bold**, `monospace`. Itemized lists
-look like:
+This game is developed by Omar Abdelkader, John Lian, Henry Lu, Charlie Marokhovsky, Nicolas Martin, and Andrew Penhale. 
 
-  * this one
-  * that one
-  * the other one
+How to Run
+---------------
 
-Note that --- not considering the asterisk --- the actual text
-content starts at 4-columns in.
+	git clone https://github.com/winter2013-ecse321-mcgill/team3.git
+	cd team3/src
+	javac astr_pkg/MainMenu.java
+	java astr_pkg/MainMenu
 
-> Block quotes are
-> written like so.
->
-> They can span multiple paragraphs,
-> if you like.
+It would be preferable to have `javac -version` of 1.7.0 or above.
 
-Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex. "it's all in
-chapters 12--14"). Three dots ... will be converted to an ellipsis.
+How to Play 
+---------------
 
+### Moving
 
+By default:
 
-An h2 header
-------------
+- W: accelerate
+- A: turn left
+- D: turn right
+- Space: shoot
 
-Here's a numbered list:
+Alternative, if changed in options:
 
- 1. first item
- 2. second item
- 3. third item
+- Up: accelerate
+- Left: turn left
+- Right: turn right
+- Space: shoot
 
-Note again how the actual text starts at 4 columns in (4 characters
-from the left side). Here's a code sample:
+### Quitting
 
-    # Let me re-iterate ...
-    for i in 1 .. 10 { do-something(i) }
+- ESC: pause the game
 
-As you probably guessed, indented 4 spaces. By the way, instead of
-indenting the block, you can use delimited blocks, if you like:
+Known Issues
+------------------
 
-~~~
-define foobar() {
-    print "Welcome to flavor country!";
-}
-~~~
+- Currently, if the program is compiled outside of Eclipse (our chosen IDE), anything resources (fonts, images, music) cannot be used by the game due to directory issues. We are working on it. 
+- Once all the lives run out, the game crashes. We are working on a fix.
+- Background music currently doesn’t work on UNIX systems.
 
-(which makes copying & pasting easier). You can optionally mark the
-delimited block for Pandoc to syntax highlight it:
+Dependencies
+------------------
 
-~~~python
-import time
-# Quick, count to ten!
-for i in range(10):
-    # (but not *too* quick)
-    time.sleep(0.5)
-    print i
-~~~
-
-
-
-### An h3 header ###
-
-Now a nested list:
-
- 1. First, get these ingredients:
-
-      * carrots
-      * celery
-      * lentils
-
- 2. Boil some water.
-
- 3. Dump everything in the pot and follow
-    this algorithm:
-
-        find wooden spoon
-        uncover pot
-        stir
-        cover pot
-        balance wooden spoon precariously on pot handle
-        wait 10 minutes
-        goto first step (or shut off burner when done)
-
-    Do not bump wooden spoon or it will fall.
-
-Notice again how text always lines up on 4-space indents (including
-that last line which continues item 3 above). Here's a link to [a
-website](http://foo.bar). Here's a link to a [local
-doc](local-doc.html). Here's a footnote [^1].
-
-[^1]: Footnote text goes here.
-
-Tables can look like this:
-
-size  material      color
-----  ------------  ------------
-9     leather       brown
-10    hemp canvas   natural
-11    glass         transparent
-
-Table: Shoes, their sizes, and what they're made of
-
-(The above is the caption for the table.) Here's a definition list:
-
-apples
-  : Good for making applesauce.
-oranges
-  : Citrus!
-tomatoes
-  : There's no "e" in tomatoe.
-
-Again, text is indented 4 spaces. (Alternately, put blank lines in
-between each of the above definition list lines to spread things
-out more.)
-
-Inline math equations go in like so: $\omega = d\phi / dt$. Display
-math should get its own line and be put in in double-dollarsigns:
-
-$$I = \int \rho R^{2} dV$$
-
-Done.
+Super Smasteroids needs the latest version of Java installed to compile and run successfully. 

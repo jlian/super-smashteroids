@@ -190,6 +190,9 @@ public class Asteroid {
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
 		if(Constants.SHIP.getBounds() != null && p.intersects(Constants.SHIP.getBounds()) && 
 				Constants.SHIP.isAlive()){
+			if(MainMenu.isSfxOn() && !Constants.LINUX){
+				this.playHitSound();
+			}
 			Constants.SHIP.setAlive(false);
 			return true;
 		}

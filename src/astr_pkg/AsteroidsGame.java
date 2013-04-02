@@ -33,7 +33,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private Clip thrusterSound;
     private static ImageIcon gameBackground = new ImageIcon("src/astr_pkg/BG-game.jpg");
     private boolean blowup = true;
-    private static ImageIcon explosion = new ImageIcon("src/astr_pkg/explosion.gif");
+    private static ImageIcon shipExplosion = new ImageIcon("src/astr_pkg/explosion.gif");
     private static int count = 0;
 	public void init(){
 		nextWave = false;
@@ -116,7 +116,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	}
 	
 	public static ImageIcon getExplosion(){
-		return explosion;
+		return shipExplosion;
 	}
 	
 	@Override
@@ -273,27 +273,30 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		// TODO Auto-generated method stub
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
-		
 		g.fillRect(0, 0, 800, 600);
 		g.drawImage(getGameBackground().getImage(), 0, 0, getWidth(), getHeight(), this);
 		Asteroid.drawAsteroid(g);
 		Alien.drawAlien(g);
         if(Constants.SHIP.isAlive()){
         	Constants.SHIP.drawShip(g);
-        }else if(blowup){
-        	if(count<283){
+        }
+        else if(blowup){
+        	if(count<282){
         		g.drawImage(getExplosion().getImage(), (int) Constants.SHIP.getX()-180, (int) Constants.SHIP.getY()-180, this);
         		count++;
         	}
         	else{
+        		Constants.SHIP.reset();
         		blowup = false;
         		count = 0;
+        		
         	}
         }
         if(!Constants.SHIP.isAlive()){
 			if(Constants.SHIP.getRespawnTime() < 80){
 				Constants.SHIP.incrementRespawnTime();
 			}else{
+				Constants.SHIP.reset();
 				Constants.SHIP.resetRespawnTime();
 				Constants.SHIP.setAlive(true);
 				blowup = true;

@@ -9,7 +9,7 @@ public class Alien {
     
     private static Image AlienImage;
     double shipX, shipY, xPos, yPos;
-    private static double lastX, lastY;
+//    private static double lastX, lastY;
     int xVelocity, yVelocity;
     private static Alien[] aliens;
     private static int drawDelay = 25;
@@ -25,6 +25,7 @@ public class Alien {
     private static int[] scoreX;
 	private static int[] scoreY;
 	private static int[] scoreTime;
+	private static int[] deathTimer;
 	private static final int scoreValue = 100;
 	
 //	private static int count = 0;
@@ -54,6 +55,7 @@ public class Alien {
         scoreX = new int[numAliens];
 		scoreY = new int[numAliens];
 		scoreTime = new int[numAliens];
+		deathTimer = new int[numAliens];
     }
     
     public static Alien[] getAliens(){
@@ -87,17 +89,18 @@ public class Alien {
         		g.drawImage(AlienImage, (int)aliens[i].xPos, (int)aliens[i].yPos, null);
         		aliens[i].collisionShip();
         		aliens[i].checkCollisionProjectile();
-        		if(collision){
+//        		if(collision){
 //        			if(count<282){
 //                		g.drawImage(getAlienExplosion().getImage(), scoreX[i], scoreY[i], null);
 //                		count++;
+//                		System.out.println(+ count);
 //                	}
 //        			else{
 //        				count = 0;
 //                		collision = false;
 //        			}
-                	
-        		}
+//                	
+//        		}
         	}  
         }
         if(drawDelay < 0 && alienCount < aliens.length){
@@ -112,9 +115,13 @@ public class Alien {
 					g.setFont(new Font("Arial", Font.BOLD, 12));
 					g.setColor(Color.RED);
 					g.drawString("" + scoreValue, scoreX[i], scoreY[i]);
-					g.drawImage(getAlienExplosion().getImage(), scoreX[i]-40, scoreY[i]-40, null);
+//					g.drawImage(getAlienExplosion().getImage(), scoreX[i]-40, scoreY[i]-40, null);
 					scoreTime[i]--;
 					scoreY[i] -= 1;
+				}
+				if(deathTimer[i] > 0) {
+					g.drawImage(getAlienExplosion().getImage(), scoreX[i]-40, scoreY[i]-40, null); // draw the explosion for as long as the timer
+					deathTimer[i]--;
 				}
 			}
 		}
@@ -227,6 +234,7 @@ public class Alien {
 //						lastX = aliens[i].xPos;
 //						lastY = aliens[i].yPos;
 						scoreTime[j] = 80;
+						deathTimer[j] = 43;
 						aliens[j] = null;
 						numberOfAliens--;
 						pointsPlayer1 += scoreValue;

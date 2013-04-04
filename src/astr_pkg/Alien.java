@@ -9,7 +9,6 @@ public class Alien {
     
     private static Image AlienImage;
     double shipX, shipY, xPos, yPos;
-//    private static double lastX, lastY;
     int xVelocity, yVelocity;
     private static Alien[] aliens;
     private static int drawDelay = 25;
@@ -28,9 +27,9 @@ public class Alien {
 	private static int[] deathTimer;
 	private static final int scoreValue = 100;
 	
-//	private static int count = 0;
+	private static int shootDelay;
+	
 	private static ImageIcon alienExplosion = new ImageIcon("src/astr_pkg/explosion3.gif");
-    private static boolean collision = false;
 	
     public Alien(double alienXPos, double alienYPos, double shipXPos, double shipYPos){
         xPos = alienXPos;
@@ -41,6 +40,15 @@ public class Alien {
         alienHeight = AlienImage.getHeight(null);
         alienWidth = AlienImage.getWidth(null);
         projectiles = new ArrayList<ProjectilesAliens>();
+        if(MainMenu.getDifficulty()==1){
+        	shootDelay = 100;
+        }
+        else if(MainMenu.getDifficulty()==2){
+        	shootDelay = 80;
+        }
+        else if(MainMenu.getDifficulty()==3){
+        	shootDelay=60;
+        }
     }
     
     public static void generateAliens(int numAliens){
@@ -89,18 +97,6 @@ public class Alien {
         		g.drawImage(AlienImage, (int)aliens[i].xPos, (int)aliens[i].yPos, null);
         		aliens[i].collisionShip();
         		aliens[i].checkCollisionProjectile();
-//        		if(collision){
-//        			if(count<282){
-//                		g.drawImage(getAlienExplosion().getImage(), scoreX[i], scoreY[i], null);
-//                		count++;
-//                		System.out.println(+ count);
-//                	}
-//        			else{
-//        				count = 0;
-//                		collision = false;
-//        			}
-//                	
-//        		}
         	}  
         }
         if(drawDelay < 0 && alienCount < aliens.length){
@@ -115,7 +111,6 @@ public class Alien {
 					g.setFont(new Font("Arial", Font.BOLD, 12));
 					g.setColor(Color.RED);
 					g.drawString("" + scoreValue, scoreX[i], scoreY[i]);
-//					g.drawImage(getAlienExplosion().getImage(), scoreX[i]-40, scoreY[i]-40, null);
 					scoreTime[i]--;
 					scoreY[i] -= 1;
 				}
@@ -166,7 +161,7 @@ public class Alien {
     }
     
     public void shoot(){
-        if(shoot >= 50 && Constants.SHIP.isAlive()){
+        if(shoot >= shootDelay && Constants.SHIP.isAlive()){
         	double deltaX = shipX - xPos;
         	double deltaY = shipY - yPos;
             double theta = Math.atan2(deltaY, deltaX);
@@ -225,16 +220,13 @@ public class Alien {
     public void checkCollisionProjectile(){
         for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
     		if(circle.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
-    			collision = true;
     			Constants.SHIP.getProjectiles().remove(i);
 				for(int j = 0; j < aliens.length; j++){
 					if(aliens[j] != null && aliens[j].equals(this)){
 						scoreX[j] = (int) this.xPos;
 						scoreY[j] = (int) this.yPos;
-//						lastX = aliens[i].xPos;
-//						lastY = aliens[i].yPos;
 						scoreTime[j] = 80;
-						deathTimer[j] = 43;
+						deathTimer[j] = 75;
 						aliens[j] = null;
 						numberOfAliens--;
 						pointsPlayer1 += scoreValue;

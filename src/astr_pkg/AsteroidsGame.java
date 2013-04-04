@@ -281,7 +281,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
         	Constants.SHIP.drawShip(g);
         }
         else if(blowup){
-        	if(count<282){
+        	if(count<285){
         		g.drawImage(getExplosion().getImage(), (int) Constants.SHIP.getX()-180, (int) Constants.SHIP.getY()-180, this);
         		count++;
         	}

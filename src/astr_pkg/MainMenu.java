@@ -253,8 +253,12 @@ public class MainMenu extends JFrame{
 						//If music option is ON and user presses Enter
 						if(musicVolume){
 							musicVolume = false; //Turn Music off
+							menu_music.stop();
 						}else{
 							musicVolume = true; //Else turn Music on
+							if (!Constants.LINUX) {
+								menu_music.loop(Clip.LOOP_CONTINUOUSLY);
+							}
 						}
 						break;
 					case 2: //If thrid option selected
@@ -328,7 +332,7 @@ public class MainMenu extends JFrame{
 			background_music = AudioSystem.getClip();
 			background_music.open(audioIn3);
 			
-			File menuMusic = new File("src/astr_pkg/menu_music.mp3");
+			File menuMusic = new File("src/astr_pkg/menu_music.wav");
 			AudioInputStream audioIn4 = AudioSystem.getAudioInputStream(menuMusic);
 			menu_music = AudioSystem.getClip();
 			menu_music.open(audioIn4);

@@ -185,8 +185,8 @@ public class Asteroid {
 				arrayAsteroid.remove(this);
 				pointsPlayer1 += scoreValue[i];
 				if(this.size>=2){
-					arrayAsteroid.add(new Asteroid(this.x, this.y, this.thetaVelocity+Math.random()*(Math.PI/4), this.size-1, this.speed));
-					arrayAsteroid.add(new Asteroid(this.x, this.y, this.thetaVelocity-Math.random()*(Math.PI/4), this.size-1, this.speed));
+					arrayAsteroid.add(new Asteroid(this.x, this.y, this.thetaVelocity+Math.random()*(Math.PI/2), this.size-1, this.speed));
+					arrayAsteroid.add(new Asteroid(this.x, this.y, this.thetaVelocity-Math.random()*(Math.PI/2), this.size-1, this.speed));
 				}
 				return true;
 			}

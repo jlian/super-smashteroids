@@ -168,6 +168,9 @@ public class Alien {
             ProjectilesAliens AlienProjectiles = 
             		new ProjectilesAliens(xPos, yPos, theta, xVelocity, yVelocity);
             projectiles.add(AlienProjectiles);
+            if(MainMenu.isSfxOn() && !Constants.LINUX){
+            	AlienProjectiles.playShotSound();
+            }
             shoot = 0;
         }else{
             shoot++;

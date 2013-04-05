@@ -58,7 +58,7 @@ public class ProjectilesAliens {
 	
 	private void initializeSound(){
 		try {
-			File menuSelection = new File("src/fire.wav");
+			File menuSelection = new File("src/alien_laser.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
 			clip = AudioSystem.getClip();
 			clip.open(audioIn);

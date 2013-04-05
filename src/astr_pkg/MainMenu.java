@@ -35,6 +35,7 @@ public class MainMenu extends JFrame{
 	private static Clip menu_select; //Sound effect for when options are scrolled in the Main Menu
 	private static Clip menu_validate;
 	private static Clip background_music;
+	private static Clip menu_music;
 
 	public MainMenu(){
 		
@@ -46,6 +47,12 @@ public class MainMenu extends JFrame{
 		Constants.MAIN_MENU_PANEL.setFocusable(true);//Make this panel able to detect key presses
 		Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 
+		//TEST
+		if (musicVolume && !Constants.LINUX) {
+			menu_music.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+		//END TEST
+		
 		Constants.MAIN_MENU_PANEL.addKeyListener(new KeyAdapter(){ //Keyboard event handler
 			public void keyPressed(KeyEvent e){
 				switch(e.getKeyCode()){
@@ -160,6 +167,7 @@ public class MainMenu extends JFrame{
 						add(game);
 						revalidate();
 						if (musicVolume && !Constants.LINUX) {
+							menu_music.stop();
 							background_music.loop(Clip.LOOP_CONTINUOUSLY);
 						}
 						game.setFocusable(true);
@@ -319,6 +327,12 @@ public class MainMenu extends JFrame{
 			AudioInputStream audioIn3 = AudioSystem.getAudioInputStream(backgroundMusic);
 			background_music = AudioSystem.getClip();
 			background_music.open(audioIn3);
+			
+			File menuMusic = new File("src/astr_pkg/menu_music.mp3");
+			AudioInputStream audioIn4 = AudioSystem.getAudioInputStream(menuMusic);
+			menu_music = AudioSystem.getClip();
+			menu_music.open(audioIn4);
+			
 		} catch (UnsupportedAudioFileException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

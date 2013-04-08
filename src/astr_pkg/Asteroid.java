@@ -152,7 +152,7 @@ public class Asteroid {
 		}
 	}
 	
-	public boolean collisionShip(){
+	public void collisionShip(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
 		if(Constants.SHIP.getBounds() != null && p.intersects(Constants.SHIP.getBounds()) && 
 				Constants.SHIP.isAlive() && !Constants.SHIP.isInvulnerable()){
@@ -160,9 +160,18 @@ public class Asteroid {
 				this.playHitSound();
 			}
 			Constants.SHIP.setAlive(false);
-			return true;
+//			return true;
+		//MP
+		}/*else */
+		if(MainMenu.isMultiplayer() && Constants.P2SHIP.getBounds() != null &&
+				p.intersects(Constants.P2SHIP.getBounds()) && Constants.P2SHIP.isAlive() && !Constants.P2SHIP.isInvulnerable()){
+			if(MainMenu.isSfxOn() && !Constants.LINUX){
+				this.playHitSound();
+			}
+			Constants.P2SHIP.setAlive(false);
+//			return true;
 		}
-		return false;
+//		return false;
 	}
 	public boolean collisionProjectile(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);

@@ -204,7 +204,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	public void run() {
 		// TODO Auto-generated method stub
 		
-		while (numLivesP1 > 0){
+		while (true){
 			startTime = System.currentTimeMillis();
 			if(Constants.SHIP.isAlive()){
 				Constants.SHIP.move(getWidth(), getHeight());

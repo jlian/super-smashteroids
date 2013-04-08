@@ -160,6 +160,11 @@ public class Asteroid {
 				this.playHitSound();
 			}
 			Constants.SHIP.setAlive(false);
+			arrayAsteroid.remove(this);
+			if(this.size>=2){
+				arrayAsteroid.add(new Asteroid(this.x, this.y, this.thetaVelocity+Math.random()*(Math.PI/2), this.size-1, this.speed));
+				arrayAsteroid.add(new Asteroid(this.x, this.y, this.thetaVelocity-Math.random()*(Math.PI/2), this.size-1, this.speed));
+			}
 //			return true;
 		//MP
 		}/*else */

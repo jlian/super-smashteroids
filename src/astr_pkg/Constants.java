@@ -4,7 +4,7 @@ import java.awt.Font;
 
 public interface Constants {
 
-	static final Font MENU_FONT = new Font("Times-Roman", Font.BOLD, 36);
+	static final Font MENU_FONT = new Font("Arial", Font.BOLD, 36);
 	static final Font SELECTIONS_FONT = new Font("Dialog", Font.BOLD, 24);
 	static final MainMenuPanel MAIN_MENU_PANEL = new MainMenuPanel();
 	static final PlayGamePanel PLAY_GAME_PANEL = new PlayGamePanel();
@@ -14,6 +14,8 @@ public interface Constants {
 	static final int WIDTH = 800;
 	static final int HEIGHT = 600;
 	static final int DEFAULT_RESPAWN_WAIT = 40;
-	static final boolean LINUX = false;
+	static final boolean LINUX = true;
+	static final Ship P2SHIP = new Ship(380, 300, Math.PI, 0.35, 0.98, .1);
+	static final GameOverPanel GAME_OVER_PANEL = new GameOverPanel();
 
 }

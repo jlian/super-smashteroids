@@ -24,6 +24,7 @@ import java.net.URL;
 public class MainMenu extends JFrame{
 
 	private static final ImageIcon background = new ImageIcon("src/astr_pkg/background_main_menu2.jpg");
+	private static final ImageIcon gameOverPic = new ImageIcon("src/astr_pkg/game_over.jpg");
 	private static int countMain = 0; //Controls which option in Main Menu should be highlighted
 	private static int countPlay = 0; //Controls which option in the Play Game menu should be highlighted
 	private static int countOptions = 0; //Controls which option in the Options menu should be highlighted
@@ -35,6 +36,7 @@ public class MainMenu extends JFrame{
 	private static Clip menu_select; //Sound effect for when options are scrolled in the Main Menu
 	private static Clip menu_validate;
 	private static Clip background_music;
+	private static Clip menu_music;
 
 	public MainMenu(){
 		
@@ -46,6 +48,12 @@ public class MainMenu extends JFrame{
 		Constants.MAIN_MENU_PANEL.setFocusable(true);//Make this panel able to detect key presses
 		Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 
+		//TEST
+		if (musicVolume && !Constants.LINUX) {
+			menu_music.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+		//END TEST
+		
 		Constants.MAIN_MENU_PANEL.addKeyListener(new KeyAdapter(){ //Keyboard event handler
 			public void keyPressed(KeyEvent e){
 				switch(e.getKeyCode()){
@@ -160,6 +168,7 @@ public class MainMenu extends JFrame{
 						add(game);
 						revalidate();
 						if (musicVolume && !Constants.LINUX) {
+							menu_music.stop();
 							background_music.loop(Clip.LOOP_CONTINUOUSLY);
 						}
 						game.setFocusable(true);
@@ -245,8 +254,12 @@ public class MainMenu extends JFrame{
 						//If music option is ON and user presses Enter
 						if(musicVolume){
 							musicVolume = false; //Turn Music off
+							menu_music.stop();
 						}else{
 							musicVolume = true; //Else turn Music on
+							if (!Constants.LINUX) {
+								menu_music.loop(Clip.LOOP_CONTINUOUSLY);
+							}
 						}
 						break;
 					case 2: //If thrid option selected
@@ -319,6 +332,12 @@ public class MainMenu extends JFrame{
 			AudioInputStream audioIn3 = AudioSystem.getAudioInputStream(backgroundMusic);
 			background_music = AudioSystem.getClip();
 			background_music.open(audioIn3);
+			
+			File menuMusic = new File("src/astr_pkg/menu_music.wav");
+			AudioInputStream audioIn4 = AudioSystem.getAudioInputStream(menuMusic);
+			menu_music = AudioSystem.getClip();
+			menu_music.open(audioIn4);
+			
 		} catch (UnsupportedAudioFileException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -335,6 +354,10 @@ public class MainMenu extends JFrame{
 	
 	public static int getDifficulty(){
 		return difficultyLevel;
+	}
+	
+	public static ImageIcon getGameOverImage(){
+		return gameOverPic;
 	}
 	
 	//Return the background Image
@@ -815,8 +838,34 @@ class HighScoresPanel extends JPanel{
 		 */
 		g.setColor(Color.WHITE);
 		g.drawString("Back to Main Menu", highScoresX, highScoresY);
-					
-		
 
+	}
+}
+
+class GameOverPanel extends JPanel{
+	protected void paintComponent(Graphics g){
+		super.paintComponents(g);
+		
+		if(g instanceof Graphics2D){
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		}
+		
+		g.drawImage(MainMenu.getGameOverImage().getImage(), 0, 0, this);
+		
+		g.setFont(Constants.MENU_FONT);
+		g.setColor(Color.WHITE);
+		
+		FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
+		
+		int playAgainX = getWidth() / 2 - (metrics.stringWidth("Play Again") / 2);
+		int playAgainY = 6*getHeight()/8;
+		
+		int mainMenuX = getWidth() / 2 - metrics.stringWidth("Back to Main Menu") / 2; //Center text
+		int mainMenuY = playAgainY + metrics.getHeight() + 10; 
+		
+		g.drawString("Play Again", playAgainX, playAgainY);
+		g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
+		
 	}
 }

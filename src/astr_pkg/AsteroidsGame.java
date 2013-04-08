@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.io.*;
 
 import javax.sound.sampled.*;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
@@ -30,9 +31,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static boolean nextWave, levelUp;
     private static int numLivesP1;
     private Clip thrusterSound;
-     
-        
-	public void init(){
+    private static ImageIcon gameBackground = new ImageIcon("src/astr_pkg/BG-game.jpg");
+    private boolean blowup = true;
+    private static ImageIcon shipExplosion = new ImageIcon("src/astr_pkg/explosion.gif");
+    private static int count = 0;
+	
+    public void init(){
 		nextWave = false;
 		levelUp = true;
 		delay = 100;
@@ -106,6 +110,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	
 	public static int getNumLivesP1(){
 		return numLivesP1;
+	}
+	
+	public static ImageIcon getGameBackground(){
+		return gameBackground;
+	}
+	
+	public static ImageIcon getExplosion(){
+		return shipExplosion;
 	}
 	
 	@Override
@@ -204,7 +216,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	public void run() {
 		// TODO Auto-generated method stub
 		
-		while (true){
+		while (numLivesP1 > 0){
 			startTime = System.currentTimeMillis();
 			if(Constants.SHIP.isAlive()){
 				Constants.SHIP.move(getWidth(), getHeight());
@@ -232,15 +244,22 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				}
 			} 
 			
-			for (int i = 0; i < numAliens; i++){
-				if(Alien.getAliens()[i] != null){
-					Alien.getAliens()[i].shipX = Constants.SHIP.getX();
-					Alien.getAliens()[i].shipY = Constants.SHIP.getY();
-					Alien.getAliens()[i].find();
-					Alien.getAliens()[i].shoot();
-					Alien.getAliens()[i].move();
-					Alien.getAliens()[i].detectEdges();
-				}
+//			for (int i = 0; i < numAliens; i++){
+			for(int i = 0; i < Alien.getAliens().size(); i++){
+				Alien.getAliens().get(i).shipX = Constants.SHIP.getX();
+				Alien.getAliens().get(i).shipY = Constants.SHIP.getY();
+				Alien.getAliens().get(i).find();
+				Alien.getAliens().get(i).shoot();
+				Alien.getAliens().get(i).move();
+				Alien.getAliens().get(i).detectEdges();
+//				if(Alien.getAliens()[i] != null){
+//					Alien.getAliens()[i].shipX = Constants.SHIP.getX();
+//					Alien.getAliens()[i].shipY = Constants.SHIP.getY();
+//					Alien.getAliens()[i].find();
+//					Alien.getAliens()[i].shoot();
+//					Alien.getAliens()[i].move();
+//					Alien.getAliens()[i].detectEdges();
+//				}
 			}
 			repaint();
 			endTime = System.currentTimeMillis();
@@ -263,22 +282,41 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 800, 600);
+		g.drawImage(getGameBackground().getImage(), 0, 0, getWidth(), getHeight(), this);
 		Asteroid.drawAsteroid(g);
 		Alien.drawAlien(g);
         if(Constants.SHIP.isAlive()){
         	Constants.SHIP.drawShip(g);
-        }else{
-        	Constants.SHIP.reset();
+        }
+        else if(blowup){
+        	if(count<285){
+        		g.drawImage(getExplosion().getImage(), (int) Constants.SHIP.getX()-180, (int) Constants.SHIP.getY()-180, this);
+        		count++;
+        	}
+        	else{
+        		Constants.SHIP.reset();
+        		blowup = false;
+        		count = 0;
+        		
+        	}
         }
         if(!Constants.SHIP.isAlive()){
 			if(Constants.SHIP.getRespawnTime() < 80){
 				Constants.SHIP.incrementRespawnTime();
 			}else{
+				Constants.SHIP.reset();
 				Constants.SHIP.resetRespawnTime();
+				Constants.SHIP.resetInvulnerabilityTime();//If ship has just respawned, make invulnerable
 				Constants.SHIP.setAlive(true);
+				blowup = true;
 				numLivesP1--;
 			}
 		}
+        
+        if(Constants.SHIP.isInvulnerable()){
+        	Constants.SHIP.incrementInvulnerabilityTime();
+        }
+        
 		if(Constants.SHIP.getProjectiles().size() > 0){
 			for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 					Constants.SHIP.getProjectiles().get(i).move();
@@ -288,11 +326,20 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		/*
 		 * ADDED THIS
 		 */
-		for(int i = 0; i < Alien.getAliens().length; i++){
-			if(Alien.getAliens()[i] != null && 
-					Alien.getAliens()[i].getShots().size() > 0){
-				for(int j = 0; j < Alien.getAliens()[i].getShots().size(); j++){
-					Alien.getAliens()[i].getShots().get(j).move();
+//		for(int i = 0; i < Alien.getAliens().length; i++){
+//			if(Alien.getAliens()[i] != null && 
+//					Alien.getAliens()[i].getShots().size() > 0){
+//				for(int j = 0; j < Alien.getAliens()[i].getShots().size(); j++){
+//					Alien.getAliens()[i].getShots().get(j).move();
+//				}
+//				ProjectilesAliens.drawProjectiles(g);
+//			}
+//		}
+		
+		for(int i = 0; i < Alien.getAliens().size(); i++){
+			if(Alien.getAliens().get(i).getShots().size() > 0){
+				for(int j = 0; j < Alien.getAliens().get(i).getShots().size(); j++){
+					Alien.getAliens().get(i).getShots().get(j).move();
 				}
 				ProjectilesAliens.drawProjectiles(g);
 			}

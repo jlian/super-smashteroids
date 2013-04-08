@@ -5,22 +5,22 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class Ship {
-	
+	//Intialize the starting points of the ship shape
 	private final int[] initialXPts = {16, -11, -6, -11},
 			initialYPts = {0, 8, 0, -8};
-
+	//Initialize the starting points of the shape of the ship thruster
 	private final int[] initialThrusterXPts = {-6, -9, -16, -20, -16, -9},
 			initialThrusterYPts = {0 ,4, 2, 0, -2, -4};
-	
+	//Initialize the starting points of the hit box around the ship
 	private final int[] initHitX = {16, 16, -11, -11} ,
 			initHitY = {8, -8, -8, 8};
-	
+	//Initialization
 	private double x, y, theta, acceleration, rotationSpeed, 
 			decelerationRate, xVelocity, yVelocity;
 	
 	private Rectangle2D rect;
 	
-	private boolean accelerating, turningLeft, turningRight, active, alive;
+	private boolean accelerating, turningLeft, turningRight, alive;
 	
 	boolean fire;
 	
@@ -30,8 +30,9 @@ public class Ship {
 	
 	private ArrayList<Projectiles> projectiles;
 	
+	public static final int INVULNERABILITY_TIME = 120;
 	public static final int RESPAWN_TIME = 80;
-	private int respawnTime;
+	private int respawnTime, invulnerabilityTime;
 	
 	public Ship(double x, double y, double theta, double acceleration,
 			double decelerationRate, double rotationSpeed){
@@ -43,9 +44,9 @@ public class Ship {
 		this.decelerationRate = decelerationRate;
 		xVelocity = yVelocity = 0;
 		respawnTime = 0;
+		invulnerabilityTime = 0;
 		turningLeft = turningRight = false;
 		accelerating = false;
-		active = true;
 		alive = true;
 		xPts = new int[4];
 		yPts = new int[4];
@@ -104,6 +105,25 @@ public class Ship {
 		return respawnTime;
 	}
 	
+	public boolean isInvulnerable(){
+		if(invulnerabilityTime > INVULNERABILITY_TIME){
+			return false;
+		}
+		return true;
+	}
+	
+	public void incrementInvulnerabilityTime(){
+		invulnerabilityTime++;
+	}
+	
+	public void resetInvulnerabilityTime(){
+		invulnerabilityTime = 0;
+	}
+	
+	public int getInvulnerabilityTime(){
+		return invulnerabilityTime;
+	}
+	
 	public void setAlive(boolean isAlive){
 		alive = isAlive;
 	}
@@ -127,30 +147,33 @@ public class Ship {
 	
 	public void makeItRain(boolean fire){
 		this.fire = fire;
-//		shotWaitLeft = shotWait;
-//		Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
-//				theta);
-//		projectiles.add(p);
-//		p.playShotSound();
 	}
 	
 	public void checkCollisionProjectile(){
 		Polygon shipPoly = new Polygon(xPts, yPts, 4);
-		for(int j = 0; j < Alien.getAliens().length; j++){
-			while(Alien.getAliens()[j] == null){
-				if(j < Alien.getAliens().length - 1){
-					j++;
-				}else{
-					return;
-				}
-			}
-			for(int i = 0; i < Alien.getAliens()[j].getShots().size(); i++){
-				if(shipPoly.intersects(Alien.getAliens()[j].getShots().get(i).getProjectileBounds())){
-					Alien.getAliens()[j].getShots().remove(i);
+//		for(int j = 0; j < Alien.getAliens().length; j++){
+//			while(Alien.getAliens()[j] == null){
+//				if(j < Alien.getAliens().length - 1){
+//					j++;
+//				}else{
+//					return;
+//				}
+//			}
+		for(int i = 0; i < Alien.getAliens().size(); i++){
+			for(int j = 0; j < Alien.getAliens().get(i).getShots().size(); j++){
+				if(shipPoly.intersects(Alien.getAliens().get(i).getShots().get(j).getProjectileBounds())){
+					Alien.getAliens().get(i).getShots().remove(j);
 					Constants.SHIP.setAlive(false);
 					return;
 				}
 			}
+//			for(int i = 0; i < Alien.getAliens()[j].getShots().size(); i++){
+//				if(shipPoly.intersects(Alien.getAliens()[j].getShots().get(i).getProjectileBounds())){
+//					Alien.getAliens()[j].getShots().remove(i);
+//					Constants.SHIP.setAlive(false);
+//					return;
+//				}
+//			}
 		}
         
     }
@@ -225,24 +248,21 @@ public class Ship {
 		Polygon ship = new Polygon(xPts, yPts, 4);
 		rect = ship.getBounds2D();
 	}
-	
-//	public void fire(){
-//		System.out.println("CHECK2");
-//		projectiles.add(new Projectiles(x, y, theta));
-//	}
-	
+		
 	public void drawShip(Graphics g){
 		if(g instanceof Graphics2D){
 			Graphics2D g2d = (Graphics2D)g;
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-
+		
 		g.setColor(Color.WHITE);
+		
+		if(isInvulnerable()){
+			g.setColor(Color.PINK);
+		}
+		
 		g.fillPolygon(xPts, yPts, 4);
 		checkCollisionProjectile();
-//		g.setColor(Color.RED);
-//		Graphics2D g2D = (Graphics2D) g;
-//		g2D.draw(rect);
 		if(accelerating){
 			g.setColor(Color.RED);
 			g.fillPolygon(xThrusters, yThrusters, 6);

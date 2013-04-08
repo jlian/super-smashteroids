@@ -23,6 +23,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class Projectiles {
 	//Initialization
 	private double x, y, theta, xVelocity, yVelocity;
+	private Ship ship;
 	private static Image pImage;
 	boolean onScreen;
 	private final int PROJECTILE_SPEED = 10;
@@ -30,18 +31,23 @@ public class Projectiles {
 	private Clip clip;
 	
 	//Constructor
-	public Projectiles(double x, double y, double theta){
+	public Projectiles(double x, double y, double theta, Ship ship){
 		this.x = x;
 		this.y = y;
 		this.theta = theta;
+		
+		this.ship = ship;
 		
 		/*These next two velocities are for the ship projectiles. To be realistic, we have
 		 *set them to always be faster than the current velocity of the ship when they
 		 *are fired. We take the current ship velocity in x and y, then add the constant
 		 *projectile speed in the theta direction the ship is facing.
 		 */
-		xVelocity = Constants.SHIP.getXVelocity() + PROJECTILE_SPEED * Math.cos(theta);
-		yVelocity = Constants.SHIP.getYVelocity() + PROJECTILE_SPEED * Math.sin(theta);
+//		xVelocity = Constants.SHIP.getXVelocity() + PROJECTILE_SPEED * Math.cos(theta);
+//		yVelocity = Constants.SHIP.getYVelocity() + PROJECTILE_SPEED * Math.sin(theta);
+		
+		xVelocity = ship.getXVelocity() + PROJECTILE_SPEED * Math.cos(theta);
+		yVelocity = ship.getYVelocity() + PROJECTILE_SPEED * Math.sin(theta);
 		
 		onScreen = true;
 		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
@@ -91,6 +97,9 @@ public class Projectiles {
 	public double getTheta(){
 		return theta;
 	}
+	public Ship getSource(){
+		return ship;
+	}
 	public boolean isOnScreen(){
 		return onScreen;
 	}
@@ -112,11 +121,13 @@ public class Projectiles {
 		 */
 		if(x > Constants.WIDTH || x < 0){
 			onScreen = false;
-			Constants.SHIP.getProjectiles().remove(this);
+//			Constants.SHIP.getProjectiles().remove(this);
+			ship.getProjectiles().remove(this);
 		}
 		if(y > Constants.HEIGHT || y < 0){
 			onScreen = false;
-			Constants.SHIP.getProjectiles().remove(this);
+//			Constants.SHIP.getProjectiles().remove(this);
+			ship.getProjectiles().remove(this);
 		}
 
 	}
@@ -124,16 +135,28 @@ public class Projectiles {
 	//Draw method for the projectiles
 	public static void drawProjectiles(Graphics g){
 		Graphics g2D = (Graphics2D) g;
-		ArrayList<Projectiles> shootArray;
-		shootArray = Constants.SHIP.getProjectiles();
+		ArrayList<Projectiles> shootArrayP1;
+		shootArrayP1 = Constants.SHIP.getProjectiles();
 		/*We used an arraylist to handle the projectiles, so to draw them we must travel
 		 *through the array to set the colour and shape of each projectile for drawing
 		 */
-		for(int i = 0; i<shootArray.size(); i++){
-			Projectiles p = shootArray.get(i);
+		for(int i = 0; i<shootArrayP1.size(); i++){
+			Projectiles p = shootArrayP1.get(i);
 			g2D.setColor(new Color(0, 216, 65));
 			g2D.fillOval((int) p.getX(),  (int)p.getY(), 4, 4);
 			
+		}
+		
+		//MP
+		if(MainMenu.isMultiplayer()){
+			ArrayList<Projectiles> shootArrayP2;
+			shootArrayP2 = Constants.P2SHIP.getProjectiles();
+			
+			for(int i = 0; i < shootArrayP2.size(); i++){
+				Projectiles p = shootArrayP2.get(i);
+				g2D.setColor(new Color(0, 216, 65));
+				g2D.fillOval((int) p.getX(),  (int)p.getY(), 4, 4);
+			}
 		}
 		
 	}

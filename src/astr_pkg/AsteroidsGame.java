@@ -31,6 +31,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static boolean nextWave, levelUp;
     private static int numLivesP1, numLivesP2;
     private Clip thrusterSound;
+    private static Clip gameOverSound;
     private static ImageIcon gameBackground = new ImageIcon("src/astr_pkg/BG-game.jpg");
     private boolean blowup = true;
     private static ImageIcon shipExplosion = new ImageIcon("src/astr_pkg/explosion.gif");
@@ -74,6 +75,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(thrusters);
 			thrusterSound = AudioSystem.getClip();
 			thrusterSound.open(audioIn);
+			
+			File gameOver = new File("src/game_over.wav");
+			AudioInputStream audioIn1 = AudioSystem.getAudioInputStream(gameOver);
+			gameOverSound = AudioSystem.getClip();
+			gameOverSound.open(audioIn1);
+			
 		} catch (UnsupportedAudioFileException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -109,6 +116,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		thrusterSound.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 	
+	public void playGameOverSound(){
+		gameOverSound.setFramePosition(0);
+		gameOverSound.loop(Clip.LOOP_CONTINUOUSLY);
+	}
 	public static void setRespawnTime(int time){
 		respawnTime = time;
 	}
@@ -374,6 +385,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				e.printStackTrace();
 			}
 
+		}
+		if(MainMenu.isSfxOn() && !Constants.LINUX){
+			playGameOverSound();
 		}
 		MainMenu.getMenu().gameOver();
 	}

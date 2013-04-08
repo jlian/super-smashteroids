@@ -69,8 +69,8 @@ public class Ship {
 	
 	private void initializeSound(){
 		try {
-			File asteroidHit = new File("src/bangLarge.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
+			File shipHit = new File("src/bangLarge.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(shipHit);
 			shipGoBoom = AudioSystem.getClip();
 			shipGoBoom.open(audioIn);
 		} catch (UnsupportedAudioFileException e1) {

@@ -86,8 +86,8 @@ public class Alien {
     
     private void initializeSound(){
 		try {
-			File asteroidHit = new File("src/bangLarge.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
+			File alienHit = new File("src/bangLarge.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(alienHit);
 			alienGoBoom = AudioSystem.getClip();
 			alienGoBoom.open(audioIn);
 		} catch (UnsupportedAudioFileException e1) {

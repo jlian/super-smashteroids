@@ -29,7 +29,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static int respawnTime;
     private static int delay, level, difficulty, startAstr, numAliens;
     private static boolean nextWave, levelUp;
-    private static int numLivesP1;
+    private static int numLivesP1, numLivesP2;
     private Clip thrusterSound;
     private static ImageIcon gameBackground = new ImageIcon("src/astr_pkg/BG-game.jpg");
     private boolean blowup = true;
@@ -42,6 +42,11 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		delay = 100;
 		level = 1;
 		numLivesP1 = 3;
+		if(MainMenu.isMultiplayer()){
+			numLivesP2 = 3;
+		}else{
+			numLivesP2 = 0;
+		}
 		startAstr = MainMenu.getDifficulty() * 5;
 		numAliens = MainMenu.getDifficulty();
 		difficulty = MainMenu.getDifficulty();
@@ -112,6 +117,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		return numLivesP1;
 	}
 	
+	public static int getNumLivesP2(){
+		return numLivesP2;
+	}
+	
 	public static ImageIcon getGameBackground(){
 		return gameBackground;
 	}
@@ -167,6 +176,50 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			System.exit(0);
 		}
+		
+		if(MainMenu.isMultiplayer()){
+			if(MainMenu.isControlWasd()){
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_LEFT:
+					Constants.P2SHIP.setTurningLeft(true);
+					break;
+				case KeyEvent.VK_RIGHT:
+					Constants.P2SHIP.setTurningRight(true);
+					break;
+				case KeyEvent.VK_UP:
+					Constants.P2SHIP.setAccelerating(true);
+//					if(MainMenu.isSfxOn() && !Constants.LINUX){
+//						playThrusterSound();
+//					}
+					break;
+				case KeyEvent.VK_ENTER:
+					Constants.P2SHIP.makeItRain(true);
+					break;
+				}
+			}else{
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_A:
+					Constants.P2SHIP.setTurningLeft(true);
+					break;
+				case KeyEvent.VK_D:
+					Constants.P2SHIP.setTurningRight(true);
+					break;
+				case KeyEvent.VK_W:
+					Constants.P2SHIP.setAccelerating(true);
+//					if(MainMenu.isSfxOn() && !Constants.LINUX){
+//						playThrusterSound();
+//					}
+					break;
+				case KeyEvent.VK_F:
+					Constants.P2SHIP.makeItRain(true);
+					break;
+				}
+			}
+//			if(e.getKeyCode() == KeyEvent.VK_CONTROL){
+//				Constants.P2SHIP.makeItRain(true);
+//			}
+		}
+		
 	}
 
 	@Override
@@ -209,6 +262,49 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			Constants.SHIP.makeItRain(false);
 		}
 		
+		if(MainMenu.isMultiplayer()){
+			if(MainMenu.isControlWasd()){
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_LEFT:
+					Constants.P2SHIP.setTurningLeft(false);
+					break;
+				case KeyEvent.VK_RIGHT:
+					Constants.P2SHIP.setTurningRight(false);
+					break;
+				case KeyEvent.VK_UP:
+					Constants.P2SHIP.setAccelerating(false);
+//					if(MainMenu.isSfxOn() && !Constants.LINUX){
+//						playThrusterSound();
+//					}
+					break;
+				case KeyEvent.VK_ENTER:
+					Constants.P2SHIP.makeItRain(false);
+					break;
+				}
+			}else{
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_A:
+					Constants.P2SHIP.setTurningLeft(false);
+					break;
+				case KeyEvent.VK_D:
+					Constants.P2SHIP.setTurningRight(false);
+					break;
+				case KeyEvent.VK_W:
+					Constants.P2SHIP.setAccelerating(false);
+//					if(MainMenu.isSfxOn() && !Constants.LINUX){
+//						playThrusterSound();
+//					}
+					break;
+				case KeyEvent.VK_F:
+					Constants.P2SHIP.makeItRain(false);
+					break;
+				}
+			}
+//			if(e.getKeyCode() == KeyEvent.VK_CONTROL){
+//				Constants.P2SHIP.makeItRain(false);
+//			}
+		}
+		
 	}
 
 
@@ -216,11 +312,17 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	public void run() {
 		// TODO Auto-generated method stub
 		
-		while (numLivesP1 > 0){
+		while (numLivesP1 > 0 || numLivesP2 > 0){
 			startTime = System.currentTimeMillis();
 			if(Constants.SHIP.isAlive()){
 				Constants.SHIP.move(getWidth(), getHeight());
 			}
+			
+			//MP
+			if(Constants.P2SHIP.isAlive()){
+				Constants.P2SHIP.move(getWidth(), getHeight());
+			}
+			
 			for(int i = 0; i < Asteroid.getAsteroids().size(); i++){
 				Asteroid.getAsteroids().get(i).move(getWidth(), getHeight());
 			}
@@ -273,6 +375,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			}
 
 		}
+		MainMenu.getMenu().gameOver();
 	}
 
 
@@ -280,12 +383,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	protected void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
 		super.paintComponent(g);
+		
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 800, 600);
 		g.drawImage(getGameBackground().getImage(), 0, 0, getWidth(), getHeight(), this);
 		Asteroid.drawAsteroid(g);
 		Alien.drawAlien(g);
-        if(Constants.SHIP.isAlive()){
+       
+		if(Constants.SHIP.isAlive()){
         	Constants.SHIP.drawShip(g);
         }
         else if(blowup){
@@ -300,8 +405,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
         		
         	}
         }
-        if(!Constants.SHIP.isAlive()){
-			if(Constants.SHIP.getRespawnTime() < 80){
+        if(!Constants.SHIP.isAlive() && numLivesP1 > 1){
+        	if(Constants.SHIP.getRespawnTime() < 80){
 				Constants.SHIP.incrementRespawnTime();
 			}else{
 				Constants.SHIP.reset();
@@ -311,6 +416,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				blowup = true;
 				numLivesP1--;
 			}
+		}else if(numLivesP1 == 1){
+			numLivesP1--;
 		}
         
         if(Constants.SHIP.isInvulnerable()){
@@ -323,6 +430,50 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			}
 			Projectiles.drawProjectiles(g);	
 		}
+		
+		//MP
+		if(MainMenu.isMultiplayer()){
+			if(Constants.P2SHIP.isAlive()){
+	        	Constants.P2SHIP.drawShip(g);
+	        }
+	        else if(blowup){ //new blowup var needed
+	        	if(count<285){
+	        		g.drawImage(getExplosion().getImage(), (int) Constants.P2SHIP.getX()-180, (int) Constants.P2SHIP.getY()-180, this);
+	        		count++; //new count needed
+	        	}
+	        	else{
+	        		Constants.P2SHIP.reset();
+	        		blowup = false; //new var
+	        		count = 0; //new var
+	        		
+	        	}
+	        }
+	        if(!Constants.P2SHIP.isAlive()){
+				if(Constants.P2SHIP.getRespawnTime() < 80){
+					Constants.P2SHIP.incrementRespawnTime();
+				}else{
+					Constants.P2SHIP.reset();
+					Constants.P2SHIP.resetRespawnTime();
+					Constants.P2SHIP.resetInvulnerabilityTime();//If ship has just respawned, make invulnerable
+					Constants.P2SHIP.setAlive(true);
+					blowup = true; //new Var
+					numLivesP2--; //new Var
+				}
+			}
+	        
+	        if(Constants.P2SHIP.isInvulnerable()){
+	        	Constants.P2SHIP.incrementInvulnerabilityTime();
+	        }
+	        
+			if(Constants.P2SHIP.getProjectiles().size() > 0){
+				for(int i = 0; i < Constants.P2SHIP.getProjectiles().size(); i++){
+						Constants.P2SHIP.getProjectiles().get(i).move();
+				}
+				Projectiles.drawProjectiles(g);	
+			}
+		}
+		
+		
 		/*
 		 * ADDED THIS
 		 */
@@ -352,7 +503,11 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		g.drawString("SCORE   " + (Asteroid.getPointsP1() + Alien.getPointsP1()),
 				10, 40);
 		g.drawString("Level   " + level, Constants.WIDTH - 110, 40);
-		g.drawString("Lives Left  " + numLivesP1, Constants.WIDTH - 160, Constants.HEIGHT - 20);
+		g.drawString("Lives Left P1  " + numLivesP1, Constants.WIDTH - 210, Constants.HEIGHT - 20);
+		
+		if(MainMenu.isMultiplayer()){
+			g.drawString("Lives Left P2  " + numLivesP2, 10, Constants.HEIGHT - 20);
+		}
 		
 		if(nextWave){
 			g.setFont(Constants.MENU_FONT);

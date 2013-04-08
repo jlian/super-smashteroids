@@ -161,9 +161,11 @@ public class Ship {
 //			}
 		for(int i = 0; i < Alien.getAliens().size(); i++){
 			for(int j = 0; j < Alien.getAliens().get(i).getShots().size(); j++){
-				if(shipPoly.intersects(Alien.getAliens().get(i).getShots().get(j).getProjectileBounds())){
+				if(shipPoly.intersects(Alien.getAliens().get(i).getShots().get(j).getProjectileBounds()) &&
+						!isInvulnerable()){
 					Alien.getAliens().get(i).getShots().remove(j);
-					Constants.SHIP.setAlive(false);
+//					Constants.SHIP.setAlive(false);
+					this.setAlive(false);
 					return;
 				}
 			}
@@ -185,7 +187,7 @@ public class Ship {
 		if(fire){
 			if(shotWaitLeft <= 0){
 				Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
-						theta);
+						theta, this);
 				projectiles.add(p);
 				if(MainMenu.isSfxOn() && !Constants.LINUX){
 					p.playShotSound();
@@ -259,6 +261,11 @@ public class Ship {
 		
 		if(isInvulnerable()){
 			g.setColor(Color.PINK);
+		}
+		
+		//MP
+		if(this.equals(Constants.P2SHIP)){
+			g.setColor(Color.GRAY);
 		}
 		
 		g.fillPolygon(xPts, yPts, 4);

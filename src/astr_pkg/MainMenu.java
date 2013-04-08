@@ -350,20 +350,20 @@ public class MainMenu extends JFrame{
 						//Show the Play Game sub-menu
 						menu.remove(Constants.MAIN_MENU_PANEL); //Remove the Main Menu
 						menu.add(Constants.PLAY_GAME_PANEL); //Show the Play Game sub-menu
-						menu.revalidate(); //refresh frame
+						menu.getRootPane().revalidate(); //refresh frame
 						Constants.PLAY_GAME_PANEL.setFocusable(true);//Make this panel able to detect key presses
 						Constants.PLAY_GAME_PANEL.requestFocusInWindow(); //from the keyboard
 					}else if (countMain % 4 == 1){ //If 2nd option selected, "Options"
 						//Show the Options sub-menu
 						menu.remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
 						menu.add(Constants.OPTIONS_PANEL); //Show Options sub-menu
-						menu.revalidate(); //refresh frame
+						menu.getRootPane().revalidate(); //refresh frame
 						Constants.OPTIONS_PANEL.setFocusable(true); //Make this panel able to detect key presses
 						Constants.OPTIONS_PANEL.requestFocusInWindow(); //from the keyboard
 					}else if(countMain % 4 == 2){ //If 3rd option selected, "High Scores"
 						menu.remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
 						menu.add(Constants.HIGH_SCORES_PANEL); //Show High Scores sub-menu
-						menu.revalidate(); //refresh frame
+						menu.getRootPane().revalidate(); //refresh frame
 						Constants.HIGH_SCORES_PANEL.setFocusable(true); //Make this panel able to detect key presses
 						Constants.HIGH_SCORES_PANEL.requestFocusInWindow(); //from the keyboard
 					}else{ //If last option selected, "Exit"
@@ -424,7 +424,7 @@ public class MainMenu extends JFrame{
 						menu.remove(Constants.PLAY_GAME_PANEL);
 						game = new AsteroidsGame();
 						menu.add(game);
-						menu.revalidate();
+						menu.getRootPane().revalidate();
 						if (musicVolume && !Constants.LINUX) {
 							menu_music.stop();
 							background_music.loop(Clip.LOOP_CONTINUOUSLY);
@@ -439,7 +439,7 @@ public class MainMenu extends JFrame{
 						menu.remove(Constants.PLAY_GAME_PANEL);
 						game = new AsteroidsGame();
 						menu.add(game);
-						menu.revalidate();
+						menu.getRootPane().revalidate();
 						if (musicVolume && !Constants.LINUX) {
 							menu_music.stop();
 							background_music.loop(Clip.LOOP_CONTINUOUSLY);
@@ -451,7 +451,7 @@ public class MainMenu extends JFrame{
 					case 3: //If third option selected "Back to Main Menu"
 						menu.remove(Constants.PLAY_GAME_PANEL); //remove the Play Game sub-menu from frame
 						menu.add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
-						menu.revalidate(); //refresh frame
+						menu.getRootPane().revalidate(); //refresh frame
 						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
 						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 						countPlay = 0; //reset pointer position in Play Game sub-menu to top option
@@ -535,7 +535,7 @@ public class MainMenu extends JFrame{
 					case 3: //If third option selected "Back to Main Menu"
 						menu.remove(Constants.OPTIONS_PANEL); //Remove Option sub-menu from frame
 						menu.add(Constants.MAIN_MENU_PANEL); //Add/Show Main Menu in the frame
-						menu.revalidate(); //Refresh Frame
+						menu.getRootPane().revalidate(); //Refresh Frame
 						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
 						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 						countOptions = 0; //reset pointer position in Options sub-menu to top option
@@ -559,7 +559,7 @@ public class MainMenu extends JFrame{
 					}
 					menu.remove(Constants.HIGH_SCORES_PANEL); //remove the Play Game sub-menu from frame
 					menu.add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
-					menu.revalidate(); //refresh frame
+					menu.getRootPane().revalidate(); //refresh frame
 					Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
 					Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 					break;
@@ -573,7 +573,7 @@ public class MainMenu extends JFrame{
 	public void gameOver(){
 		menu.remove(game);
 		menu.add(Constants.GAME_OVER_PANEL);
-		menu.revalidate();
+		menu.getRootPane().revalidate();
 		Constants.GAME_OVER_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
 		Constants.GAME_OVER_PANEL.requestFocusInWindow();
 		repaint();

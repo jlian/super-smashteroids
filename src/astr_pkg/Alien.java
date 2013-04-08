@@ -2,7 +2,15 @@ package astr_pkg;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 
 public class Alien {
@@ -32,6 +40,8 @@ public class Alien {
 	private static int shootDelay;
 	
 	private static ImageIcon alienExplosion = new ImageIcon("src/astr_pkg/explosion3.gif");
+	
+	private static Clip alienGoBoom;
 	
     public Alien(double alienXPos, double alienYPos, double shipXPos, double shipYPos){
         xPos = alienXPos;
@@ -73,6 +83,29 @@ public class Alien {
 //    public static Alien[] getAliens(){
 //        return aliens;
 //    }
+    
+    private void initializeSound(){
+		try {
+			File asteroidHit = new File("src/bangLarge.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
+			alienGoBoom = AudioSystem.getClip();
+			alienGoBoom.open(audioIn);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+    
+    public void playAlienHitSound(){
+		alienGoBoom.setFramePosition(0);
+		alienGoBoom.start();
+	}
     
     public static ArrayList<Alien> getAliens(){
     	return aliens;
@@ -183,7 +216,7 @@ public class Alien {
             		new ProjectilesAliens(xPos, yPos, theta, xVelocity, yVelocity);
             projectiles.add(AlienProjectiles);
             if(MainMenu.isSfxOn() && !Constants.LINUX){
-            	AlienProjectiles.playShotSound();
+            	this.playAlienHitSound();
             }
             shoot = 0;
         }else{
@@ -229,6 +262,9 @@ public class Alien {
     	if(Constants.SHIP.getBounds() != null && circle.intersects(Constants.SHIP.getBounds()) && 
 				Constants.SHIP.isAlive() && !Constants.SHIP.isInvulnerable()){
 			Constants.SHIP.setAlive(false);
+			if(MainMenu.isSfxOn() && !Constants.LINUX){
+				this.playAlienHitSound();
+			}
 			return true;
     	}
     	return false;
@@ -238,7 +274,9 @@ public class Alien {
         for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
     		if(circle.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
     			Constants.SHIP.getProjectiles().remove(i);
-    			
+    			if(MainMenu.isSfxOn() && !Constants.LINUX){
+					this.playAlienHitSound();
+				}
     			scoreX[arrayPos] = (int) this.xPos;
     			scoreY[arrayPos] = (int) this.yPos;
     			scoreTime[arrayPos] = 80;

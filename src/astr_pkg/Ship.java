@@ -2,7 +2,15 @@ package astr_pkg;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Ship {
 	//Intialize the starting points of the ship shape
@@ -34,6 +42,8 @@ public class Ship {
 	public static final int RESPAWN_TIME = 80;
 	private int respawnTime, invulnerabilityTime;
 	
+	private static Clip shipGoBoom;
+	
 	public Ship(double x, double y, double theta, double acceleration,
 			double decelerationRate, double rotationSpeed){
 		this.x = x;
@@ -56,6 +66,31 @@ public class Ship {
 		yThrusters = new int[6];
 		projectiles = new ArrayList<Projectiles>();
 	}
+	
+	private void initializeSound(){
+		try {
+			File asteroidHit = new File("src/bangLarge.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
+			shipGoBoom = AudioSystem.getClip();
+			shipGoBoom.open(audioIn);
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+    
+    public void playShipHitSound(){
+		shipGoBoom.setFramePosition(0);
+		shipGoBoom.start();
+	}
+	
+	
 	
 	public double getX(){
 		return x;
@@ -164,6 +199,9 @@ public class Ship {
 				if(shipPoly.intersects(Alien.getAliens().get(i).getShots().get(j).getProjectileBounds()) &&
 						!isInvulnerable()){
 					Alien.getAliens().get(i).getShots().remove(j);
+					if(MainMenu.isSfxOn() && !Constants.LINUX){
+		            	this.playShipHitSound();
+		            }
 //					Constants.SHIP.setAlive(false);
 					this.setAlive(false);
 					return;

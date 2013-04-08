@@ -707,7 +707,7 @@ public class MainMenu extends JFrame{
 		menu.setBackground(Color.BLACK); //Set background color of frame(Black) N.N
 		menu.setForeground(Color.RED); //Set foreground color of Frame (RED) N.N
 		menu.setUndecorated(true); //Hide the toolbar at the top of windows
-		menu.setSize(800, 600); //Set size to 800x600
+		menu.setSize(Constants.WIDTH, Constants.HEIGHT); //Set size to 800x600
 		menu.setLocationRelativeTo(null); //Center frame
 		menu.setVisible(true); //Make frame visible
 	}

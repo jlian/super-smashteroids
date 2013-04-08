@@ -109,14 +109,14 @@ public class ProjectilesAliens {
 		/*These two if statements ensure that our projectiles do not loop around the screen
 		 * like other entities. Once they reach the end of the screen, they are removed from the game.
 		 */
-		if(x > Constants.WIDTH || x < 0){
-			onScreen = false;
-			Constants.SHIP.getProjectiles().remove(this);
-		}
-		if(y > Constants.HEIGHT || y < 0){
-			onScreen = false;
-			Constants.SHIP.getProjectiles().remove(this);
-		}
+//		if(x > Constants.WIDTH || x < 0){
+//			onScreen = false;
+//			Constants.SHIP.getProjectiles().remove(this);
+//		}
+//		if(y > Constants.HEIGHT || y < 0){
+//			onScreen = false;
+//			Constants.SHIP.getProjectiles().remove(this);
+//		}
 
 	}
 	

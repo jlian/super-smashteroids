@@ -24,6 +24,7 @@ import java.net.URL;
 public class MainMenu extends JFrame{
 
 	private static final ImageIcon background = new ImageIcon("src/astr_pkg/background_main_menu2.jpg");
+	private static final ImageIcon gameOverPic = new ImageIcon("src/astr_pkg/game_over.jpg");
 	private static int countMain = 0; //Controls which option in Main Menu should be highlighted
 	private static int countPlay = 0; //Controls which option in the Play Game menu should be highlighted
 	private static int countOptions = 0; //Controls which option in the Options menu should be highlighted
@@ -35,6 +36,10 @@ public class MainMenu extends JFrame{
 	private static Clip menu_select; //Sound effect for when options are scrolled in the Main Menu
 	private static Clip menu_validate;
 	private static Clip background_music;
+	private static Clip menu_music;
+	private static MainMenu menu = new MainMenu();
+	private AsteroidsGame game;
+	private static boolean multiplayer = false;
 
 	public MainMenu(){
 		
@@ -45,6 +50,267 @@ public class MainMenu extends JFrame{
 		add(Constants.MAIN_MENU_PANEL); //Add panel, which has main menu options, to the frame
 		Constants.MAIN_MENU_PANEL.setFocusable(true);//Make this panel able to detect key presses
 		Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+
+		//TEST
+		if (musicVolume && !Constants.LINUX) {
+			menu_music.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+		//END TEST
+		
+//		Constants.MAIN_MENU_PANEL.addKeyListener(new KeyAdapter(){ //Keyboard event handler
+//			public void keyPressed(KeyEvent e){
+//				switch(e.getKeyCode()){
+//				case KeyEvent.VK_DOWN: //If down arrow key pressed,
+//					countMain++; //increment count --> move down the list of options
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_select.isRunning()){ //If the clip is still running
+//							menu_select.stop(); //Stop playback
+//						}
+//						menu_select.setFramePosition(0); //Rewind audio to beginning
+//						menu_select.start(); //Play audio
+//					}
+//					break;
+//				case KeyEvent.VK_UP: //If upward arrow key pressed,
+//					countMain--; //decrement count --> move up the list of options
+//					if (countMain < 0){ //Keep value positive as to keep proper track of the
+//						countMain = 3; //keyboard pointer location.				
+//					}
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_select.isRunning()){ 
+//							menu_select.stop();
+//						}
+//						menu_select.setFramePosition(0);
+//						menu_select.start();
+//					}
+//					break;
+//				case KeyEvent.VK_ENTER: //If the Enter key is pressed, depending on the option selected
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_validate.isRunning()){ 
+//							menu_validate.stop(); 
+//						}
+//						menu_validate.setFramePosition(0); 
+//						menu_validate.start(); 
+//					}
+//					if(countMain % 4 == 0){ // If first option selected, "Play Game"
+//						//Show the Play Game sub-menu
+//						remove(Constants.MAIN_MENU_PANEL); //Remove the Main Menu
+//						add(Constants.PLAY_GAME_PANEL); //Show the Play Game sub-menu
+//						revalidate(); //refresh frame
+//						Constants.PLAY_GAME_PANEL.setFocusable(true);//Make this panel able to detect key presses
+//						Constants.PLAY_GAME_PANEL.requestFocusInWindow(); //from the keyboard
+//					}else if (countMain % 4 == 1){ //If 2nd option selected, "Options"
+//						//Show the Options sub-menu
+//						remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
+//						add(Constants.OPTIONS_PANEL); //Show Options sub-menu
+//						revalidate(); //refresh frame
+//						Constants.OPTIONS_PANEL.setFocusable(true); //Make this panel able to detect key presses
+//						Constants.OPTIONS_PANEL.requestFocusInWindow(); //from the keyboard
+//					}else if(countMain % 4 == 2){ //If 3rd option selected, "High Scores"
+//						remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
+//						add(Constants.HIGH_SCORES_PANEL); //Show High Scores sub-menu
+//						revalidate(); //refresh frame
+//						Constants.HIGH_SCORES_PANEL.setFocusable(true); //Make this panel able to detect key presses
+//						Constants.HIGH_SCORES_PANEL.requestFocusInWindow(); //from the keyboard
+//					}else{ //If last option selected, "Exit"
+//						System.exit(0); //Terminate program
+//					}
+//					break;
+//				}
+//				repaint(); //repaint canvas every time a key is pressed
+//			}
+//		});
+//
+//
+//		//Code to check for Keyboard events in the Play Game Sub-menu 
+//		Constants.PLAY_GAME_PANEL.addKeyListener(new KeyAdapter(){
+//			public void keyPressed(KeyEvent e){
+//				switch(e.getKeyCode()){
+//				case KeyEvent.VK_DOWN: //If down arrow key pressed
+//					countPlay++; // move down list of options
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_select.isRunning()){ 
+//							menu_select.stop(); 
+//						}
+//						menu_select.setFramePosition(0); 
+//						menu_select.start(); 
+//					}
+//					break;
+//				case KeyEvent.VK_UP: //If up arrow key pressed
+//					countPlay--; // move up list of options
+//					if(countPlay < 0){ //Keep value positive as to keep proper track of the
+//						countPlay = 3; //keyboard pointer location.	
+//					}
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_select.isRunning()){ 
+//							menu_select.stop(); 
+//						}
+//						menu_select.setFramePosition(0); 
+//						menu_select.start(); 
+//					}
+//					break;
+//				case KeyEvent.VK_ENTER://If enter key pressed
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_validate.isRunning()){ 
+//							menu_validate.stop(); 
+//						}
+//						menu_validate.setFramePosition(0); 
+//						menu_validate.start(); 
+//					}
+//					switch(countPlay % 4){
+//					case 0:
+//						difficultyLevel = (difficultyLevel + 1) % 4;
+//						if(difficultyLevel == 0){
+//							difficultyLevel = 1;
+//						}
+//						break;
+//					case 1: //If first option selected "Single Player"
+//						//Start a Single Player game
+//						System.out.println("Single Player Game Selected");
+//						remove(Constants.PLAY_GAME_PANEL);
+//						AsteroidsGame game = new AsteroidsGame();
+//						add(game);
+//						revalidate();
+//						if (musicVolume && !Constants.LINUX) {
+//							menu_music.stop();
+//							background_music.loop(Clip.LOOP_CONTINUOUSLY);
+//						}
+//						game.setFocusable(true);
+//						game.requestFocusInWindow();
+//						game.init();
+//						if(AsteroidsGame.getNumLivesP1() == 0){
+//							remove(game); //remove the Play Game sub-menu from frame
+//							add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+//							revalidate(); //refresh frame
+//							Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+//							Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+//							countPlay = 0; //reset pointer position in Play Game sub-menu to top option
+//						}
+//						
+//						break;
+//					case 2: //If second option selected "Multiplayer"
+//						//Start a Multiplayer game
+//						System.out.println("Multiplayer Game Selected");
+//						break;
+//					case 3: //If third option selected "Back to Main Menu"
+//						remove(Constants.PLAY_GAME_PANEL); //remove the Play Game sub-menu from frame
+//						add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+//						revalidate(); //refresh frame
+//						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+//						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+//						countPlay = 0; //reset pointer position in Play Game sub-menu to top option
+//						break;
+//					}break;
+//				}
+//				repaint();//repaint canvas every time a key is pressed
+//			}
+//		});
+//
+//		//Code to check for keyboard events in the Options sub-menu
+//		Constants.OPTIONS_PANEL.addKeyListener(new KeyAdapter(){
+//			public void keyPressed(KeyEvent e){
+//				switch(e.getKeyCode()){
+//				case KeyEvent.VK_DOWN: //If down arrow key pressed
+//					countOptions++; //move down list of options
+//					if(sfxVolume && !Constants.LINUX) {
+//						if(menu_select.isRunning()){ 
+//							menu_select.stop(); 
+//						}
+//						menu_select.setFramePosition(0); 
+//						menu_select.start(); 
+//					}
+//					break;
+//				case KeyEvent.VK_UP: //If up arrow key pressed
+//					countOptions--; //Move up list of options
+//					if(countOptions < 0){ //Keep value positive as to keep proper track of the
+//						countOptions = 3; //keyboard pointer location
+//					}
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_select.isRunning()){ 
+//							menu_select.stop(); 
+//						}
+//						menu_select.setFramePosition(0); 
+//						menu_select.start(); 
+//					}
+//					break;
+//				case KeyEvent.VK_ENTER: //If Enter key pressed
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_validate.isRunning()){ 
+//							menu_validate.stop(); 
+//						}
+//						menu_validate.setFramePosition(0); 
+//						menu_validate.start(); 
+//					}
+//					switch(countOptions % 4){
+//					case 0: //If first option selected
+//						//Toggle Sound effects volume ON or OFF
+//						System.out.println("Sound Effects ON/OFF");
+//						//If sound effects option is on and user presses enter
+//						if(isSfxOn()){ 
+//							sfxVolume = false; //turn sound effects off
+//						}else{
+//							sfxVolume = true; //else turn sound effects on
+//						}
+//						break;
+//					case 1: //If second option selected
+//						//Toggle Background Music ON or Off
+//						System.out.println("Background Music ON/OFF");
+//						//If music option is ON and user presses Enter
+//						if(musicVolume){
+//							musicVolume = false; //Turn Music off
+//							menu_music.stop();
+//						}else{
+//							musicVolume = true; //Else turn Music on
+//							if (!Constants.LINUX) {
+//								menu_music.loop(Clip.LOOP_CONTINUOUSLY);
+//							}
+//						}
+//						break;
+//					case 2: //If thrid option selected
+//						//Toggle Control schemes
+//						System.out.println("Control Scheme");
+//						//If WASD option and user presses enter
+//						if(wasd){
+//							wasd = false; //Scheme becomes arrow keys
+//						}else{
+//							wasd = true; //Else Scheme is WASD
+//						}
+//						break;
+//					case 3: //If third option selected "Back to Main Menu"
+//						remove(Constants.OPTIONS_PANEL); //Remove Option sub-menu from frame
+//						add(Constants.MAIN_MENU_PANEL); //Add/Show Main Menu in the frame
+//						revalidate(); //Refresh Frame
+//						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+//						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+//						countOptions = 0; //reset pointer position in Options sub-menu to top option
+//						break;
+//					}break;
+//				}
+//				repaint(); //repaint canvas every time a key is pressed
+//			}
+//		});
+//		
+//		Constants.HIGH_SCORES_PANEL.addKeyListener(new KeyAdapter(){
+//			public void keyPressed(KeyEvent e){
+//				switch(e.getKeyCode()){
+//				case KeyEvent.VK_ENTER://If enter key pressed
+//					if (sfxVolume && !Constants.LINUX) {
+//						if(menu_validate.isRunning()){ 
+//							menu_validate.stop(); 
+//						}
+//						menu_validate.setFramePosition(0); 
+//						menu_validate.start(); 
+//					}
+//					remove(Constants.HIGH_SCORES_PANEL); //remove the Play Game sub-menu from frame
+//					add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+//					revalidate(); //refresh frame
+//					Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+//					Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+//					break;
+//				}
+//				
+//				repaint();//repaint canvas every time a key is pressed
+//			}
+//		});
 
 		Constants.MAIN_MENU_PANEL.addKeyListener(new KeyAdapter(){ //Keyboard event handler
 			public void keyPressed(KeyEvent e){
@@ -82,22 +348,22 @@ public class MainMenu extends JFrame{
 					}
 					if(countMain % 4 == 0){ // If first option selected, "Play Game"
 						//Show the Play Game sub-menu
-						remove(Constants.MAIN_MENU_PANEL); //Remove the Main Menu
-						add(Constants.PLAY_GAME_PANEL); //Show the Play Game sub-menu
-						revalidate(); //refresh frame
+						menu.remove(Constants.MAIN_MENU_PANEL); //Remove the Main Menu
+						menu.add(Constants.PLAY_GAME_PANEL); //Show the Play Game sub-menu
+						menu.getRootPane().revalidate(); //refresh frame
 						Constants.PLAY_GAME_PANEL.setFocusable(true);//Make this panel able to detect key presses
 						Constants.PLAY_GAME_PANEL.requestFocusInWindow(); //from the keyboard
 					}else if (countMain % 4 == 1){ //If 2nd option selected, "Options"
 						//Show the Options sub-menu
-						remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
-						add(Constants.OPTIONS_PANEL); //Show Options sub-menu
-						revalidate(); //refresh frame
+						menu.remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
+						menu.add(Constants.OPTIONS_PANEL); //Show Options sub-menu
+						menu.getRootPane().revalidate(); //refresh frame
 						Constants.OPTIONS_PANEL.setFocusable(true); //Make this panel able to detect key presses
 						Constants.OPTIONS_PANEL.requestFocusInWindow(); //from the keyboard
 					}else if(countMain % 4 == 2){ //If 3rd option selected, "High Scores"
-						remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
-						add(Constants.HIGH_SCORES_PANEL); //Show High Scores sub-menu
-						revalidate(); //refresh frame
+						menu.remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
+						menu.add(Constants.HIGH_SCORES_PANEL); //Show High Scores sub-menu
+						menu.getRootPane().revalidate(); //refresh frame
 						Constants.HIGH_SCORES_PANEL.setFocusable(true); //Make this panel able to detect key presses
 						Constants.HIGH_SCORES_PANEL.requestFocusInWindow(); //from the keyboard
 					}else{ //If last option selected, "Exit"
@@ -155,34 +421,37 @@ public class MainMenu extends JFrame{
 					case 1: //If first option selected "Single Player"
 						//Start a Single Player game
 						System.out.println("Single Player Game Selected");
-						remove(Constants.PLAY_GAME_PANEL);
-						AsteroidsGame game = new AsteroidsGame();
-						add(game);
-						revalidate();
+						menu.remove(Constants.PLAY_GAME_PANEL);
+						game = new AsteroidsGame();
+						menu.add(game);
+						menu.getRootPane().revalidate();
 						if (musicVolume && !Constants.LINUX) {
+							menu_music.stop();
 							background_music.loop(Clip.LOOP_CONTINUOUSLY);
 						}
 						game.setFocusable(true);
 						game.requestFocusInWindow();
 						game.init();
-						if(AsteroidsGame.getNumLivesP1() == 0){
-							remove(game); //remove the Play Game sub-menu from frame
-							add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
-							revalidate(); //refresh frame
-							Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
-							Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
-							countPlay = 0; //reset pointer position in Play Game sub-menu to top option
-						}
-						
 						break;
 					case 2: //If second option selected "Multiplayer"
 						//Start a Multiplayer game
-						System.out.println("Multiplayer Game Selected");
+						multiplayer = true;
+						menu.remove(Constants.PLAY_GAME_PANEL);
+						game = new AsteroidsGame();
+						menu.add(game);
+						menu.getRootPane().revalidate();
+						if (musicVolume && !Constants.LINUX) {
+							menu_music.stop();
+							background_music.loop(Clip.LOOP_CONTINUOUSLY);
+						}
+						game.setFocusable(true);
+						game.requestFocusInWindow();
+						game.init();
 						break;
 					case 3: //If third option selected "Back to Main Menu"
-						remove(Constants.PLAY_GAME_PANEL); //remove the Play Game sub-menu from frame
-						add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
-						revalidate(); //refresh frame
+						menu.remove(Constants.PLAY_GAME_PANEL); //remove the Play Game sub-menu from frame
+						menu.add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+						menu.getRootPane().revalidate(); //refresh frame
 						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
 						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 						countPlay = 0; //reset pointer position in Play Game sub-menu to top option
@@ -245,8 +514,12 @@ public class MainMenu extends JFrame{
 						//If music option is ON and user presses Enter
 						if(musicVolume){
 							musicVolume = false; //Turn Music off
+							menu_music.stop();
 						}else{
 							musicVolume = true; //Else turn Music on
+							if (!Constants.LINUX) {
+								menu_music.loop(Clip.LOOP_CONTINUOUSLY);
+							}
 						}
 						break;
 					case 2: //If thrid option selected
@@ -260,9 +533,9 @@ public class MainMenu extends JFrame{
 						}
 						break;
 					case 3: //If third option selected "Back to Main Menu"
-						remove(Constants.OPTIONS_PANEL); //Remove Option sub-menu from frame
-						add(Constants.MAIN_MENU_PANEL); //Add/Show Main Menu in the frame
-						revalidate(); //Refresh Frame
+						menu.remove(Constants.OPTIONS_PANEL); //Remove Option sub-menu from frame
+						menu.add(Constants.MAIN_MENU_PANEL); //Add/Show Main Menu in the frame
+						menu.getRootPane().revalidate(); //Refresh Frame
 						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
 						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 						countOptions = 0; //reset pointer position in Options sub-menu to top option
@@ -284,9 +557,9 @@ public class MainMenu extends JFrame{
 						menu_validate.setFramePosition(0); 
 						menu_validate.start(); 
 					}
-					remove(Constants.HIGH_SCORES_PANEL); //remove the Play Game sub-menu from frame
-					add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
-					revalidate(); //refresh frame
+					menu.remove(Constants.HIGH_SCORES_PANEL); //remove the Play Game sub-menu from frame
+					menu.add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+					menu.getRootPane().revalidate(); //refresh frame
 					Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
 					Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 					break;
@@ -295,10 +568,17 @@ public class MainMenu extends JFrame{
 				repaint();//repaint canvas every time a key is pressed
 			}
 		});
-
-		
 	}
 
+	public void gameOver(){
+		menu.remove(game);
+		menu.add(Constants.GAME_OVER_PANEL);
+		menu.getRootPane().revalidate();
+		Constants.GAME_OVER_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+		Constants.GAME_OVER_PANEL.requestFocusInWindow();
+		repaint();
+	}
+	
 	public static void initializeSounds(){
 		/*
 		 * Code for getting an audio file to be accessible for playback
@@ -319,6 +599,12 @@ public class MainMenu extends JFrame{
 			AudioInputStream audioIn3 = AudioSystem.getAudioInputStream(backgroundMusic);
 			background_music = AudioSystem.getClip();
 			background_music.open(audioIn3);
+			
+			File menuMusic = new File("src/astr_pkg/menu_music.wav");
+			AudioInputStream audioIn4 = AudioSystem.getAudioInputStream(menuMusic);
+			menu_music = AudioSystem.getClip();
+			menu_music.open(audioIn4);
+			
 		} catch (UnsupportedAudioFileException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -333,8 +619,16 @@ public class MainMenu extends JFrame{
 
 	}
 	
+	public static MainMenu getMenu(){
+		return menu;
+	}
+	
 	public static int getDifficulty(){
 		return difficultyLevel;
+	}
+	
+	public static ImageIcon getGameOverImage(){
+		return gameOverPic;
 	}
 	
 	//Return the background Image
@@ -372,6 +666,10 @@ public class MainMenu extends JFrame{
 		return wasd;
 	}
 
+	public static boolean isMultiplayer(){
+		return multiplayer;
+	}
+	
 	//Return the custom title Font
 	public static Font getTitleFont(){
 		return titleFont;
@@ -404,12 +702,12 @@ public class MainMenu extends JFrame{
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 		//}
-		MainMenu menu = new MainMenu();
+//		MainMenu menu = new MainMenu();
 		//N.N = not necessary / not visible
 		menu.setBackground(Color.BLACK); //Set background color of frame(Black) N.N
 		menu.setForeground(Color.RED); //Set foreground color of Frame (RED) N.N
 		menu.setUndecorated(true); //Hide the toolbar at the top of windows
-		menu.setSize(800, 600); //Set size to 800x600
+		menu.setSize(Constants.WIDTH, Constants.HEIGHT); //Set size to 800x600
 		menu.setLocationRelativeTo(null); //Center frame
 		menu.setVisible(true); //Make frame visible
 	}
@@ -815,8 +1113,34 @@ class HighScoresPanel extends JPanel{
 		 */
 		g.setColor(Color.WHITE);
 		g.drawString("Back to Main Menu", highScoresX, highScoresY);
-					
-		
 
+	}
+}
+
+class GameOverPanel extends JPanel{
+	protected void paintComponent(Graphics g){
+		super.paintComponents(g);
+		
+		if(g instanceof Graphics2D){
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		}
+		
+		g.drawImage(MainMenu.getGameOverImage().getImage(), 0, 0, this);
+		
+		g.setFont(Constants.MENU_FONT);
+		g.setColor(Color.WHITE);
+		
+		FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
+		
+		int playAgainX = getWidth() / 2 - (metrics.stringWidth("Play Again") / 2);
+		int playAgainY = 6*getHeight()/8;
+		
+		int mainMenuX = getWidth() / 2 - metrics.stringWidth("Back to Main Menu") / 2; //Center text
+		int mainMenuY = playAgainY + metrics.getHeight() + 10; 
+		
+		g.drawString("Play Again", playAgainX, playAgainY);
+		g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
+		
 	}
 }

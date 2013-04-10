@@ -42,6 +42,7 @@ public class Alien {
 	private static ImageIcon alienExplosion = new ImageIcon("src/astr_pkg/explosion3.gif");
 	
 	private static Clip alienGoBoom;
+	private static Clip alienLaser;
 	
     public Alien(double alienXPos, double alienYPos, double shipXPos, double shipYPos){
         xPos = alienXPos;
@@ -61,6 +62,9 @@ public class Alien {
         else if(MainMenu.getDifficulty()==3){
         	shootDelay=60;
         }
+		if(MainMenu.isSfxOn() && !Constants.LINUX){
+			initializeSound();
+		}
     }
     
     public static void generateAliens(int numAliens){
@@ -90,6 +94,11 @@ public class Alien {
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(alienHit);
 			alienGoBoom = AudioSystem.getClip();
 			alienGoBoom.open(audioIn);
+			
+			File alienShoot = new File("src/alien_laser.wav");
+			AudioInputStream audioIn1 = AudioSystem.getAudioInputStream(alienShoot);
+			alienLaser = AudioSystem.getClip();
+			alienLaser.open(audioIn1);
 		} catch (UnsupportedAudioFileException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -106,6 +115,10 @@ public class Alien {
 		alienGoBoom.setFramePosition(0);
 		alienGoBoom.start();
 	}
+    public void playAlienShootSound(){
+    	alienLaser.setFramePosition(0);
+    	alienLaser.start();
+    }
     
     public static ArrayList<Alien> getAliens(){
     	return aliens;
@@ -216,7 +229,7 @@ public class Alien {
             		new ProjectilesAliens(xPos, yPos, theta, xVelocity, yVelocity);
             projectiles.add(AlienProjectiles);
             if(MainMenu.isSfxOn() && !Constants.LINUX){
-            	this.playAlienHitSound();
+            	this.playAlienShootSound();
             }
             shoot = 0;
         }else{

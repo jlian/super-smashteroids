@@ -65,6 +65,9 @@ public class Ship {
 		xThrusters = new int[6];
 		yThrusters = new int[6];
 		projectiles = new ArrayList<Projectiles>();
+		if(MainMenu.isSfxOn() && !Constants.LINUX){
+			initializeSound();
+		}
 	}
 	
 	private void initializeSound(){

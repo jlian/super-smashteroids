@@ -419,20 +419,27 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
         		
         	}
         }
-        if(!Constants.SHIP.isAlive() && numLivesP1 > 1){
+        if(!Constants.SHIP.isAlive() && numLivesP1 > 0){
         	if(Constants.SHIP.getRespawnTime() < 80){
 				Constants.SHIP.incrementRespawnTime();
 			}else{
 				Constants.SHIP.reset();
 				Constants.SHIP.resetRespawnTime();
 				Constants.SHIP.resetInvulnerabilityTime();//If ship has just respawned, make invulnerable
-				Constants.SHIP.setAlive(true);
-				blowup = true;
 				numLivesP1--;
+				if(numLivesP1 >= 0){
+					
+					Constants.SHIP.setAlive(true);
+					
+				}
+				
+				blowup = true;
+				
 			}
-		}else if(numLivesP1 == 1){
-			numLivesP1--;
 		}
+        //	else if(numLivesP1 == 1){
+//			numLivesP1--;
+//		}
         
         if(Constants.SHIP.isInvulnerable()){
         	Constants.SHIP.incrementInvulnerabilityTime();

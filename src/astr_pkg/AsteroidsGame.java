@@ -377,6 +377,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 						lifeup = 2;
 						//put in message letting play know of upgrades
 					}
+					lifeup--;
 					Alien.generateAliens(numAliens);
 					nextWave = false;
 					levelUp = true;

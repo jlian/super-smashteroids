@@ -27,7 +27,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     static Alien AI;
 
     private static int respawnTime;
-    private static int delay, level, difficulty, startAstr, numAliens;
+    private static int delay, level, difficulty, startAstr, numAliens, rapidfire, scattershot, lifeup;
     private static boolean nextWave, levelUp;
     private static int numLivesP1, numLivesP2;
     private Clip thrusterSound;
@@ -36,11 +36,16 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private boolean blowup = true;
     private static ImageIcon shipExplosion = new ImageIcon("src/astr_pkg/explosion.gif");
     private static int count = 0;
+    private boolean isHighScore;
+    private int score;
 	
     public void init(){
 		nextWave = false;
 		levelUp = true;
 		delay = 100;
+		rapidfire = 0;
+		scattershot = 1;
+		lifeup = 2;
 		level = 1;
 		numLivesP1 = 3;
 		if(MainMenu.isMultiplayer()){
@@ -109,7 +114,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			e.printStackTrace();
 		}
 	}
-	
+	public boolean getIsHighScore() {
+		return isHighScore;
+	}
+	public int getScore() {
+		return score;
+	}
 
 	public void playThrusterSound(){
 		thrusterSound.setFramePosition(0);
@@ -328,6 +338,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			if(Constants.SHIP.isAlive()){
 				Constants.SHIP.move(getWidth(), getHeight());
 			}
+			score = (Asteroid.getPointsP1() + Alien.getPointsP1());
 			
 			//MP
 			if(Constants.P2SHIP.isAlive()){
@@ -351,6 +362,21 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					startAstr += difficulty;
 					numAliens += difficulty;
 					Asteroid.generateAsteroids(startAstr);
+					if (rapidfire == 0) {
+						Constants.SHIP.decreaseShotWait();
+						rapidfire = 2;
+					}
+					rapidfire--;
+					if (scattershot == 0) {
+						Constants.SHIP.setScattershot();
+						scattershot =2;
+					}
+					scattershot--;
+					if (lifeup ==0) {
+						numLivesP1++;
+						lifeup = 2;
+						//put in message letting play know of upgrades
+					}
 					Alien.generateAliens(numAliens);
 					nextWave = false;
 					levelUp = true;

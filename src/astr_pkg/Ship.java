@@ -32,7 +32,7 @@ public class Ship {
 	
 	boolean fire;
 	
-	int shotWaitLeft, shotWait = 10;
+	int shotWaitLeft, scatterShot; shotWait = 10;
 	
 	private int[] xPts, yPts, xThrusters, yThrusters, hitXPts, hitYPts;
 	
@@ -65,6 +65,7 @@ public class Ship {
 		xThrusters = new int[6];
 		yThrusters = new int[6];
 		projectiles = new ArrayList<Projectiles>();
+		scatterShot = 0;
 		if(MainMenu.isSfxOn() && !Constants.LINUX){
 			initializeSound();
 		}
@@ -93,7 +94,17 @@ public class Ship {
 		shipGoBoom.start();
 	}
 	
+	public void decreaseShotWait() {
+		if (shotWait > 4) {
+			shotWait = shotWait -2;
+		}
+	}
 	
+	public void setScattershot() {
+		if (scatterShot <= 1) {
+			scatterShot++;
+		}
+	}
 	
 	public double getX(){
 		return x;
@@ -230,6 +241,23 @@ public class Ship {
 				Projectiles p = new Projectiles(x+(16*Math.cos(theta)), y+(16*Math.sin(theta)),
 						theta, this);
 				projectiles.add(p);
+				if (scatterShot >=1) {
+					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+0.8)), y+(16*Math.sin(theta+0.8)),
+						theta, this);
+					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-0.8)), y+(16*Math.sin(theta-0.8)),
+						theta, this);
+					projectiles.add(p1);
+					projectiles.add(p2);
+				}
+				if (scatterShot == 2) {
+					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+1.5)), y+(16*Math.sin(theta+1.5)),
+						theta, this);
+					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-1.5)), y+(16*Math.sin(theta-1.5)),
+						theta, this);
+					projectiles.add(p1);
+					projecttiles.add(p2);
+				}
+				
 				if(MainMenu.isSfxOn() && !Constants.LINUX){
 					p.playShotSound();
 				}

@@ -40,6 +40,10 @@ public class MainMenu extends JFrame{
 	private static MainMenu menu = new MainMenu();
 	private AsteroidsGame game;
 	private static boolean multiplayer = false;
+	
+	public static AsteroidsGame getGame() {
+		return game;
+	}
 
 	public MainMenu(){
 		
@@ -1142,5 +1146,10 @@ class GameOverPanel extends JPanel{
 		g.drawString("Play Again", playAgainX, playAgainY);
 		g.drawString("Back to Main Menu", mainMenuX, mainMenuY);
 		
+		g.drawString ("Score: " + MainMenu.getGame().getScore(), 150, 100);
+		g.drawString("Time: ", 150, 200);
+		if (MainMenu.getGame().getIsHighScore()) {
+			
+		}
 	}
 }

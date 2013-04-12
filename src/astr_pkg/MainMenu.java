@@ -41,9 +41,9 @@ public class MainMenu extends JFrame{
 	private AsteroidsGame game;
 	private static boolean multiplayer = false;
 	
-	public static AsteroidsGame getGame() {
-		return game;
-	}
+//	public static AsteroidsGame getGame() {
+//		return game;
+//	}
 
 	public MainMenu(){
 		
@@ -55,266 +55,264 @@ public class MainMenu extends JFrame{
 		Constants.MAIN_MENU_PANEL.setFocusable(true);//Make this panel able to detect key presses
 		Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
 
-		//TEST
 		if (musicVolume && !Constants.LINUX) {
 			menu_music.loop(Clip.LOOP_CONTINUOUSLY);
 		}
-		//END TEST
 		
-//		Constants.MAIN_MENU_PANEL.addKeyListener(new KeyAdapter(){ //Keyboard event handler
-//			public void keyPressed(KeyEvent e){
-//				switch(e.getKeyCode()){
-//				case KeyEvent.VK_DOWN: //If down arrow key pressed,
-//					countMain++; //increment count --> move down the list of options
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_select.isRunning()){ //If the clip is still running
-//							menu_select.stop(); //Stop playback
-//						}
-//						menu_select.setFramePosition(0); //Rewind audio to beginning
-//						menu_select.start(); //Play audio
-//					}
-//					break;
-//				case KeyEvent.VK_UP: //If upward arrow key pressed,
-//					countMain--; //decrement count --> move up the list of options
-//					if (countMain < 0){ //Keep value positive as to keep proper track of the
-//						countMain = 3; //keyboard pointer location.				
-//					}
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_select.isRunning()){ 
-//							menu_select.stop();
-//						}
-//						menu_select.setFramePosition(0);
-//						menu_select.start();
-//					}
-//					break;
-//				case KeyEvent.VK_ENTER: //If the Enter key is pressed, depending on the option selected
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_validate.isRunning()){ 
-//							menu_validate.stop(); 
-//						}
-//						menu_validate.setFramePosition(0); 
-//						menu_validate.start(); 
-//					}
-//					if(countMain % 4 == 0){ // If first option selected, "Play Game"
-//						//Show the Play Game sub-menu
-//						remove(Constants.MAIN_MENU_PANEL); //Remove the Main Menu
-//						add(Constants.PLAY_GAME_PANEL); //Show the Play Game sub-menu
-//						revalidate(); //refresh frame
-//						Constants.PLAY_GAME_PANEL.setFocusable(true);//Make this panel able to detect key presses
-//						Constants.PLAY_GAME_PANEL.requestFocusInWindow(); //from the keyboard
-//					}else if (countMain % 4 == 1){ //If 2nd option selected, "Options"
-//						//Show the Options sub-menu
-//						remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
-//						add(Constants.OPTIONS_PANEL); //Show Options sub-menu
-//						revalidate(); //refresh frame
-//						Constants.OPTIONS_PANEL.setFocusable(true); //Make this panel able to detect key presses
-//						Constants.OPTIONS_PANEL.requestFocusInWindow(); //from the keyboard
-//					}else if(countMain % 4 == 2){ //If 3rd option selected, "High Scores"
-//						remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
-//						add(Constants.HIGH_SCORES_PANEL); //Show High Scores sub-menu
-//						revalidate(); //refresh frame
-//						Constants.HIGH_SCORES_PANEL.setFocusable(true); //Make this panel able to detect key presses
-//						Constants.HIGH_SCORES_PANEL.requestFocusInWindow(); //from the keyboard
-//					}else{ //If last option selected, "Exit"
-//						System.exit(0); //Terminate program
-//					}
-//					break;
-//				}
-//				repaint(); //repaint canvas every time a key is pressed
-//			}
-//		});
-//
-//
-//		//Code to check for Keyboard events in the Play Game Sub-menu 
-//		Constants.PLAY_GAME_PANEL.addKeyListener(new KeyAdapter(){
-//			public void keyPressed(KeyEvent e){
-//				switch(e.getKeyCode()){
-//				case KeyEvent.VK_DOWN: //If down arrow key pressed
-//					countPlay++; // move down list of options
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_select.isRunning()){ 
-//							menu_select.stop(); 
-//						}
-//						menu_select.setFramePosition(0); 
-//						menu_select.start(); 
-//					}
-//					break;
-//				case KeyEvent.VK_UP: //If up arrow key pressed
-//					countPlay--; // move up list of options
-//					if(countPlay < 0){ //Keep value positive as to keep proper track of the
-//						countPlay = 3; //keyboard pointer location.	
-//					}
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_select.isRunning()){ 
-//							menu_select.stop(); 
-//						}
-//						menu_select.setFramePosition(0); 
-//						menu_select.start(); 
-//					}
-//					break;
-//				case KeyEvent.VK_ENTER://If enter key pressed
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_validate.isRunning()){ 
-//							menu_validate.stop(); 
-//						}
-//						menu_validate.setFramePosition(0); 
-//						menu_validate.start(); 
-//					}
-//					switch(countPlay % 4){
-//					case 0:
-//						difficultyLevel = (difficultyLevel + 1) % 4;
-//						if(difficultyLevel == 0){
-//							difficultyLevel = 1;
-//						}
-//						break;
-//					case 1: //If first option selected "Single Player"
-//						//Start a Single Player game
-//						System.out.println("Single Player Game Selected");
-//						remove(Constants.PLAY_GAME_PANEL);
-//						AsteroidsGame game = new AsteroidsGame();
-//						add(game);
-//						revalidate();
-//						if (musicVolume && !Constants.LINUX) {
-//							menu_music.stop();
-//							background_music.loop(Clip.LOOP_CONTINUOUSLY);
-//						}
-//						game.setFocusable(true);
-//						game.requestFocusInWindow();
-//						game.init();
-//						if(AsteroidsGame.getNumLivesP1() == 0){
-//							remove(game); //remove the Play Game sub-menu from frame
-//							add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
-//							revalidate(); //refresh frame
-//							Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
-//							Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
-//							countPlay = 0; //reset pointer position in Play Game sub-menu to top option
-//						}
-//						
-//						break;
-//					case 2: //If second option selected "Multiplayer"
-//						//Start a Multiplayer game
-//						System.out.println("Multiplayer Game Selected");
-//						break;
-//					case 3: //If third option selected "Back to Main Menu"
-//						remove(Constants.PLAY_GAME_PANEL); //remove the Play Game sub-menu from frame
-//						add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
-//						revalidate(); //refresh frame
-//						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
-//						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
-//						countPlay = 0; //reset pointer position in Play Game sub-menu to top option
-//						break;
-//					}break;
-//				}
-//				repaint();//repaint canvas every time a key is pressed
-//			}
-//		});
-//
-//		//Code to check for keyboard events in the Options sub-menu
-//		Constants.OPTIONS_PANEL.addKeyListener(new KeyAdapter(){
-//			public void keyPressed(KeyEvent e){
-//				switch(e.getKeyCode()){
-//				case KeyEvent.VK_DOWN: //If down arrow key pressed
-//					countOptions++; //move down list of options
-//					if(sfxVolume && !Constants.LINUX) {
-//						if(menu_select.isRunning()){ 
-//							menu_select.stop(); 
-//						}
-//						menu_select.setFramePosition(0); 
-//						menu_select.start(); 
-//					}
-//					break;
-//				case KeyEvent.VK_UP: //If up arrow key pressed
-//					countOptions--; //Move up list of options
-//					if(countOptions < 0){ //Keep value positive as to keep proper track of the
-//						countOptions = 3; //keyboard pointer location
-//					}
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_select.isRunning()){ 
-//							menu_select.stop(); 
-//						}
-//						menu_select.setFramePosition(0); 
-//						menu_select.start(); 
-//					}
-//					break;
-//				case KeyEvent.VK_ENTER: //If Enter key pressed
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_validate.isRunning()){ 
-//							menu_validate.stop(); 
-//						}
-//						menu_validate.setFramePosition(0); 
-//						menu_validate.start(); 
-//					}
-//					switch(countOptions % 4){
-//					case 0: //If first option selected
-//						//Toggle Sound effects volume ON or OFF
-//						System.out.println("Sound Effects ON/OFF");
-//						//If sound effects option is on and user presses enter
-//						if(isSfxOn()){ 
-//							sfxVolume = false; //turn sound effects off
-//						}else{
-//							sfxVolume = true; //else turn sound effects on
-//						}
-//						break;
-//					case 1: //If second option selected
-//						//Toggle Background Music ON or Off
-//						System.out.println("Background Music ON/OFF");
-//						//If music option is ON and user presses Enter
-//						if(musicVolume){
-//							musicVolume = false; //Turn Music off
-//							menu_music.stop();
-//						}else{
-//							musicVolume = true; //Else turn Music on
-//							if (!Constants.LINUX) {
-//								menu_music.loop(Clip.LOOP_CONTINUOUSLY);
-//							}
-//						}
-//						break;
-//					case 2: //If thrid option selected
-//						//Toggle Control schemes
-//						System.out.println("Control Scheme");
-//						//If WASD option and user presses enter
-//						if(wasd){
-//							wasd = false; //Scheme becomes arrow keys
-//						}else{
-//							wasd = true; //Else Scheme is WASD
-//						}
-//						break;
-//					case 3: //If third option selected "Back to Main Menu"
-//						remove(Constants.OPTIONS_PANEL); //Remove Option sub-menu from frame
-//						add(Constants.MAIN_MENU_PANEL); //Add/Show Main Menu in the frame
-//						revalidate(); //Refresh Frame
-//						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
-//						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
-//						countOptions = 0; //reset pointer position in Options sub-menu to top option
-//						break;
-//					}break;
-//				}
-//				repaint(); //repaint canvas every time a key is pressed
-//			}
-//		});
-//		
-//		Constants.HIGH_SCORES_PANEL.addKeyListener(new KeyAdapter(){
-//			public void keyPressed(KeyEvent e){
-//				switch(e.getKeyCode()){
-//				case KeyEvent.VK_ENTER://If enter key pressed
-//					if (sfxVolume && !Constants.LINUX) {
-//						if(menu_validate.isRunning()){ 
-//							menu_validate.stop(); 
-//						}
-//						menu_validate.setFramePosition(0); 
-//						menu_validate.start(); 
-//					}
-//					remove(Constants.HIGH_SCORES_PANEL); //remove the Play Game sub-menu from frame
-//					add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
-//					revalidate(); //refresh frame
-//					Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
-//					Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
-//					break;
-//				}
-//				
-//				repaint();//repaint canvas every time a key is pressed
-//			}
-//		});
+		Constants.MAIN_MENU_PANEL.addKeyListener(new KeyAdapter(){ //Keyboard event handler
+			public void keyPressed(KeyEvent e){
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_DOWN: //If down arrow key pressed,
+					countMain++; //increment count --> move down the list of options
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_select.isRunning()){ //If the clip is still running
+							menu_select.stop(); //Stop playback
+						}
+						menu_select.setFramePosition(0); //Rewind audio to beginning
+						menu_select.start(); //Play audio
+					}
+					break;
+				case KeyEvent.VK_UP: //If upward arrow key pressed,
+					countMain--; //decrement count --> move up the list of options
+					if (countMain < 0){ //Keep value positive as to keep proper track of the
+						countMain = 3; //keyboard pointer location.				
+					}
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_select.isRunning()){ 
+							menu_select.stop();
+						}
+						menu_select.setFramePosition(0);
+						menu_select.start();
+					}
+					break;
+				case KeyEvent.VK_ENTER: //If the Enter key is pressed, depending on the option selected
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_validate.isRunning()){ 
+							menu_validate.stop(); 
+						}
+						menu_validate.setFramePosition(0); 
+						menu_validate.start(); 
+					}
+					if(countMain % 4 == 0){ // If first option selected, "Play Game"
+						//Show the Play Game sub-menu
+						remove(Constants.MAIN_MENU_PANEL); //Remove the Main Menu
+						add(Constants.PLAY_GAME_PANEL); //Show the Play Game sub-menu
+						getRootPane().revalidate(); //refresh frame
+						Constants.PLAY_GAME_PANEL.setFocusable(true);//Make this panel able to detect key presses
+						Constants.PLAY_GAME_PANEL.requestFocusInWindow(); //from the keyboard
+					}else if (countMain % 4 == 1){ //If 2nd option selected, "Options"
+						//Show the Options sub-menu
+						remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
+						add(Constants.OPTIONS_PANEL); //Show Options sub-menu
+						getRootPane().revalidate(); //refresh frame
+						Constants.OPTIONS_PANEL.setFocusable(true); //Make this panel able to detect key presses
+						Constants.OPTIONS_PANEL.requestFocusInWindow(); //from the keyboard
+					}else if(countMain % 4 == 2){ //If 3rd option selected, "High Scores"
+						remove(Constants.MAIN_MENU_PANEL); //Remove Main Menu
+						add(Constants.HIGH_SCORES_PANEL); //Show High Scores sub-menu
+						getRootPane().revalidate(); //refresh frame
+						Constants.HIGH_SCORES_PANEL.setFocusable(true); //Make this panel able to detect key presses
+						Constants.HIGH_SCORES_PANEL.requestFocusInWindow(); //from the keyboard
+					}else{ //If last option selected, "Exit"
+						System.exit(0); //Terminate program
+					}
+					break;
+				}
+				repaint(); //repaint canvas every time a key is pressed
+			}
+		});
+
+
+		//Code to check for Keyboard events in the Play Game Sub-menu 
+		Constants.PLAY_GAME_PANEL.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_DOWN: //If down arrow key pressed
+					countPlay++; // move down list of options
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_select.isRunning()){ 
+							menu_select.stop(); 
+						}
+						menu_select.setFramePosition(0); 
+						menu_select.start(); 
+					}
+					break;
+				case KeyEvent.VK_UP: //If up arrow key pressed
+					countPlay--; // move up list of options
+					if(countPlay < 0){ //Keep value positive as to keep proper track of the
+						countPlay = 3; //keyboard pointer location.	
+					}
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_select.isRunning()){ 
+							menu_select.stop(); 
+						}
+						menu_select.setFramePosition(0); 
+						menu_select.start(); 
+					}
+					break;
+				case KeyEvent.VK_ENTER://If enter key pressed
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_validate.isRunning()){ 
+							menu_validate.stop(); 
+						}
+						menu_validate.setFramePosition(0); 
+						menu_validate.start(); 
+					}
+					switch(countPlay % 4){
+					case 0:
+						difficultyLevel = (difficultyLevel + 1) % 4;
+						if(difficultyLevel == 0){
+							difficultyLevel = 1;
+						}
+						break;
+					case 1: //If first option selected "Single Player"
+						//Start a Single Player game
+						System.out.println("Single Player Game Selected");
+						remove(Constants.PLAY_GAME_PANEL);
+						AsteroidsGame game = new AsteroidsGame();
+						add(game);
+						getRootPane().revalidate();
+						if (musicVolume && !Constants.LINUX) {
+							menu_music.stop();
+							background_music.loop(Clip.LOOP_CONTINUOUSLY);
+						}
+						game.setFocusable(true);
+						game.requestFocusInWindow();
+						game.init();
+						if(AsteroidsGame.getNumLivesP1() == 0){
+							remove(game); //remove the Play Game sub-menu from frame
+							add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+							getRootPane().revalidate(); //refresh frame
+							Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+							Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+							countPlay = 0; //reset pointer position in Play Game sub-menu to top option
+						}
+						
+						break;
+					case 2: //If second option selected "Multiplayer"
+						//Start a Multiplayer game
+						System.out.println("Multiplayer Game Selected");
+						break;
+					case 3: //If third option selected "Back to Main Menu"
+						remove(Constants.PLAY_GAME_PANEL); //remove the Play Game sub-menu from frame
+						add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+						getRootPane().revalidate(); //refresh frame
+						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+						countPlay = 0; //reset pointer position in Play Game sub-menu to top option
+						break;
+					}break;
+				}
+				repaint();//repaint canvas every time a key is pressed
+			}
+		});
+
+		//Code to check for keyboard events in the Options sub-menu
+		Constants.OPTIONS_PANEL.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_DOWN: //If down arrow key pressed
+					countOptions++; //move down list of options
+					if(sfxVolume && !Constants.LINUX) {
+						if(menu_select.isRunning()){ 
+							menu_select.stop(); 
+						}
+						menu_select.setFramePosition(0); 
+						menu_select.start(); 
+					}
+					break;
+				case KeyEvent.VK_UP: //If up arrow key pressed
+					countOptions--; //Move up list of options
+					if(countOptions < 0){ //Keep value positive as to keep proper track of the
+						countOptions = 3; //keyboard pointer location
+					}
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_select.isRunning()){ 
+							menu_select.stop(); 
+						}
+						menu_select.setFramePosition(0); 
+						menu_select.start(); 
+					}
+					break;
+				case KeyEvent.VK_ENTER: //If Enter key pressed
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_validate.isRunning()){ 
+							menu_validate.stop(); 
+						}
+						menu_validate.setFramePosition(0); 
+						menu_validate.start(); 
+					}
+					switch(countOptions % 4){
+					case 0: //If first option selected
+						//Toggle Sound effects volume ON or OFF
+						System.out.println("Sound Effects ON/OFF");
+						//If sound effects option is on and user presses enter
+						if(isSfxOn()){ 
+							sfxVolume = false; //turn sound effects off
+						}else{
+							sfxVolume = true; //else turn sound effects on
+						}
+						break;
+					case 1: //If second option selected
+						//Toggle Background Music ON or Off
+						System.out.println("Background Music ON/OFF");
+						//If music option is ON and user presses Enter
+						if(musicVolume){
+							musicVolume = false; //Turn Music off
+							menu_music.stop();
+						}else{
+							musicVolume = true; //Else turn Music on
+							if (!Constants.LINUX) {
+								menu_music.loop(Clip.LOOP_CONTINUOUSLY);
+							}
+						}
+						break;
+					case 2: //If thrid option selected
+						//Toggle Control schemes
+						System.out.println("Control Scheme");
+						//If WASD option and user presses enter
+						if(wasd){
+							wasd = false; //Scheme becomes arrow keys
+						}else{
+							wasd = true; //Else Scheme is WASD
+						}
+						break;
+					case 3: //If third option selected "Back to Main Menu"
+						remove(Constants.OPTIONS_PANEL); //Remove Option sub-menu from frame
+						add(Constants.MAIN_MENU_PANEL); //Add/Show Main Menu in the frame
+						getRootPane().revalidate(); //Refresh Frame
+						Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+						Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+						countOptions = 0; //reset pointer position in Options sub-menu to top option
+						break;
+					}break;
+				}
+				repaint(); //repaint canvas every time a key is pressed
+			}
+		});
+		
+		Constants.HIGH_SCORES_PANEL.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_ENTER://If enter key pressed
+					if (sfxVolume && !Constants.LINUX) {
+						if(menu_validate.isRunning()){ 
+							menu_validate.stop(); 
+						}
+						menu_validate.setFramePosition(0); 
+						menu_validate.start(); 
+					}
+					remove(Constants.HIGH_SCORES_PANEL); //remove the Play Game sub-menu from frame
+					add(Constants.MAIN_MENU_PANEL); //Add the Main Menu to frame
+					getRootPane().revalidate(); //refresh frame
+					Constants.MAIN_MENU_PANEL.setFocusable(true); //Make Main Menu able to detect key presses
+					Constants.MAIN_MENU_PANEL.requestFocusInWindow(); //from the keyboard
+					break;
+				}
+				
+				repaint();//repaint canvas every time a key is pressed
+			}
+		});
 
 		Constants.MAIN_MENU_PANEL.addKeyListener(new KeyAdapter(){ //Keyboard event handler
 			public void keyPressed(KeyEvent e){
@@ -625,6 +623,10 @@ public class MainMenu extends JFrame{
 	
 	public static MainMenu getMenu(){
 		return menu;
+	}
+	
+	public static AsteroidsGame getGame() {
+		return game;
 	}
 	
 	public static int getDifficulty(){

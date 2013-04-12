@@ -32,7 +32,8 @@ public class Ship {
 	
 	boolean fire;
 	
-	int shotWaitLeft, scatterShot; shotWait = 10;
+	int shotWaitLeft, scatterShot; 
+	int shotWait = 10;
 	
 	private int[] xPts, yPts, xThrusters, yThrusters, hitXPts, hitYPts;
 	
@@ -255,7 +256,7 @@ public class Ship {
 					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-1.5)), y+(16*Math.sin(theta-1.5)),
 						theta, this);
 					projectiles.add(p1);
-					projecttiles.add(p2);
+					projectiles.add(p2);
 				}
 				
 				if(MainMenu.isSfxOn() && !Constants.LINUX){

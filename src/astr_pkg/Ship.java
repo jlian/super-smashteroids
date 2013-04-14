@@ -26,8 +26,8 @@ public class Ship {
 	private Rectangle2D rect;
 	private boolean accelerating, turningLeft, turningRight, alive;
 	boolean fire;
-	private int shotWaitLeft, scatterShot; 
-	private int shotWait = 10;
+	public int shotWaitLeft, scatterShot; 
+	public int shotWait = 10;
 	private int[] xPts, yPts, xThrusters, yThrusters;
 	private ArrayList<Projectiles> projectiles;
 	public static final int INVULNERABILITY_TIME = 120;

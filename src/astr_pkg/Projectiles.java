@@ -22,8 +22,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Projectiles {
 	//Initialization
-	private double x, y, theta, xVelocity, yVelocity;
 	private Ship ship;
+	private double x, y, theta, xVelocity, yVelocity;
 	private static Image pImage;
 	boolean onScreen;
 	private final int PROJECTILE_SPEED = 10;
@@ -35,7 +35,6 @@ public class Projectiles {
 		this.x = x;
 		this.y = y;
 		this.theta = theta;
-		
 		this.ship = ship;
 		
 		/*These next two velocities are for the ship projectiles. To be realistic, we have
@@ -43,9 +42,6 @@ public class Projectiles {
 		 *are fired. We take the current ship velocity in x and y, then add the constant
 		 *projectile speed in the theta direction the ship is facing.
 		 */
-//		xVelocity = Constants.SHIP.getXVelocity() + PROJECTILE_SPEED * Math.cos(theta);
-//		yVelocity = Constants.SHIP.getYVelocity() + PROJECTILE_SPEED * Math.sin(theta);
-		
 		xVelocity = ship.getXVelocity() + PROJECTILE_SPEED * Math.cos(theta);
 		yVelocity = ship.getYVelocity() + PROJECTILE_SPEED * Math.sin(theta);
 		
@@ -57,6 +53,8 @@ public class Projectiles {
 		 *First, if the player selects to turn off the sound in the Options menu, and
 		 *second if the game is running on a linux machine. Errors with sound files
 		 *come up on linux machine, so this had to be done for the game to run.
+		 *Our game does not auto-detect linux machines, so this constant must
+		 *be changed manually
 		 */
 		if(MainMenu.isSfxOn() && !Constants.LINUX){
 			initializeSound();
@@ -71,23 +69,15 @@ public class Projectiles {
 			clip = AudioSystem.getClip();
 			clip.open(audioIn);
 		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
 	
-	public void playShotSound(){
-		clip.setFramePosition(0);
-		clip.start();
-	}
-	
-	//Getters
+	//Getters and Setters
 	public double getX(){
 		return x;
 	}
@@ -110,6 +100,11 @@ public class Projectiles {
 		rect = new Rectangle((int) getX()-2,  (int) getY()-2, 4, 4);
 		return rect;
 	}
+	public void playShotSound(){
+		clip.setFramePosition(0);
+		clip.start();
+	}
+	
 	//Move method for the projectiles
 	public void move(){
 		//Updates the x and y position according to the velocity determined earlier
@@ -121,12 +116,10 @@ public class Projectiles {
 		 */
 		if(x > Constants.WIDTH || x < 0){
 			onScreen = false;
-//			Constants.SHIP.getProjectiles().remove(this);
 			ship.getProjectiles().remove(this);
 		}
 		if(y > Constants.HEIGHT || y < 0){
 			onScreen = false;
-//			Constants.SHIP.getProjectiles().remove(this);
 			ship.getProjectiles().remove(this);
 		}
 
@@ -137,6 +130,7 @@ public class Projectiles {
 		Graphics g2D = (Graphics2D) g;
 		ArrayList<Projectiles> shootArrayP1;
 		shootArrayP1 = Constants.SHIP.getProjectiles();
+		
 		/*We used an arraylist to handle the projectiles, so to draw them we must travel
 		 *through the array to set the colour and shape of each projectile for drawing
 		 */
@@ -147,7 +141,7 @@ public class Projectiles {
 			
 		}
 		
-		//MP
+		//Multiplayer
 		if(MainMenu.isMultiplayer()){
 			ArrayList<Projectiles> shootArrayP2;
 			shootArrayP2 = Constants.P2SHIP.getProjectiles();

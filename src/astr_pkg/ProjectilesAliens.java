@@ -63,13 +63,10 @@ public class ProjectilesAliens {
 			clip = AudioSystem.getClip();
 			clip.open(audioIn);
 		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
@@ -109,13 +106,14 @@ public class ProjectilesAliens {
 		/*These two if statements ensure that our projectiles do not loop around the screen
 		 * like other entities. Once they reach the end of the screen, they are removed from the game.
 		 */
+		//Does not work yet
 //		if(x > Constants.WIDTH || x < 0){
 //			onScreen = false;
-//			Constants.SHIP.getProjectiles().remove(this);
+//			Alien.getShots().remove(this);
 //		}
 //		if(y > Constants.HEIGHT || y < 0){
 //			onScreen = false;
-//			Constants.SHIP.getProjectiles().remove(this);
+//			Alien.getShots().remove(this);
 //		}
 
 	}
@@ -128,19 +126,13 @@ public class ProjectilesAliens {
 		 *we needed an embedded for loop to travel through both arrays and set the colour
 		 *and shape of the projectiles needed to be displayed for all aliens on the screen		 
 		 */
-//		for(int i = 0; i < Alien.getAliens().length; i++){
-//			if(Alien.getAliens()[i] != null){
-//				shootArray = Alien.getAliens()[i].getShots();
 		for(int i = 0; i < Alien.getAliens().size(); i++){
 			shootArray = Alien.getAliens().get(i).getShots();
 			for(int j = 0; j < shootArray.size(); j++){
 				ProjectilesAliens p = shootArray.get(j);
 				g2D.setColor(new Color(255, 0, 0));
 				g2D.fillOval((int) p.getX(),  (int)p.getY(), 4, 4);
-			}
-//			}
-			
+			}	
 		}
-	}
-		
+	}	
 }

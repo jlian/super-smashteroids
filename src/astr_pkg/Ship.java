@@ -39,7 +39,7 @@ public class Ship {
 	
 	private ArrayList<Projectiles> projectiles;
 	
-	public static final int INVULNERABILITY_TIME = 120;
+	public static final int INVULNERABILITY_TIME = 1000;
 	public static final int RESPAWN_TIME = 80;
 	private int respawnTime, invulnerabilityTime;
 	

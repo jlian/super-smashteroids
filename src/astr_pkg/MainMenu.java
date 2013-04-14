@@ -38,7 +38,7 @@ public class MainMenu extends JFrame{
 	private static Clip background_music;
 	private static Clip menu_music;
 	private static MainMenu menu = new MainMenu();
-	private AsteroidsGame game;
+	private static AsteroidsGame game;
 	private static boolean multiplayer = false;
 	
 //	public static AsteroidsGame getGame() {
@@ -681,6 +681,9 @@ public class MainMenu extends JFrame{
 		return titleFont;
 	}
 
+	public static void stopBackgroundMusic() {
+		background_music.stop();
+	}
 	/**
 	 * @param args
 	 * @throws Exception 

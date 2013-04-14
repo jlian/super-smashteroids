@@ -128,7 +128,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	
 	public void playGameOverSound(){
 		gameOverSound.setFramePosition(0);
-		gameOverSound.loop(Clip.LOOP_CONTINUOUSLY);
+		gameOverSound.start();
+		//gameOverSound.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 	public static void setRespawnTime(int time){
 		respawnTime = time;
@@ -168,9 +169,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(true);
-//				if(MainMenu.isSfxOn() && !Constants.LINUX){
-//					playThrusterSound();
-//				}
+				if(MainMenu.isSfxOn() && !Constants.LINUX){
+					playThrusterSound();
+				}
 				break;
 			
 			}
@@ -184,9 +185,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_UP:
 				Constants.SHIP.setAccelerating(true);
-//				if(MainMenu.isSfxOn() && !Constants.LINUX){
-//					playThrusterSound();
-//				}
+				if(MainMenu.isSfxOn() && !Constants.LINUX){
+					playThrusterSound();
+				}
 				break;
 			}
 		}
@@ -209,9 +210,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					break;
 				case KeyEvent.VK_UP:
 					Constants.P2SHIP.setAccelerating(true);
-//					if(MainMenu.isSfxOn() && !Constants.LINUX){
-//						playThrusterSound();
-//					}
+					if(MainMenu.isSfxOn() && !Constants.LINUX){
+						playThrusterSound();
+					}
 					break;
 				case KeyEvent.VK_ENTER:
 					Constants.P2SHIP.makeItRain(true);
@@ -227,9 +228,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					break;
 				case KeyEvent.VK_W:
 					Constants.P2SHIP.setAccelerating(true);
-//					if(MainMenu.isSfxOn() && !Constants.LINUX){
-//						playThrusterSound();
-//					}
+					if(MainMenu.isSfxOn() && !Constants.LINUX){
+						playThrusterSound();
+					}
 					break;
 				case KeyEvent.VK_F:
 					Constants.P2SHIP.makeItRain(true);
@@ -239,8 +240,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 //			if(e.getKeyCode() == KeyEvent.VK_CONTROL){
 //				Constants.P2SHIP.makeItRain(true);
 //			}
-		}
-		
+		}	
 	}
 
 	@Override
@@ -255,10 +255,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(false);
-//				if(MainMenu.isSfxOn() && !Constants.LINUX){
-//					thrusterSound.stop();
-//					thrusterSound.setFramePosition(0);
-//				}
+				if(MainMenu.isSfxOn() && !Constants.LINUX){
+					thrusterSound.stop();
+					thrusterSound.setFramePosition(0);
+				}
 				break;
 			}
 		}else{
@@ -271,10 +271,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_UP:
 				Constants.SHIP.setAccelerating(false);
-//				if(MainMenu.isSfxOn() && !Constants.LINUX){
-//					thrusterSound.stop();
-//					thrusterSound.setFramePosition(0);
-//				}
+				if(MainMenu.isSfxOn() && !Constants.LINUX){
+					thrusterSound.stop();
+					thrusterSound.setFramePosition(0);
+				}
 			
 				break;
 			}
@@ -294,9 +294,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					break;
 				case KeyEvent.VK_UP:
 					Constants.P2SHIP.setAccelerating(false);
-//					if(MainMenu.isSfxOn() && !Constants.LINUX){
-//						playThrusterSound();
-//					}
+					if(MainMenu.isSfxOn() && !Constants.LINUX){
+						playThrusterSound();
+					}
 					break;
 				case KeyEvent.VK_ENTER:
 					Constants.P2SHIP.makeItRain(false);
@@ -312,9 +312,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					break;
 				case KeyEvent.VK_W:
 					Constants.P2SHIP.setAccelerating(false);
-//					if(MainMenu.isSfxOn() && !Constants.LINUX){
-//						playThrusterSound();
-//					}
+					if(MainMenu.isSfxOn() && !Constants.LINUX){
+						playThrusterSound();
+					}
 					break;
 				case KeyEvent.VK_F:
 					Constants.P2SHIP.makeItRain(false);
@@ -414,6 +414,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 		}
 		if(MainMenu.isSfxOn() && !Constants.LINUX){
+			MainMenu.stopBackgroundMusic();
 			playGameOverSound();
 		}
 		MainMenu.getMenu().gameOver();

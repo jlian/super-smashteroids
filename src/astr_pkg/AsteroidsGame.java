@@ -30,7 +30,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static int delay, level, difficulty, startAstr, numAliens, rapidfire, scattershot, lifeup;
     private static boolean nextWave, levelUp;
     private static int numLivesP1, numLivesP2;
-    private Clip thrusterSound;
     private static Clip gameOverSound;
     private static ImageIcon gameBackground = new ImageIcon("src/astr_pkg/BG-game.jpg");
     private boolean blowup = true;
@@ -76,11 +75,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	private void initializeSounds(){
 		try {
-			File thrusters = new File("src/thrust.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(thrusters);
-			thrusterSound = AudioSystem.getClip();
-			thrusterSound.open(audioIn);
-			
 			File gameOver = new File("src/game_over.wav");
 			AudioInputStream audioIn1 = AudioSystem.getAudioInputStream(gameOver);
 			gameOverSound = AudioSystem.getClip();
@@ -119,17 +113,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	}
 	public int getScore() {
 		return score;
-	}
-
-	public void playThrusterSound(){
-		thrusterSound.setFramePosition(0);
-		thrusterSound.loop(Clip.LOOP_CONTINUOUSLY);
-	}
-	
+	}	
 	public void playGameOverSound(){
 		gameOverSound.setFramePosition(0);
 		gameOverSound.start();
-		//gameOverSound.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 	public static void setRespawnTime(int time){
 		respawnTime = time;
@@ -169,9 +156,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(true);
-				if(MainMenu.isSfxOn() && !Constants.LINUX){
-					playThrusterSound();
-				}
 				break;
 			
 			}
@@ -185,9 +169,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_UP:
 				Constants.SHIP.setAccelerating(true);
-				if(MainMenu.isSfxOn() && !Constants.LINUX){
-					playThrusterSound();
-				}
 				break;
 			}
 		}
@@ -210,9 +191,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					break;
 				case KeyEvent.VK_UP:
 					Constants.P2SHIP.setAccelerating(true);
-					if(MainMenu.isSfxOn() && !Constants.LINUX){
-						playThrusterSound();
-					}
 					break;
 				case KeyEvent.VK_ENTER:
 					Constants.P2SHIP.makeItRain(true);
@@ -228,9 +206,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					break;
 				case KeyEvent.VK_W:
 					Constants.P2SHIP.setAccelerating(true);
-					if(MainMenu.isSfxOn() && !Constants.LINUX){
-						playThrusterSound();
-					}
 					break;
 				case KeyEvent.VK_F:
 					Constants.P2SHIP.makeItRain(true);
@@ -255,10 +230,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_W:
 				Constants.SHIP.setAccelerating(false);
-				if(MainMenu.isSfxOn() && !Constants.LINUX){
-					thrusterSound.stop();
-					thrusterSound.setFramePosition(0);
-				}
 				break;
 			}
 		}else{
@@ -271,11 +242,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				break;
 			case KeyEvent.VK_UP:
 				Constants.SHIP.setAccelerating(false);
-				if(MainMenu.isSfxOn() && !Constants.LINUX){
-					thrusterSound.stop();
-					thrusterSound.setFramePosition(0);
-				}
-			
 				break;
 			}
 		}
@@ -294,9 +260,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					break;
 				case KeyEvent.VK_UP:
 					Constants.P2SHIP.setAccelerating(false);
-					if(MainMenu.isSfxOn() && !Constants.LINUX){
-						playThrusterSound();
-					}
 					break;
 				case KeyEvent.VK_ENTER:
 					Constants.P2SHIP.makeItRain(false);
@@ -312,9 +275,6 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					break;
 				case KeyEvent.VK_W:
 					Constants.P2SHIP.setAccelerating(false);
-					if(MainMenu.isSfxOn() && !Constants.LINUX){
-						playThrusterSound();
-					}
 					break;
 				case KeyEvent.VK_F:
 					Constants.P2SHIP.makeItRain(false);

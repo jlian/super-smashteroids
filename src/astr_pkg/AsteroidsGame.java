@@ -324,17 +324,17 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					Asteroid.generateAsteroids(startAstr);
 					if (rapidfire == 0) {
 						Constants.SHIP.decreaseShotWait();
-						rapidfire = 2;
+						rapidfire = 3;
 					}
 					rapidfire--;
 					if (scattershot == 0) {
 						Constants.SHIP.setScattershot();
-						scattershot =2;
+						scattershot =3;
 					}
 					scattershot--;
 					if (lifeup ==0) {
 						numLivesP1++;
-						lifeup = 2;
+						lifeup = 3;
 						//put in message letting play know of upgrades
 					}
 					lifeup--;

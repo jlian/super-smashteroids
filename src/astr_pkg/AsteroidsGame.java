@@ -561,9 +561,26 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		if(nextWave){
 			g.setFont(Constants.MENU_FONT);
 			FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
+			FontMetrics upgradeMetrics = g.getFontMetrics(Constants.SELECTIONS_FONT);
 			String strLevel = "Level   " + (level);
 			g.setColor(Color.orange);
 			g.drawString(strLevel, 400-(metrics.stringWidth(strLevel)/2), 300);
+			
+			if (rapidfire == 0 && Constants.SHIP.shotWait > 4) {
+				g.setFont(Constants.SELECTIONS_FONT);
+				String rapidfireMessage = "Your firing rate has increased!";
+				g.drawString(rapidfireMessage, 400-(upgradeMetrics.stringWidth(rapidfireMessage)/2), 350);
+			}
+			if (scattershot == 0 && Constants.SHIP.scatterShot <= 1) {
+				g.setFont(Constants.SELECTIONS_FONT);
+				String scattershotMessage = "You've picked up a multi-shot upgrade!";
+				g.drawString(scattershotMessage, 400-(upgradeMetrics.stringWidth(scattershotMessage)/2), 350);
+			}
+			if (lifeup == 0) {
+				g.setFont(Constants.SELECTIONS_FONT);
+				String lifeupMessage = "You've gained an additional life!";
+				g.drawString(lifeupMessage, 400-(upgradeMetrics.stringWidth(lifeupMessage)/2), 350);
+			}
 		} 
 	}
 

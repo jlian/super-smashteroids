@@ -46,7 +46,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		scattershot = 1;
 		lifeup = 2;
 		level = 1;
-		numLivesP1 = 3;
+		numLivesP1 = 1000;
 		if(MainMenu.isMultiplayer()){
 			numLivesP2 = 3;
 		}else{
@@ -322,14 +322,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					startAstr += difficulty;
 					numAliens += difficulty;
 					Asteroid.generateAsteroids(startAstr);
-					if (rapidfire == 0) {
+                                        if (rapidfire == 0) {
 						Constants.SHIP.decreaseShotWait();
 						rapidfire = 3;
 					}
 					rapidfire--;
 					if (scattershot == 0) {
 						Constants.SHIP.setScattershot();
-						scattershot =3;
+						scattershot =0;
 					}
 					scattershot--;
 					if (lifeup ==0) {

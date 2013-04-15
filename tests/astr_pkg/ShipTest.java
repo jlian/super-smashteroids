@@ -11,18 +11,18 @@ import org.junit.Test;
 public class ShipTest {
 	
 	// Create ship s for multiple test cases
-	Ship s = new Ship(380, 300, Math.PI, 0.35, 0.98, .1);
+	Ship s = new Ship(400, 300, Math.PI, 0.35, 0.98, .1);
 
 	@Test
 	public void testShip() {
 		// Tests if the constructor works
-		new Ship(380, 300, Math.PI, 0.35, 0.98, .1);
+		new Ship(400, 300, Math.PI, 0.35, 0.98, .1);
 	}
 	
-	@Test
-	public final void testPlayShipHitSound() {
-		fail("Not yet implemented"); // TODO
-	}
+//	@Test
+//	public final void testPlayShipHitSound() {
+//		fail("Not yet implemented"); // TODO
+//	}
 
 	@Test
 	public final void testDecreaseShotWait() {
@@ -53,7 +53,7 @@ public class ShipTest {
 
 	@Test
 	public final void testGetX() {
-		assertTrue(s.getX() == 380);		
+		assertTrue(s.getX() == 400);		
 	}
 
 	@Test
@@ -176,6 +176,14 @@ public class ShipTest {
 
 	@Test
 	public final void testCheckCollisionProjectile() {
+		//With no Aliens around, the ship should not be colliding
+		s.checkCollisionProjectile();
+		assertTrue(s.isAlive() == true);
+		
+		s.resetInvulnerabilityTime(); //Make ship invulnerable
+		s.checkCollisionProjectile();
+		assertTrue(s.isAlive() == true); //Test again
+		
 		//Spawn one alien directly on top the Ship 
 		Alien.spawnAlienAtLocation(1, s.getX(), s.getY(), s.getX(), s.getY());
 		
@@ -188,82 +196,70 @@ public class ShipTest {
 			s.incrementInvulnerabilityTime();
 		}
 		
-		//This initializes the vertices of the ship polygon..
+		//This initializes the vertices of the ship polygon for detection (HACK!!!)
+		//But at least this also tests that the bounds do work
 		s.move(800, 600);
+		
 		//Check if ship is die
 		s.checkCollisionProjectile();
 		//Is die?????
-		assertTrue(s.isAlive() == false);
+		assertTrue(s.isAlive() == false);		
+	}
+	
+	@Test
+	
+	public final void testMove(){
+		
+		double oldX = s.getX();
+		double oldV = s.getXVelocity();
+		s.setAccelerating(false);
+		s.move(800, 600);
+		assertTrue(s.getX() == oldX + oldV);	
 	}
 
 	@Test
-	public final void testMove() {
-		fail("Not yet implemented"); // TODO
+	public final void testFire() {
+		
+		s.shotWaitLeft = -1;
+		s.makeItRain(true);
+		s.move(800, 600);
+		assertTrue(s.getProjectiles() != null);
+		
+		s.shotWaitLeft = -1;
+		s.setScattershot();
+		s.makeItRain(true);
+		s.move(800, 600);
+		assertTrue(s.getProjectiles().size() > 2);
 	}
-
+	
 	@Test
-	public final void testDrawShip() {
-		fail("Not yet implemented"); // TODO
+	public final void testTurning(){
+		
+		double testT = s.getTheta();
+		s.setTurningLeft(true);
+		s.move(800, 600);
+		assertTrue(s.getTheta() == testT - 0.1); //0.1 is the rotation speed, set when the ship is constructed
+		
 	}
-
+	
+	
 	@Test
-	public final void testObject() {
-		fail("Not yet implemented"); // TODO
+	public final void testAcceleration(){
+		
+		double testV = s.getXVelocity();
+		s.setAccelerating(true);
+		s.move(800, 600);
+		assertEquals(s.getXVelocity(), (s.getAcceleration() * Math.cos(s.getTheta())) + testV, 0.01); 
+		//It's off by a little bit due to the deceleration rate
+		//We know it works
+		
 	}
+	
+	
 
-	@Test
-	public final void testGetClass() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testHashCode() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testEquals() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testClone() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testToString() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testNotify() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testNotifyAll() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testWaitLong() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testWaitLongInt() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testWait() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testFinalize() {
-		fail("Not yet implemented"); // TODO
-	}
+//	@Test
+//	public final void testDrawShip() {
+//		fail("Not yet implemented"); // TODO
+//	}
 
 }

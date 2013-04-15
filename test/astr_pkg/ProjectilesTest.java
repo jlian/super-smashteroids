@@ -3,6 +3,8 @@ package astr_pkg;
 import static org.junit.Assert.*;
 
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -14,11 +16,13 @@ public class ProjectilesTest {
 	Projectiles p = new Projectiles(50,45,20,ship);
 	double xVelocity = ship.getXVelocity() + 10 * Math.cos(p.getTheta());
 	double yVelocity = ship.getYVelocity() + 10 * Math.sin(p.getTheta());
+	int counter;
 	
-	@Test
-	public void testProjectiles() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	public void testProjectiles() {
+//		//How do I test this?
+//		fail("Not yet implemented");
+//	}
 
 	@Test
 	public void testGetX() {
@@ -42,35 +46,81 @@ public class ProjectilesTest {
 
 	@Test
 	public void testIsOnScreen() {
-		fail("Not yet implemented");
+		//Testing for this method has been done in the move() method
 	}
 
 	@Test
 	public void testGetPImage() {
-		fail("Not yet implemented");
+		Image pImage;
+		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
+		pImage = ii.getImage();
+		assertTrue("Return image test", p.getPImage() == pImage);
 	}
 
 	@Test
 	public void testGetProjectileBounds() {
-		fail("Not yet implemented");
+		Rectangle expected = new Rectangle((int) p.getX()-2, (int) p.getY()-2, 4, 4);
+		assertEquals(expected, p.getProjectileBounds());
 	}
 
-	@Test
-	public void testPlayShotSound() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	public void testPlayShotSound() {
+//		//How do I test this?
+//		fail("Not yet implemented");
+//	}
 
 	@Test
 	public void testMove() {
-		double expected = p.getX() + xVelocity;
+		double xExpected = p.getX() + xVelocity;
+		double yExpected = p.getY() + yVelocity;
+		
 		p.move();
-		assertEquals("x velocity", expected, p.getX(), 0.0001);
-//		fail("Not yet implemented");
+		//Test for math and for x and y within the screen bounds
+		assertEquals("x velocity", xExpected, p.getX(), 0.0001);
+		assertEquals("y velocity", yExpected, p.getY(), 0.0001);
+		assertTrue("both within range", p.isOnScreen() == true);
+		
+		//x > screen WIDTH and y > screen HEIGHT
+		Projectiles p2 = new Projectiles(1000,1000,20,ship);
+		p2.move();
+		assertTrue("both bigger than range", p2.isOnScreen() == false);
+		
+		//x < screen WIDTH and y < screen HEIGHT
+		Projectiles p3 = new Projectiles(-20,-20,20,ship);
+		p3.move();
+		assertTrue("both less than range", p3.isOnScreen() == false);
+		
+		//x < screen WIDTH and y inside screen bounds
+		Projectiles p4 = new Projectiles(-20,100,20,ship);
+		p4.move();
+		assertTrue("x less than range", p4.isOnScreen() == false);
+		
+		//x within screen bounds and y < screen HEIGHT
+		Projectiles p5 = new Projectiles(100,-20,20,ship);
+		p5.move();
+		assertTrue("y less than range", p5.isOnScreen() == false);
+		
+		//x > screen WIDTH and y inside screen bounds
+		Projectiles p6 = new Projectiles(1000,100,20,ship);
+		p6.move();
+		assertTrue("x larger than range", p6.isOnScreen() == false);
+		
+		//x within screen bounds and y > screen HEIGHT
+		Projectiles p7 = new Projectiles(100,1000,20,ship);
+		p7.move();
+		assertTrue("y larger than range", p7.isOnScreen() == false);
 	}
 
 	@Test
 	public void testDrawProjectiles() {
-		fail("Not yet implemented");
+		//test for-loop
+		ArrayList<Projectiles> shootArrayP1;
+		shootArrayP1 = Constants.SHIP.getProjectiles();
+		System.out.println(shootArrayP1.size());
+		for(int i = 0; i<shootArrayP1.size(); i++){
+			counter++;
+		}
+		assertEquals(0, counter);
 	}
 
 }

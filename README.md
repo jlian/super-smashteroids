@@ -53,7 +53,6 @@ Known Issues
 ------------
 
 - Currently, if the program is compiled outside of Eclipse (our chosen IDE), any resources (fonts, images, music) cannot be used by the game due to directory issues. 
-- Once all the lives run out, the game crashes. We are working on a fix.
 
 Dependencies
 ------------

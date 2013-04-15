@@ -68,7 +68,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		respawnTime = 0;
 		addKeyListener(this);
 		Asteroid.generateAsteroids(startAstr);
-		Alien.generateAliens(numAliens);
+		Alien.spawnAlienAtLocation(numAliens);
         thread = new Thread(this);
 		thread.start();
 	}
@@ -338,7 +338,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 						//put in message letting play know of upgrades
 					}
 					lifeup--;
-					Alien.generateAliens(numAliens);
+					Alien.spawnAlienAtLocation(numAliens);
 					nextWave = false;
 					levelUp = true;
 				}

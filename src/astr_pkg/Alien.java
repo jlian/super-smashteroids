@@ -60,11 +60,23 @@ public class Alien {
         	shootDelay = 80;
         }
         else if(MainMenu.getDifficulty()==3){
-        	shootDelay=60;
+        	shootDelay = 60;
         }
 		if(MainMenu.isSfxOn() && !Constants.LINUX){
 			initializeSound();
 		}
+    }
+    
+    public static void spawnAlienAtLocation(int numAliens, double alienX, double alienY, double shipX, double shipY){
+    	numberOfAliens = numAliens;
+        for(int i = 0; i < numAliens; i++){
+            aliens.add(new Alien(alienX, alienY, shipX, shipY));
+        }
+        scoreX = new int[numAliens];
+		scoreY = new int[numAliens];
+		scoreTime = new int[numAliens];
+		deathTimer = new int[numAliens];
+		arrayPos = 0;
     }
     
     public static void generateAliens(int numAliens){
@@ -118,6 +130,10 @@ public class Alien {
     public void playAlienShootSound(){
     	alienLaser.setFramePosition(0);
     	alienLaser.start();
+    }
+    
+    public void resetShootDelay(){
+    	shoot = 200;
     }
     
     public static ArrayList<Alien> getAliens(){

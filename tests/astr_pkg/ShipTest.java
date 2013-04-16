@@ -210,6 +210,7 @@ public class ShipTest {
 	
 	public final void testMove(){
 		
+		//Simple test to see if the X-coordinate would work or not
 		double oldX = s.getX();
 		double oldV = s.getXVelocity();
 		s.setAccelerating(false);
@@ -220,11 +221,13 @@ public class ShipTest {
 	@Test
 	public final void testFire() {
 		
+		//If there ARE projectiles, shooting works
 		s.shotWaitLeft = -1;
 		s.makeItRain(true);
 		s.move(800, 600);
 		assertTrue(s.getProjectiles() != null);
 		
+		//Make sure scattershot works. If there are more than two projectiles after shooting is called once, it works
 		s.shotWaitLeft = -1;
 		s.setScattershot();
 		s.makeItRain(true);
@@ -235,10 +238,12 @@ public class ShipTest {
 	@Test
 	public final void testTurning(){
 		
+		//See if turning actually changed theta, the rotation vector
 		double testT = s.getTheta();
 		s.setTurningLeft(true);
 		s.move(800, 600);
-		assertTrue(s.getTheta() == testT - 0.1); //0.1 is the rotation speed, set when the ship is constructed
+		assertTrue(s.getTheta() == testT - 0.1); 
+		//0.1 is the rotation speed, set when the ship is constructed
 		
 	}
 	
@@ -246,6 +251,7 @@ public class ShipTest {
 	@Test
 	public final void testAcceleration(){
 		
+		//See if making the shit accelerate makes velocity change
 		double testV = s.getXVelocity();
 		s.setAccelerating(true);
 		s.move(800, 600);

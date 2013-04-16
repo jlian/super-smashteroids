@@ -99,6 +99,7 @@ public class Ship {
 	public ArrayList<Projectiles> getProjectiles() {
 		return projectiles;
 	}
+<<<<<<< HEAD
 	public double getXVelocity() {
 		return xVelocity;
 	}
@@ -114,6 +115,14 @@ public class Ship {
 	}
 	public void setTurningRight (boolean right) {
 		turningRight = right;
+=======
+	public void setTurningLeft(boolean left){
+		this.turningLeft = left;
+	}
+	
+	public void setTurningRight(boolean right){
+		this.turningRight = right;
+>>>>>>> c0496aefe6e48d3179abbc23fc3b4d1b229166c0
 	}
 	public void setAccelerating (boolean accelerating) {
 		this.accelerating = accelerating;
@@ -211,17 +220,17 @@ public class Ship {
 						theta, this);
 				projectiles.add(p);
 				if (scatterShot >=1) {
-					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+0.8)), y+(16*Math.sin(theta+0.8)),
+					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+180)), y+(16*Math.sin(theta+180)),
 						theta, this);
-					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-0.8)), y+(16*Math.sin(theta-0.8)),
+					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-180)), y+(16*Math.sin(theta-180)),
 						theta, this);
 					projectiles.add(p1);
 					projectiles.add(p2);
 				}
 				if (scatterShot == 2) {
-					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+1.5)), y+(16*Math.sin(theta+1.5)),
+					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+180)), y+(16*Math.sin(theta+180)),
 						theta, this);
-					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-1.5)), y+(16*Math.sin(theta-1.5)),
+					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-180)), y+(16*Math.sin(theta-180)),
 						theta, this);
 					projectiles.add(p1);
 					projectiles.add(p2);

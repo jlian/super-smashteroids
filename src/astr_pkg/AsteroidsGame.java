@@ -34,9 +34,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static int numLivesP1, numLivesP2;
     private static Clip gameOverSound;
     private static ImageIcon gameBackground = new ImageIcon("FX/graphics/BG-game.jpg");
-    private boolean blowup = true;
     private static ImageIcon shipExplosion = new ImageIcon("FX/graphics/explosion.gif");
-    private static int count = 0;
     private boolean isHighScore = true;
     private int score;
     private long gameStartTime, gameEndTime;
@@ -413,34 +411,19 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		if(Constants.SHIP.isAlive()){
         	Constants.SHIP.drawShip(g);
         }
-        else if(blowup){
-        	if(count<285){
-        		g.drawImage(getExplosion().getImage(), (int) Constants.SHIP.getX()-180, (int) Constants.SHIP.getY()-180, this);
-        		count++;
-        	}
-        	else{
-        		Constants.SHIP.reset();
-        		blowup = false;
-        		count = 0;
-        		
-        	}
-        }
-        if(!Constants.SHIP.isAlive() && numLivesP1 > 0){
+		else if(!Constants.SHIP.isAlive() && numLivesP1 > 0){
         	if(Constants.SHIP.getRespawnTime() < 80){
 				Constants.SHIP.incrementRespawnTime();
+				//Now the code above is no longer needed: draw the explosion as the respawn timer counts!!
+				//I've removed all the code and variables pertaining to count/blowup/etc
+				//Still can't figure out how to make the animation play from the beginning each time
+				g.drawImage(getExplosion().getImage(), (int) Constants.SHIP.getX()-180, (int) Constants.SHIP.getY()-180, this);
 			}else{
 				Constants.SHIP.reset();
 				Constants.SHIP.resetRespawnTime();
 				Constants.SHIP.resetInvulnerabilityTime();//If ship has just respawned, make invulnerable
 				numLivesP1--;
-				if(numLivesP1 >= 0){
-					
-					Constants.SHIP.setAlive(true);
-					
-				}
-				
-				blowup = true;
-				
+				Constants.SHIP.setAlive(true);
 			}
 		}
         //	else if(numLivesP1 == 1){
@@ -463,28 +446,19 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			if(Constants.P2SHIP.isAlive() && numLivesP2 > 0){
 	        	Constants.P2SHIP.drawShip(g);
 	        }
-	        else if(blowup){ //new blowup var needed
-	        	if(count<285){
-	        		g.drawImage(getExplosion().getImage(), (int) Constants.P2SHIP.getX()-180, (int) Constants.P2SHIP.getY()-180, this);
-	        		count++; //new count needed
-	        	}
-	        	else{
-	        		Constants.P2SHIP.reset();
-	        		blowup = false; //new var
-	        		count = 0; //new var
-	        		
-	        	}
-	        }
-	        if(!Constants.P2SHIP.isAlive()){
+
+			else if(!Constants.P2SHIP.isAlive()){
 				if(Constants.P2SHIP.getRespawnTime() < 80){
 					Constants.P2SHIP.incrementRespawnTime();
+					//Same deal as above! I like how we have repeating code, it's the best
+					g.drawImage(getExplosion().getImage(), (int) Constants.P2SHIP.getX()-180, (int) Constants.P2SHIP.getY()-180, this);
 				}else{
 					Constants.P2SHIP.reset();
 					Constants.P2SHIP.resetRespawnTime();
 					Constants.P2SHIP.resetInvulnerabilityTime();//If ship has just respawned, make invulnerable
-					Constants.P2SHIP.setAlive(true);
-					blowup = true; //new Var
 					numLivesP2--; //new Var
+					Constants.P2SHIP.setAlive(true);
+
 				}
 			}
 	        

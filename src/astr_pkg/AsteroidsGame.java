@@ -460,7 +460,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		
 		//MP
 		if(MainMenu.isMultiplayer()){
-			if(Constants.P2SHIP.isAlive()){
+			if(Constants.P2SHIP.isAlive() && numLivesP2 >= 0){
 	        	Constants.P2SHIP.drawShip(g);
 	        }
 	        else if(blowup){ //new blowup var needed

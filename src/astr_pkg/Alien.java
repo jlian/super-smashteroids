@@ -296,12 +296,39 @@ public class Alien {
 			}
 			return true;
     	}
+        if(MainMenu.isMultiplayer() && Constants.P2SHIP.getBounds() != null &&circle.intersects(Constants.P2SHIP.getBounds()) && 
+				Constants.P2SHIP.isAlive() && !Constants.P2SHIP.isInvulnerable()){
+        	if(MainMenu.isSfxOn() && !Constants.LINUX){
+				this.playAlienHitSound();// plays a sound if they collide
+			}
+        	Constants.P2SHIP.setAlive(false);
+        	return true;
+        }
     	return false;
     }
     
     // method that determines if an alien has been hit by a ships projectile
     public void checkCollisionProjectile(){
         // check if the aliens hit box intersects the projectiles hit box
+    	if(MainMenu.isMultiplayer()){
+    		 for(int i = 0; i < Constants.P2SHIP.getProjectiles().size(); i++){
+    	    		if(circle.intersects(Constants.P2SHIP.getProjectiles().get(i).getProjectileBounds())){
+    	    			Constants.P2SHIP.getProjectiles().remove(i);
+    	    			if(MainMenu.isSfxOn() && !Constants.LINUX){
+    						this.playAlienHitSound();// plays a sound if they intersect
+    					}
+    	    			// updates the score array giving the player the points for hitting the alien
+    	                        scoreX[arrayPos] = (int) this.xPos;
+    	    			scoreY[arrayPos] = (int) this.yPos;
+    	    			scoreTime[arrayPos] = 80;
+    	    			deathTimer[arrayPos] = 75;
+    	    			aliens.remove(this);// removes alien from array list
+    	    			numberOfAliens--;// updates variable
+    	    			pointsPlayer1 += scoreValue; // updates score
+    	    			arrayPos++; // updates array
+    	            }
+    	    	}
+    	}
         for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
     		if(circle.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
     			Constants.SHIP.getProjectiles().remove(i);
@@ -315,7 +342,7 @@ public class Alien {
     			deathTimer[arrayPos] = 75;
     			aliens.remove(this);// removes alien from array list
     			numberOfAliens--;// updates variable
-    			pointsPlayer1 += scoreValue; // updates scroe
+    			pointsPlayer1 += scoreValue; // updates score
     			arrayPos++; // updates array
             }
     	}

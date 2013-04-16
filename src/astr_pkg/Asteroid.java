@@ -232,6 +232,34 @@ public class Asteroid {
 	}
 	public boolean collisionProjectile(){
 		Polygon p = new Polygon(this.xPts, this.yPts, 8);
+		
+		if(MainMenu.isMultiplayer() && Constants.P2SHIP.getProjectiles().size() > 0){
+			for(int i = 0; i < Constants.P2SHIP.getProjectiles().size(); i++){
+				if(p.intersects(Constants.P2SHIP.getProjectiles().get(i).getProjectileBounds())){
+					Constants.P2SHIP.getProjectiles().remove(i);
+					if(MainMenu.isSfxOn() && !Constants.LINUX){
+						this.playHitSound();
+					}
+					scoreX[i] = (int) this.x;
+					scoreY[i] = (int) this.y;
+					scoreTime[i] = 80;
+					if(this.size == 1){
+						scoreValue[i] = 10;
+					}else if(this.size == 2){
+						scoreValue[i] = 20;
+					}else if(this.size == 3){
+						scoreValue[i] = 40;
+					}
+					arrayAsteroid.remove(this);
+					pointsPlayer1 += scoreValue[i];
+					if(this.size>=2){
+						arrayAsteroid.add(new Asteroid(this.x, this.y, this.thetaVelocity+Math.random()*(Math.PI/2), this.size-1, this.speed));
+						arrayAsteroid.add(new Asteroid(this.x, this.y, this.thetaVelocity-Math.random()*(Math.PI/2), this.size-1, this.speed));
+					}
+					return true;
+				}
+			}
+		}
 		for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 			if(p.intersects(Constants.SHIP.getProjectiles().get(i).getProjectileBounds())){
 				Constants.SHIP.getProjectiles().remove(i);

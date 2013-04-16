@@ -84,11 +84,29 @@ public class Alien {
     	numberOfAliens = numAliens;// creats this many aliens
         double alienX, alienY;// two variabels used for the position of the alien
         // uses a random function
-        for(int i = 0; i < numAliens; i++){
-            alienX =  (Math.ceil(Math.random() * 500));
-            alienY =  (Math.ceil(Math.random() * 500));
-            aliens.add(new Alien(alienX, alienY, Constants.SHIP.getX(), Constants.SHIP.getY()));
+        if(!MainMenu.isMultiplayer()){
+        	for(int i = 0; i < numAliens; i++){
+        		alienX =  (Math.ceil(Math.random() * 500));
+	        	alienY =  (Math.ceil(Math.random() * 500));
+	            aliens.add(new Alien(alienX, alienY, Constants.SHIP.getX(), Constants.SHIP.getY()));
+        	}
+        }else{
+        	int p1Aliens = numAliens/2;
+        	int p2Aliens = numAliens - p1Aliens;
+        	System.out.println(p1Aliens);
+        	System.out.println(p2Aliens);
+        	for(int i = 0; i < p1Aliens; i++){
+        		alienX =  (Math.ceil(Math.random() * 500));
+	        	alienY =  (Math.ceil(Math.random() * 500));
+	            aliens.add(new Alien(alienX, alienY, Constants.SHIP.getX(), Constants.SHIP.getY()));
+        	}
+        	for(int j = 0; j < p2Aliens; j++){
+        		alienX =  (Math.ceil(Math.random() * 500));
+	        	alienY =  (Math.ceil(Math.random() * 500));
+	            aliens.add(new Alien(alienX, alienY, Constants.P2SHIP.getX(), Constants.P2SHIP.getY()));
+        	}
         }
+        
         scoreX = new int[numAliens];
 		scoreY = new int[numAliens];
 		scoreTime = new int[numAliens];
@@ -215,7 +233,7 @@ public class Alien {
     			Math.sqrt(Math.pow((shipX - xPos), 2) + 
     					Math.pow((shipY - yPos), 2));
     	// keeps aliens 100 pixels away from the aliens
-    	if(alienDistance < 100){
+    	if(alienDistance < 150){
     		changeX(0);
     		changeY(0);
         // random function that tells the alien how to move
@@ -336,7 +354,7 @@ public class Alien {
 					this.playAlienHitSound();// plays a sound if they intersect
 				}
     			// updates the score array giving the player the points for hitting the alien
-                        scoreX[arrayPos] = (int) this.xPos;
+                scoreX[arrayPos] = (int) this.xPos;
     			scoreY[arrayPos] = (int) this.yPos;
     			scoreTime[arrayPos] = 80;
     			deathTimer[arrayPos] = 75;

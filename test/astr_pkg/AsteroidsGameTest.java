@@ -9,7 +9,6 @@ import org.junit.Test;
 
 public class AsteroidsGameTest {
 	
-	private static MainMenu menu = new MainMenu();
 	private static AsteroidsGame game;
 	
 	@Test

@@ -122,6 +122,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	
 	public boolean getIsHighScore() {
 		File hs = null;
+		//Find which file to read high scores from based on difficulty
 		if(MainMenu.getDifficulty() == 1){
 			hs = new File("src/astr_pkg/hs_easy.csv");
 		}else if(MainMenu.getDifficulty() == 2){
@@ -130,28 +131,30 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			hs = new File("src/astr_pkg/hs_hard.csv");
 		}
 		try {
-			Scanner fread = new Scanner(hs);
+			Scanner fread = new Scanner(hs); //open file
 			int i = 1;
 			String line = "error";
 			String[] fields = null;
 			String score;
-			while (fread.hasNext()) {
+			while (fread.hasNext()) { //While not end of file
 				line = fread.next();
 				fields = line.split(",");
 				score = fields[1];
 				i++;
-				if(i == 11){
+				if(i == 11){ //Find the 10th high score position
 					int scoreInt = Integer.parseInt(score);
+					//If the high score in the 10th position is less than player score
 					if((Asteroid.getPointsP1() + Alien.getPointsP1()) > scoreInt){
 						fread.close();
-						return true;
+						return true; //Then player got a high score
 					}
 					break;
 				}
 			}
+			//If the high score does not have 10 high scores yet,
 			if(i < 11){
-				fread.close();
-				return true;
+				fread.close(); 
+				return true; //Player got a high score
 			}
 			fread.close();
 		} catch (FileNotFoundException e) {
@@ -159,7 +162,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			e.printStackTrace();
 		}
 		
-		return false;
+		return false; //If none of the cases above hold, no high score
 	}
 	public int getScore() {
 		return score;

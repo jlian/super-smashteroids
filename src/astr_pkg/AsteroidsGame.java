@@ -37,7 +37,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private boolean blowup = true;
     private static ImageIcon shipExplosion = new ImageIcon("FX/graphics/explosion.gif");
     private static int count = 0;
-    private boolean isHighScore = true;
+//    private boolean isHighScore = true;
     private int score;
     private long gameStartTime, gameEndTime;
 	
@@ -122,7 +122,45 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	}
 	
 	public boolean getIsHighScore() {
-		return isHighScore;
+		File hs = null;
+		if(MainMenu.getDifficulty() == 1){
+			hs = new File("src/astr_pkg/hs_easy.csv");
+		}else if(MainMenu.getDifficulty() == 2){
+			hs = new File("src/astr_pkg/hs_medium.csv");
+		}else if(MainMenu.getDifficulty() == 3){
+			hs = new File("src/astr_pkg/hs_hard.csv");
+		}
+		try {
+			Scanner fread = new Scanner(hs);
+			int i = 1;
+			String line = "error";
+			String[] fields = null;
+			String score;
+			while (fread.hasNext()) {
+				line = fread.next();
+				fields = line.split(",");
+				score = fields[1];
+				i++;
+				if(i == 11){
+					int scoreInt = Integer.parseInt(score);
+					if((Asteroid.getPointsP1() + Alien.getPointsP1()) > scoreInt){
+						fread.close();
+						return true;
+					}
+					break;
+				}
+			}
+			if(i < 11){
+				fread.close();
+				return true;
+			}
+			fread.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	public int getScore() {
 		return score;

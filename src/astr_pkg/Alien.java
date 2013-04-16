@@ -32,7 +32,7 @@ public class Alien {
     private static int[] deathTimer;// time variable
     private static Clip alienGoBoom;// sound
     private static Clip alienLaser;// sound
-    private static ImageIcon alienExplosion = new ImageIcon("src/astr_pkg/explosion3.gif");// gives alienExplosion a source
+    private static ImageIcon alienExplosion = new ImageIcon("FX/graphics/explosion3.gif");// gives alienExplosion a source
     private static ArrayList<Alien> aliens = new ArrayList<>();// array list that will contain aliens
     private ArrayList<ProjectilesAliens> projectiles;// creates an array list using the class ProjectilesALiens
     private Ellipse2D.Double circle;// creates a circle variable
@@ -47,7 +47,7 @@ public class Alien {
         yPos = alienYPos;// sets y position of alien
         shipX = shipXPos;// gets x position of ship
         shipY = shipYPos;// gets y position of ship
-        AlienImage = new ImageIcon("src/astr_pkg/AlienM.png").getImage();// sets the AlienImage to an image
+        AlienImage = new ImageIcon("FX/graphics/AlienM.png").getImage();// sets the AlienImage to an image
         alienHeight = AlienImage.getHeight(null);// sets the height of the alien
         alienWidth = AlienImage.getWidth(null);// sets the width of the alien
         projectiles = new ArrayList<>();// creates a new projectiles array list
@@ -99,12 +99,12 @@ public class Alien {
     // sound method for the class
     private void initializeSound(){
 		try {
-			File alienHit = new File("src/bangLarge.wav");//for when aliens explode
+			File alienHit = new File("FX/audio/bangLarge.wav");//for when aliens explode
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(alienHit);
 			alienGoBoom = AudioSystem.getClip();
 			alienGoBoom.open(audioIn);
 			
-			File alienShoot = new File("src/alien_laser.wav");//for when aliens shoot
+			File alienShoot = new File("FX/audio/alien_laser.wav");//for when aliens shoot
 			AudioInputStream audioIn1 = AudioSystem.getAudioInputStream(alienShoot);
 			alienLaser = AudioSystem.getClip();
 			alienLaser.open(audioIn1);
@@ -164,6 +164,16 @@ public class Alien {
     // method to get the aliens y coordinate
     public double getY(){
     	return yPos;
+    }
+    
+    public static void reset(){
+    	aliens.removeAll(aliens);
+    	numberOfAliens = 0;
+    }
+    
+    public static void resetPlayerScore(){
+    	pointsPlayer1 = 0;
+    	//PP2
     }
     
     // method to draw aliens and things that relate to the aliens

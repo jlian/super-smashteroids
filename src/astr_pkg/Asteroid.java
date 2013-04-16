@@ -95,15 +95,27 @@ public class Asteroid {
 		return pointsPlayer1;
 	}
 	
+
 	public static int[] getScoreTime() {
 		return scoreTime;
 	}
 	public static int[] getScoreValue() {
 		return scoreValue;
 	}
+
+	public static void resetPlayerScore(){
+		pointsPlayer1 = 0;
+		//PP2
+	}
+	
+	public static void reset(){
+		arrayAsteroid.removeAll(arrayAsteroid);
+	}
+	
+
 	private void initializeSound(){
 		try {
-			File asteroidHit = new File("src/bangLarge.wav");
+			File asteroidHit = new File("FX/audio/bangLarge.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
 			asteroidSound = AudioSystem.getClip();
 			asteroidSound.open(audioIn);

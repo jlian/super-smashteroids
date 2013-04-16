@@ -40,11 +40,11 @@ public class ShipTest {
 	@Test
 	public final void testSetScattershot() {
 		s.scatterShot = 3;
-		s.setScattershot();
+		s.setScatterShot();
 		assertTrue(s.scatterShot == 3);	
 		
 		s.scatterShot = 0;
-		s.setScattershot();
+		s.setScatterShot();
 		assertTrue(s.scatterShot == 1);	
 		
 	}
@@ -227,7 +227,7 @@ public class ShipTest {
 		
 		//Make sure scattershot works. If there are more than two projectiles after shooting is called once, it works
 		s.shotWaitLeft = -1;
-		s.setScattershot();
+		s.setScatterShot();
 		s.makeItRain(true);
 		s.move(800, 600);
 		assertTrue(s.getProjectiles().size() > 2);

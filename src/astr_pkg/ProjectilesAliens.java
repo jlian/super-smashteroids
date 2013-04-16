@@ -22,7 +22,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class ProjectilesAliens {
 	//Initialization
 	private double x, y, theta, xVelocity, yVelocity;
-	private static Image pImage;
 	boolean onScreen;
 	private final int PROJECTILE_SPEED = 2;
 	private Rectangle2D rect;
@@ -33,6 +32,7 @@ public class ProjectilesAliens {
 		this.x = x;
 		this.y = y;
 		this.theta = theta;
+		onScreen = true;
 		/*These next two velocities are for the alien projectiles. To be realistic, we have
 		 *set them to always be faster than the current velocity of the alien that fired the shot at
 		 *the moment they are shot. We take the current alien velocity in x and y, then add the constant
@@ -40,11 +40,7 @@ public class ProjectilesAliens {
 		 */
 		xVelocity = alienVelocityX + PROJECTILE_SPEED * Math.cos(theta);
 		yVelocity = alienVelocityY + PROJECTILE_SPEED * Math.sin(theta);
-		
-		onScreen = true;
-		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
-		pImage = ii.getImage();
-		
+			
 		/*This bit of code is to turn the sound on and off depending on two factors:
 		 *First, if the player selects to turn off the sound in the Options menu, and
 		 *second if the game is running on a linux machine. Errors with sound files
@@ -58,18 +54,15 @@ public class ProjectilesAliens {
 	
 	private void initializeSound(){
 		try {
-			File menuSelection = new File("src/alien_laser.wav");
+			File menuSelection = new File("FX/audio/alien_laser.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
 			clip = AudioSystem.getClip();
 			clip.open(audioIn);
 		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
@@ -92,9 +85,6 @@ public class ProjectilesAliens {
 	public boolean isOnScreen(){
 		return onScreen;
 	}
-	public Image getPImage(){
-		return pImage;
-	}
 	public Rectangle2D getProjectileBounds(){
 		rect = new Rectangle((int) getX()-2,  (int) getY()-2, 4, 4);
 		return rect;
@@ -109,13 +99,14 @@ public class ProjectilesAliens {
 		/*These two if statements ensure that our projectiles do not loop around the screen
 		 * like other entities. Once they reach the end of the screen, they are removed from the game.
 		 */
+		//Does not work yet
 //		if(x > Constants.WIDTH || x < 0){
 //			onScreen = false;
-//			Constants.SHIP.getProjectiles().remove(this);
+//			Alien.getShots().remove(this);
 //		}
 //		if(y > Constants.HEIGHT || y < 0){
 //			onScreen = false;
-//			Constants.SHIP.getProjectiles().remove(this);
+//			Alien.getShots().remove(this);
 //		}
 
 	}
@@ -128,19 +119,13 @@ public class ProjectilesAliens {
 		 *we needed an embedded for loop to travel through both arrays and set the colour
 		 *and shape of the projectiles needed to be displayed for all aliens on the screen		 
 		 */
-//		for(int i = 0; i < Alien.getAliens().length; i++){
-//			if(Alien.getAliens()[i] != null){
-//				shootArray = Alien.getAliens()[i].getShots();
 		for(int i = 0; i < Alien.getAliens().size(); i++){
 			shootArray = Alien.getAliens().get(i).getShots();
 			for(int j = 0; j < shootArray.size(); j++){
 				ProjectilesAliens p = shootArray.get(j);
 				g2D.setColor(new Color(255, 0, 0));
 				g2D.fillOval((int) p.getX(),  (int)p.getY(), 4, 4);
-			}
-//			}
-			
+			}	
 		}
-	}
-		
+	}	
 }

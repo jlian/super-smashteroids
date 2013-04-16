@@ -62,7 +62,7 @@ public class Ship {
 	
 	private void initializeSound() {
 		try {
-			File shipHit = new File("src/bangLarge.wav");
+			File shipHit = new File("FX/audio/bangLarge.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(shipHit);
 			shipGoBoom = AudioSystem.getClip();
 			shipGoBoom.open(audioIn);

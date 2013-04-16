@@ -23,8 +23,8 @@ import java.net.URL;
 
 public class MainMenu extends JFrame{
 
-	private static final ImageIcon background = new ImageIcon("src/astr_pkg/background_main_menu2.jpg");
-	private static final ImageIcon gameOverPic = new ImageIcon("src/astr_pkg/game_over.jpg");
+	private static final ImageIcon background = new ImageIcon("FX/graphics/background_main_menu2.jpg");
+	private static final ImageIcon gameOverPic = new ImageIcon("FX/graphics/game_over.jpg");
 	private static int countMain = 0; //Controls which option in Main Menu should be highlighted
 	private static int countPlay = 0; //Controls which option in the Play Game menu should be highlighted
 	private static int countOptions = 0; //Controls which option in the Options menu should be highlighted
@@ -587,22 +587,22 @@ public class MainMenu extends JFrame{
 		 * Clip Class is used for this.
 		 */
 		try {
-			File menuSelection = new File("src/astr_pkg/menu_select.wav");
+			File menuSelection = new File("FX/audio/menu_select.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
 			menu_select = AudioSystem.getClip();
 			menu_select.open(audioIn);
 			
-			File menuValidation = new File("src/astr_pkg/menu_validate.wav");
+			File menuValidation = new File("FX/audio/menu_validate.wav");
 			AudioInputStream audioIn2 = AudioSystem.getAudioInputStream(menuValidation);
 			menu_validate = AudioSystem.getClip();
 			menu_validate.open(audioIn2);
 			
-			File backgroundMusic = new File("src/astr_pkg/background_music.wav");
+			File backgroundMusic = new File("FX/audio/background_music.wav");
 			AudioInputStream audioIn3 = AudioSystem.getAudioInputStream(backgroundMusic);
 			background_music = AudioSystem.getClip();
 			background_music.open(audioIn3);
 			
-			File menuMusic = new File("src/astr_pkg/menu_music.wav");
+			File menuMusic = new File("FX/audio/menu_music.wav");
 			AudioInputStream audioIn4 = AudioSystem.getAudioInputStream(menuMusic);
 			menu_music = AudioSystem.getClip();
 			menu_music.open(audioIn4);
@@ -694,7 +694,7 @@ public class MainMenu extends JFrame{
 			//Create and register a custom font
 			try {
 				titleFont = Font.createFont(Font.TRUETYPE_FONT, 
-						new File("src/astr_pkg/Autobahn.ttf"));
+						new File("FX/fonts/Autobahn.ttf"));
 				titleFont = titleFont.deriveFont(Font.PLAIN, 70);
 			GraphicsEnvironment ge = 
 					GraphicsEnvironment.getLocalGraphicsEnvironment();

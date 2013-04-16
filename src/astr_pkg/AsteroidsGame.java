@@ -31,9 +31,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static boolean nextWave, levelUp;
     private static int numLivesP1, numLivesP2;
     private static Clip gameOverSound;
-    private static ImageIcon gameBackground = new ImageIcon("src/astr_pkg/BG-game.jpg");
+    private static ImageIcon gameBackground = new ImageIcon("FX/graphics/BG-game.jpg");
     private boolean blowup = true;
-    private static ImageIcon shipExplosion = new ImageIcon("src/astr_pkg/explosion.gif");
+    private static ImageIcon shipExplosion = new ImageIcon("FX/graphics/explosion.gif");
     private static int count = 0;
     private boolean isHighScore;
     private int score;
@@ -75,7 +75,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	private void initializeSounds(){
 		try {
-			File gameOver = new File("src/game_over.wav");
+			File gameOver = new File("FX/audio/game_over.wav");
 			AudioInputStream audioIn1 = AudioSystem.getAudioInputStream(gameOver);
 			gameOverSound = AudioSystem.getClip();
 			gameOverSound.open(audioIn1);
@@ -95,7 +95,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	private void setScoreFont(){
 		try {
 			scoreFont = Font.createFont(Font.TRUETYPE_FONT, 
-					new File("src/arcadeClassic.ttf"));
+					new File("FX/fonts/arcadeClassic.ttf"));
 			scoreFont = scoreFont.deriveFont(Font.PLAIN, 26);
 		GraphicsEnvironment ge = 
 				GraphicsEnvironment.getLocalGraphicsEnvironment();

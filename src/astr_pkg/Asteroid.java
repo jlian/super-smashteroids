@@ -63,7 +63,7 @@ public class Asteroid {
 	
 	private void initializeSound(){
 		try {
-			File asteroidHit = new File("src/bangLarge.wav");
+			File asteroidHit = new File("FX/audio/bangLarge.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
 			asteroidSound = AudioSystem.getClip();
 			asteroidSound.open(audioIn);

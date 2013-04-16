@@ -59,7 +59,7 @@ public class Projectiles {
 	
 	private void initializeSound(){
 		try {
-			File shotSound = new File("src/fire.wav");
+			File shotSound = new File("FX/audio/fire.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(shotSound);
 			clip = AudioSystem.getClip();
 			clip.open(audioIn);

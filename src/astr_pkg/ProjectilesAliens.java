@@ -100,14 +100,14 @@ public class ProjectilesAliens {
 		 * like other entities. Once they reach the end of the screen, they are removed from the game.
 		 */
 		//Does not work yet
-		if(x > Constants.WIDTH || x < 0){
-			onScreen = false;
-			Alien.getShots().remove(this);
-		}
-		if(y > Constants.HEIGHT || y < 0){
-			onScreen = false;
-			Alien.getShots().remove(this);
-		}
+//		if(x > Constants.WIDTH || x < 0){
+//			onScreen = false;
+//			Alien.getShots().remove(this);
+//		}
+//		if(y > Constants.HEIGHT || y < 0){
+//			onScreen = false;
+//			Alien.getShots().remove(this);
+//		}
 
 	}
 	

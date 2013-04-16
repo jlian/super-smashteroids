@@ -61,6 +61,15 @@ public class Asteroid {
 		return pointsPlayer1;
 	}
 	
+	public static void resetPlayerScore(){
+		pointsPlayer1 = 0;
+		//PP2
+	}
+	
+	public static void reset(){
+		arrayAsteroid.removeAll(arrayAsteroid);
+	}
+	
 	private void initializeSound(){
 		try {
 			File asteroidHit = new File("FX/audio/bangLarge.wav");

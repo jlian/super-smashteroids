@@ -86,8 +86,17 @@ public class Ship {
 		}
 	}
 	
-	//Getters and Setters
-	public double getX() {
+	public void setScatterShot() {
+		if (scatterShot <= 1) {
+			scatterShot++;
+		}
+	}
+	
+	public void resetScatterShot(){
+		scatterShot = 0;
+	}
+	
+	public double getX(){
 		return x;
 	}
 	public double getY() {

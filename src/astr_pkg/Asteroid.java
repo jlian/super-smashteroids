@@ -56,6 +56,25 @@ public class Asteroid {
 			initializeSound();
 		}
 	}
+	public double getX() {
+		return this.x;
+	}
+	
+	public double getY() {
+		return this.y;
+	}
+	
+	public double getThetaVelocity() {
+		return this.thetaVelocity;
+	}
+	
+	public int getSize() {
+		return this.size;
+	}
+	
+	public double getSpeed() {
+		return this.speed;
+	}
 	
 	public static int getPointsP1(){
 		return pointsPlayer1;

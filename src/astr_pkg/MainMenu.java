@@ -32,7 +32,7 @@ public class MainMenu extends JFrame {
 	private static final ImageIcon gameOverPic = new ImageIcon(
 			"FX/graphics/game_over.jpg");
 	private static int countMain = 0; // Controls which option in Main Menu
-										// should be highlighted
+	// should be highlighted
 	private static int countPlay = 0; // Controls which option in the Play Game
 										// menu should be highlighted
 	private static int countOptions = 0; // Controls which option in the Options

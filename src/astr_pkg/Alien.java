@@ -176,7 +176,7 @@ public class Alien {
     	//PP2
     }
     
-//method to draw aliens and things that relate to the aliens
+    // method to draw aliens and things that relate to the aliens
     public static void drawAlien(Graphics g){
         for(int i = 0; i < aliens.size(); i++){
     		g.drawImage(AlienImage, (int) aliens.get(i).xPos, (int)aliens.get(i).yPos, null);// draws aliens using the alien image and the alien x and y positions

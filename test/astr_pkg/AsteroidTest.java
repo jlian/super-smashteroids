@@ -43,7 +43,7 @@ public class AsteroidTest {
 	@Test
 	public final void testPlayHitSound() {
 		try {
-			File asteroidHit = new File("src/bangLarge.wav");
+			File asteroidHit = new File("FX/audio/bangLarge.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
 			asteroidSound = AudioSystem.getClip();
 			asteroidSound.open(audioIn);
@@ -94,7 +94,7 @@ public class AsteroidTest {
 	@Test
 	public final void testCollisionShip() {
 		try {
-			File asteroidHit = new File("src/bangLarge.wav");
+			File asteroidHit = new File("FX/audio/bangLarge.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(asteroidHit);
 			asteroidSound = AudioSystem.getClip();
 			asteroidSound.open(audioIn);

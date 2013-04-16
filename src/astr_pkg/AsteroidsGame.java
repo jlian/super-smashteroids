@@ -35,12 +35,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static Clip gameOverSound;
     private static ImageIcon gameBackground = new ImageIcon("FX/graphics/BG-game.jpg");
     private static ImageIcon shipExplosion = new ImageIcon("FX/graphics/explosion.gif");
-<<<<<<< HEAD
     private static int count = 0;
-    private boolean isHighScore = true;
-=======
-    private boolean isHighScore = true;
->>>>>>> 817bfba40847882a79a7e0ef972bc439b4c51418
+
     private int score;
     private long gameStartTime, gameEndTime;
 	

@@ -13,7 +13,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Ship {
-	//Intialize the starting points of the ship shape
+	//Initialize the starting points of the ship shape
 	private final int[] initialXPts = {16, -11, -6, -11},
 			initialYPts = {0, 8, 0, -8};
 	//Initialize the starting points of the shape of the ship thruster
@@ -120,11 +120,11 @@ public class Ship {
 		return projectiles;
 	}
 	public void setTurningLeft(boolean left){
-		turningLeft = left;
+		this.turningLeft = left;
 	}
 	
 	public void setTurningRight(boolean right){
-		turningRight = right;
+		this.turningRight = right;
 	}
 	
 	public void setAccelerating(boolean accelerating){
@@ -243,17 +243,17 @@ public class Ship {
 						theta, this);
 				projectiles.add(p);
 				if (scatterShot >=1) {
-					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+0.8)), y+(16*Math.sin(theta+0.8)),
+					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+180)), y+(16*Math.sin(theta+180)),
 						theta, this);
-					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-0.8)), y+(16*Math.sin(theta-0.8)),
+					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-180)), y+(16*Math.sin(theta-180)),
 						theta, this);
 					projectiles.add(p1);
 					projectiles.add(p2);
 				}
 				if (scatterShot == 2) {
-					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+1.5)), y+(16*Math.sin(theta+1.5)),
+					Projectiles p1 = new Projectiles(x+(16*Math.cos(theta+180)), y+(16*Math.sin(theta+180)),
 						theta, this);
-					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-1.5)), y+(16*Math.sin(theta-1.5)),
+					Projectiles p2 = new Projectiles(x+(16*Math.cos(theta-180)), y+(16*Math.sin(theta-180)),
 						theta, this);
 					projectiles.add(p1);
 					projectiles.add(p2);

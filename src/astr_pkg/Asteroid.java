@@ -56,6 +56,21 @@ public class Asteroid {
 			initializeSound();
 		}
 	}
+	public int[] getScoreX() {
+		return scoreX;
+	}
+	
+	public int[] getScoreY() {
+		return scoreY;
+	}
+	
+	public int[] getXPts() {
+		return this.xPts;
+	}
+	public int[] getYPts() {
+		return this.yPts;
+	}
+	
 	public double getX() {
 		return this.x;
 	}
@@ -80,6 +95,12 @@ public class Asteroid {
 		return pointsPlayer1;
 	}
 	
+	public static int[] getScoreTime() {
+		return scoreTime;
+	}
+	public static int[] getScoreValue() {
+		return scoreValue;
+	}
 	private void initializeSound(){
 		try {
 			File asteroidHit = new File("src/bangLarge.wav");

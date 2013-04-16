@@ -69,9 +69,22 @@ public class Alien {
     // method that creates the number of aliens needed
     public static void generateAliens(int numAliens, double alienX, double alienY, double shipX, double shipY){
     	numberOfAliens = numAliens;
-        for(int i = 0; i < numAliens; i++){
+    	if(MainMenu.isMultiplayer()){
+    		int p1Aliens = numAliens/2;
+        	int p2Aliens = numAliens - p1Aliens;
+        	
+        	for(int i = 0; i < p1Aliens; i++){
+	            aliens.add(new Alien(alienX, alienY, Constants.SHIP.getX(), Constants.SHIP.getY()));
+        	}
+        	for(int j = 0; j < p2Aliens; j++){
+	            aliens.add(new Alien(alienX, alienY, Constants.P2SHIP.getX(), Constants.P2SHIP.getY()));
+        	}
+    	}else{
+    		for(int i = 0; i < numAliens; i++){
             aliens.add(new Alien(alienX, alienY, shipX, shipY));
-        }
+    		}
+    	}
+        
         scoreX = new int[numAliens];
 		scoreY = new int[numAliens];
 		scoreTime = new int[numAliens];
@@ -93,8 +106,6 @@ public class Alien {
         }else{
         	int p1Aliens = numAliens/2;
         	int p2Aliens = numAliens - p1Aliens;
-        	System.out.println(p1Aliens);
-        	System.out.println(p2Aliens);
         	for(int i = 0; i < p1Aliens; i++){
         		alienX =  (Math.ceil(Math.random() * 500));
 	        	alienY =  (Math.ceil(Math.random() * 500));

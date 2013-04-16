@@ -31,14 +31,17 @@ public class MainMenu extends JFrame {
 			"FX/graphics/background_main_menu2.jpg");
 	private static final ImageIcon gameOverPic = new ImageIcon(
 			"FX/graphics/game_over.jpg");
-	private static int countMain = 0; // Controls which option in Main Menu
-	// should be highlighted
-	private static int countPlay = 0; // Controls which option in the Play Game
-										// menu should be highlighted
-	private static int countOptions = 0; // Controls which option in the Options
-											// menu should be highlighted
+	// Controls which option in Main Menu should be highlighted
+	private static int countMain = 0;
+	// Controls which option in the Play Game menu should be highlighted
+	private static int countPlay = 0;
+	// Controls which option in the Options menu should be highlighted
+	private static int countOptions = 0;
+	// Controls which option in the game over menu should be highlighted
 	private static int countGameOver = 0;
+	// Controls which option in high score menu should be highlighted
 	private static int countHSDifficulty = 0;
+
 	private static boolean musicVolume = true; // Controls if background music
 												// is on or off
 	private static boolean sfxVolume = true; // Controls if sound effects are on
@@ -50,20 +53,17 @@ public class MainMenu extends JFrame {
 	private static Font titleFont; // The custom font for the title of the game
 	private static Clip menu_select; // Sound effect for when options are
 										// scrolled in the Main Menu
-	private static Clip menu_validate;
-	private static Clip background_music;
-	private static Clip menu_music;
+	private static Clip menu_validate; // Menu sound effects
+	private static Clip background_music; // background music
+	private static Clip menu_music; // menu music
 	private static MainMenu menu = new MainMenu();
 	private static AsteroidsGame game;
 	private static boolean multiplayer = false;
 
+	// These variables are used for entering high scores
 	static int letter;
 	static int position;
 	private char hsFirstLetter, hsSecondLetter, hsThirdLetter;
-
-	// public static AsteroidsGame getGame() {
-	// return game;
-	// }
 
 	public MainMenu() {
 
@@ -84,84 +84,61 @@ public class MainMenu extends JFrame {
 		Constants.MAIN_MENU_PANEL.addKeyListener(new KeyAdapter() { // Keyboard
 																	// event
 																	// handler
-					public void keyPressed(KeyEvent e) {
-						switch (e.getKeyCode()) {
-						case KeyEvent.VK_DOWN: // If down arrow key pressed,
-							countMain++; // increment count --> move down the
-											// list of options
-							if (sfxVolume && !Constants.LINUX) {
-								if (menu_select.isRunning()) { // If the clip is
-																// still running
-									menu_select.stop(); // Stop playback
-								}
-								menu_select.setFramePosition(0); // Rewind audio
-																	// to
-																	// beginning
-								menu_select.start(); // Play audio
+			public void keyPressed(KeyEvent e) {
+					switch (e.getKeyCode()) {
+					case KeyEvent.VK_DOWN: // If down arrow key pressed,
+						countMain++; // increment count --> move down the
+										// list of options
+						if (sfxVolume && !Constants.LINUX) {
+							if (menu_select.isRunning()) { // If the clip is
+															// still running
+								menu_select.stop(); // Stop playback
 							}
-							break;
-						case KeyEvent.VK_UP: // If upward arrow key pressed,
-							countMain--; // decrement count --> move up the list
-											// of options
-							if (countMain < 0) { // Keep value positive as to
-													// keep proper track of the
-								countMain = 3; // keyboard pointer location.
+							menu_select.setFramePosition(0); // Rewind audio
+																// to
+																// beginning
+							menu_select.start(); // Play audio
+						}
+						break;
+					case KeyEvent.VK_UP: // If upward arrow key pressed,
+						countMain--; // decrement count --> move up the list
+										// of options
+						if (countMain < 0) { // Keep value positive as to
+												// keep proper track of the
+							countMain = 3; // keyboard pointer location.
+						}
+						if (sfxVolume && !Constants.LINUX) {
+							if (menu_select.isRunning()) {
+								menu_select.stop();
 							}
-							if (sfxVolume && !Constants.LINUX) {
-								if (menu_select.isRunning()) {
-									menu_select.stop();
-								}
-								menu_select.setFramePosition(0);
-								menu_select.start();
+							menu_select.setFramePosition(0);
+							menu_select.start();
+						}
+						break;
+					case KeyEvent.VK_ENTER: // If the Enter key is pressed,
+											// depending on the option
+											// selected
+						if (sfxVolume && !Constants.LINUX) {
+							if (menu_validate.isRunning()) {
+								menu_validate.stop();
 							}
-							break;
-						case KeyEvent.VK_ENTER: // If the Enter key is pressed,
-												// depending on the option
-												// selected
-							if (sfxVolume && !Constants.LINUX) {
-								if (menu_validate.isRunning()) {
-									menu_validate.stop();
-								}
-								menu_validate.setFramePosition(0);
-								menu_validate.start();
-							}
-							if (countMain % 4 == 0) { // If first option
-														// selected, "Play Game"
-								// Show the Play Game sub-menu
-								menu.remove(Constants.MAIN_MENU_PANEL); // Remove
-																		// the
-																		// Main
-																		// Menu
-								menu.add(Constants.PLAY_GAME_PANEL); // Show the
-																		// Play
-																		// Game
-																		// sub-menu
-								menu.getRootPane().revalidate(); // refresh
-																	// frame
-								Constants.PLAY_GAME_PANEL.setFocusable(true);// Make
-																				// this
-																				// panel
-																				// able
-																				// to
-																				// detect
-																				// key
-																				// presses
-								Constants.PLAY_GAME_PANEL
-										.requestFocusInWindow(); // from the
-																	// keyboard
-							} else if (countMain % 4 == 1) { // If 2nd option
-																// selected,
-																// "Options"
-								// Show the Options sub-menu
-								menu.remove(Constants.MAIN_MENU_PANEL); // Remove
-																		// Main
-																		// Menu
-								menu.add(Constants.OPTIONS_PANEL); // Show
-																	// Options
+							menu_validate.setFramePosition(0);
+							menu_validate.start();
+						}
+						if (countMain % 4 == 0) { // If first option
+													// selected, "Play Game"
+							// Show the Play Game sub-menu
+							menu.remove(Constants.MAIN_MENU_PANEL); // Remove
+																	// the
+																	// Main
+																	// Menu
+							menu.add(Constants.PLAY_GAME_PANEL); // Show the
+																	// Play
+																	// Game
 																	// sub-menu
-								menu.getRootPane().revalidate(); // refresh
-																	// frame
-								Constants.OPTIONS_PANEL.setFocusable(true); // Make
+							menu.getRootPane().revalidate(); // refresh
+																// frame
+							Constants.PLAY_GAME_PANEL.setFocusable(true);// Make
 																			// this
 																			// panel
 																			// able
@@ -169,41 +146,58 @@ public class MainMenu extends JFrame {
 																			// detect
 																			// key
 																			// presses
-								Constants.OPTIONS_PANEL.requestFocusInWindow(); // from
-																				// the
-																				// keyboard
-							} else if (countMain % 4 == 2) { // If 3rd option
-																// selected,
-																// "High Scores"
-								menu.remove(Constants.MAIN_MENU_PANEL); // Remove
-																		// Main
-																		// Menu
-								menu.add(Constants.HIGH_SCORES_PANEL); // Show
-																		// High
-																		// Scores
-																		// sub-menu
+							Constants.PLAY_GAME_PANEL
+									.requestFocusInWindow(); // from the
+																// keyboard
+						} else if (countMain % 4 == 1) { // If 2nd option
+															// selected,
+															// "Options"
+							// Show the Options sub-menu
+							menu.remove(Constants.MAIN_MENU_PANEL); // Remove
+																	// Main
+																	// Menu
+							menu.add(Constants.OPTIONS_PANEL); // Show
+																// Options
+																// sub-menu
+							menu.getRootPane().revalidate(); // refresh
+																// frame
+							Constants.OPTIONS_PANEL.setFocusable(true); // Make
+																		// this
+																		// panel
+																		// able
+																		// to
+																		// detect
+																		// key
+																		// presses
+							Constants.OPTIONS_PANEL.requestFocusInWindow(); // from
+																			// the
+																			// keyboard
+						} else if (countMain % 4 == 2) { // If 3rd option
+															// selected,
+															// "High Scores"
+							menu.remove(Constants.MAIN_MENU_PANEL); // Remove
+																	// Main
+																	// Menu
+							menu.add(Constants.HIGH_SCORES_PANEL); // Show
+																	// High
+																	// Scores
+																	// sub-menu
 								menu.getRootPane().revalidate(); // refresh
-																	// frame
-								Constants.HIGH_SCORES_PANEL.setFocusable(true); // Make
-																				// this
-																				// panel
-																				// able
-																				// to
-																				// detect
-																				// key
-																				// presses
-								Constants.HIGH_SCORES_PANEL
-										.requestFocusInWindow(); // from the
-																	// keyboard
-							} else { // If last option selected, "Exit"
-								System.exit(0); // Terminate program
-							}
-							break;
+																// frame
+							
+							// Make this panel able to detect key presses
+							Constants.HIGH_SCORES_PANEL.setFocusable(true);
+							Constants.HIGH_SCORES_PANEL
+									.requestFocusInWindow(); // from the
+																// keyboard
+						} else { // If last option selected, "Exit"
+							System.exit(0); // Terminate program
 						}
-						repaint(); // repaint canvas every time a key is pressed
+						break;
 					}
-				});
-
+					repaint(); // repaint canvas every time a key is pressed
+				}
+			});
 		// Code to check for Keyboard events in the Play Game Sub-menu
 		Constants.PLAY_GAME_PANEL.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
@@ -433,11 +427,14 @@ public class MainMenu extends JFrame {
 						if (position > 3) {
 							File highScoreList = null;
 							if (MainMenu.getDifficulty() == 1) {
-								highScoreList = new File("src/astr_pkg/hs_easy.csv");
+								highScoreList = new File(
+										"src/astr_pkg/hs_easy.csv");
 							} else if (MainMenu.getDifficulty() == 2) {
-								highScoreList = new File("src/astr_pkg/hs_medium.csv");
+								highScoreList = new File(
+										"src/astr_pkg/hs_medium.csv");
 							} else if (MainMenu.getDifficulty() == 3) {
-								highScoreList = new File("src/astr_pkg/hs_hard.csv");
+								highScoreList = new File(
+										"src/astr_pkg/hs_hard.csv");
 							}
 
 							try {
@@ -450,28 +447,31 @@ public class MainMenu extends JFrame {
 								boolean insert = false, done = false;
 								while (true) {
 									if (!insert) {
-										if(!file.hasNext()){
+										if (!file.hasNext()) {
 											break;
 										}
 										line = file.next();
 										fields = line.split(",");
 									}
-									Integer scoreInt = Integer.parseInt(fields[1]);
+									Integer scoreInt = Integer
+											.parseInt(fields[1]);
 									if (!done) {
 										if (scoreInt > (Asteroid.getPointsP1() + Alien
 												.getPointsP1())) {
 											name = fields[0];
 											score = fields[1];
 											hsTime = fields[2];
-											fout.println(name + "," + score + ","
-													+ hsTime);
+											fout.println(name + "," + score
+													+ "," + hsTime);
 										} else {
-											name = "" + hsFirstLetter + hsSecondLetter
+											name = "" + hsFirstLetter
+													+ hsSecondLetter
 													+ hsThirdLetter;
 											fout.println(name
 													+ ","
 													+ (Asteroid.getPointsP1() + Alien
-															.getPointsP1()) + ","
+															.getPointsP1())
+													+ ","
 													+ game.getGameLength());
 											insert = true;
 											done = true;
@@ -480,12 +480,13 @@ public class MainMenu extends JFrame {
 										name = fields[0];
 										score = fields[1];
 										hsTime = fields[2];
-										fout.println(name + "," + score + "," + hsTime);
+										fout.println(name + "," + score + ","
+												+ hsTime);
 										insert = false;
 									}
 
 								}
-								if(!done){
+								if (!done) {
 									name = "" + hsFirstLetter + hsSecondLetter
 											+ hsThirdLetter;
 									fout.println(name
@@ -498,7 +499,8 @@ public class MainMenu extends JFrame {
 								file.close();
 								String fileName = highScoreList.getName();
 								highScoreList.delete();
-								temp.renameTo(new File("src/astr_pkg/" + fileName));
+								temp.renameTo(new File("src/astr_pkg/"
+										+ fileName));
 							} catch (FileNotFoundException exception) {
 								// TODO Auto-generated catch block
 								exception.printStackTrace();
@@ -530,7 +532,7 @@ public class MainMenu extends JFrame {
 							break;
 						}
 					}
-					
+
 				} else {
 					switch (e.getKeyCode()) {
 					case KeyEvent.VK_DOWN: // If down arrow key pressed
@@ -618,7 +620,7 @@ public class MainMenu extends JFrame {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_LEFT:
 					countHSDifficulty--;
-					if(countHSDifficulty < 0){
+					if (countHSDifficulty < 0) {
 						countHSDifficulty = 2;
 					}
 					break;
@@ -669,7 +671,7 @@ public class MainMenu extends JFrame {
 		Constants.GAME_OVER_PANEL.requestFocusInWindow();
 		repaint();
 	}
-	
+
 	/*
 	 * Code to initialize all the audio variables
 	 */
@@ -680,22 +682,26 @@ public class MainMenu extends JFrame {
 		 */
 		try {
 			File menuSelection = new File("FX/audio/menu_select.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(menuSelection);
+			AudioInputStream audioIn = AudioSystem
+					.getAudioInputStream(menuSelection);
 			menu_select = AudioSystem.getClip();
 			menu_select.open(audioIn);
-			
+
 			File menuValidation = new File("FX/audio/menu_validate.wav");
-			AudioInputStream audioIn2 = AudioSystem.getAudioInputStream(menuValidation);
+			AudioInputStream audioIn2 = AudioSystem
+					.getAudioInputStream(menuValidation);
 			menu_validate = AudioSystem.getClip();
 			menu_validate.open(audioIn2);
-			
+
 			File backgroundMusic = new File("FX/audio/background_music.wav");
-			AudioInputStream audioIn3 = AudioSystem.getAudioInputStream(backgroundMusic);
+			AudioInputStream audioIn3 = AudioSystem
+					.getAudioInputStream(backgroundMusic);
 			background_music = AudioSystem.getClip();
 			background_music.open(audioIn3);
-			
+
 			File menuMusic = new File("FX/audio/menu_music.wav");
-			AudioInputStream audioIn4 = AudioSystem.getAudioInputStream(menuMusic);
+			AudioInputStream audioIn4 = AudioSystem
+					.getAudioInputStream(menuMusic);
 			menu_music = AudioSystem.getClip();
 			menu_music.open(audioIn4);
 
@@ -718,14 +724,14 @@ public class MainMenu extends JFrame {
 	public static MainMenu getMenu() {
 		return menu;
 	}
-	
+
 	/*
 	 * Return the AsteroidsGame object
 	 */
 	public static AsteroidsGame getGame() {
 		return game;
 	}
-	
+
 	/*
 	 * Return the difficulty the user selected
 	 */
@@ -759,14 +765,14 @@ public class MainMenu extends JFrame {
 	public static int getOptionsPointerPosition() {
 		return countOptions;
 	}
-	
-	//Return the position of the pointer in the Game Over screen
+
+	// Return the position of the pointer in the Game Over screen
 	public static int getGameOverPointerPosition() {
 		return countGameOver;
 	}
-	
-	//Return the position of the pointer in the High Score sub-menu
-	public static int getHSDifficulty(){
+
+	// Return the position of the pointer in the High Score sub-menu
+	public static int getHSDifficulty() {
 		return countHSDifficulty;
 	}
 
@@ -785,7 +791,7 @@ public class MainMenu extends JFrame {
 		return wasd;
 	}
 
-	//return true if multiplayer game selected
+	// return true if multiplayer game selected
 	public static boolean isMultiplayer() {
 		return multiplayer;
 	}
@@ -795,7 +801,7 @@ public class MainMenu extends JFrame {
 		return titleFont;
 	}
 
-	//Method that stops the background music
+	// Method that stops the background music
 	public static void stopBackgroundMusic() {
 		background_music.stop();
 	}
@@ -821,11 +827,12 @@ public class MainMenu extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		menu.setBackground(Color.BLACK); // Set background color of frame(Black)
 		menu.setForeground(Color.RED); // Set foreground color of Frame (RED)
 		menu.setUndecorated(true); // Hide the toolbar at the top of windows
-		menu.setSize(Constants.WIDTH, Constants.HEIGHT); // Set size to 800x600 (default)
+		menu.setSize(Constants.WIDTH, Constants.HEIGHT); // Set size to 800x600
+															// (default)
 		menu.setLocationRelativeTo(null); // Center frame
 		menu.setVisible(true); // Make frame visible
 	}
@@ -833,9 +840,9 @@ public class MainMenu extends JFrame {
 }
 
 /*
- * This class is used to paint paint the Main Menu onto the screen
- * The Main Menu has the following selections: "Play Game", "Options",
- * "High Scores", and "Exit"
+ * This class is used to paint paint the Main Menu onto the screen The Main Menu
+ * has the following selections: "Play Game", "Options", "High Scores", and
+ * "Exit"
  */
 class MainMenuPanel extends JPanel {
 
@@ -977,8 +984,8 @@ class MainMenuPanel extends JPanel {
 }
 
 /*
- * Very similar to the MainMenuPanel class. This class will paint/display
- * the Play Game sub-menu which has the "Difficulty", "Single Player",
+ * Very similar to the MainMenuPanel class. This class will paint/display the
+ * Play Game sub-menu which has the "Difficulty", "Single Player",
  * "Multiplayer", and "Back to Main Menu" selections
  */
 class PlayGamePanel extends JPanel {
@@ -1093,8 +1100,8 @@ class PlayGamePanel extends JPanel {
 }
 
 /*
- * This class is very similar to MainMenuPanel and PlayGamePanel.
- * This class will paint/display the options sub-menu
+ * This class is very similar to MainMenuPanel and PlayGamePanel. This class
+ * will paint/display the options sub-menu
  */
 class OptionsPanel extends JPanel {
 
@@ -1256,8 +1263,7 @@ class OptionsPanel extends JPanel {
 }
 
 /*
- * This class will paint/display the High Scores in the
- * High Scores sub-menu.
+ * This class will paint/display the High Scores in the High Scores sub-menu.
  */
 class HighScoresPanel extends JPanel {
 	protected void paintComponent(Graphics g) {
@@ -1279,46 +1285,45 @@ class HighScoresPanel extends JPanel {
 		// X and Y positions of the Back to Main Menu option calculated
 		int highScoresX = getWidth() / 2
 				- (metrics.stringWidth("Back to Main Menu") / 2); // Center
-																		// text
+																	// text
 		int highScoresY = 9 * getHeight() / 10;
 
 		g.setColor(Color.WHITE);
 		g.drawString("Back to Main Menu", highScoresX, highScoresY);
-		
-		
+
 		int i = 1;
 		File highScoreList = null;
 		/*
-		 * Find which difficulty the pointer is on in the High Scores
-		 * menu. Gray out the options that are not selected. By default,
-		 * Enter is to exit to Main Menu so Back to Main Menu option will always
-		 * be selected. Depending on the difficulty, the high score file to be read
-		 * is decided on accordingly.
+		 * Find which difficulty the pointer is on in the High Scores menu. Gray
+		 * out the options that are not selected. By default, Enter is to exit
+		 * to Main Menu so Back to Main Menu option will always be selected.
+		 * Depending on the difficulty, the high score file to be read is
+		 * decided on accordingly.
 		 */
-		switch(MainMenu.getHSDifficulty() % 3){
+		switch (MainMenu.getHSDifficulty() % 3) {
 		case 0:
 			highScoreList = new File("src/astr_pkg/hs_easy.csv");
 			g.setColor(Color.WHITE);
-			g.drawString("EASY", getWidth()/8, getHeight()/ 5);
+			g.drawString("EASY", getWidth() / 8, getHeight() / 5);
 			g.setColor(Color.GRAY);
-			g.drawString("Medium", 2 * getWidth()/5, getHeight()/5);
-			g.drawString("HARD", 6 * getWidth() / 8, getHeight()/5);
+			g.drawString("Medium", 2 * getWidth() / 5, getHeight() / 5);
+			g.drawString("HARD", 6 * getWidth() / 8, getHeight() / 5);
 			break;
 		case 1:
 			highScoreList = new File("src/astr_pkg/hs_medium.csv");
 			g.setColor(Color.WHITE);
-			g.drawString("Medium", 2 * getWidth()/5, getHeight()/5);
+			g.drawString("Medium", 2 * getWidth() / 5, getHeight() / 5);
 			g.setColor(Color.GRAY);
-			g.drawString("EASY", getWidth()/8, getHeight()/ 5);
-			g.drawString("HARD", 6 * getWidth() / 8, getHeight()/5);
+			g.drawString("EASY", getWidth() / 8, getHeight() / 5);
+			g.drawString("HARD", 6 * getWidth() / 8, getHeight() / 5);
 			break;
 		case 2:
 			highScoreList = new File("src/astr_pkg/hs_hard.csv");
 			g.setColor(Color.WHITE);
-			g.drawString("HARD", 6 * getWidth() / 8, getHeight()/5);
+			g.drawString("HARD", 6 * getWidth() / 8, getHeight() / 5);
 			g.setColor(Color.GRAY);
-			g.drawString("EASY", getWidth()/8, getHeight()/ 5);
-			g.drawString("Medium", 2 * getWidth()/5, getHeight()/5);
+			g.drawString("EASY", getWidth() / 8, getHeight() / 5);
+			g.drawString("Medium", 2 * getWidth() / 5, getHeight() / 5);
 			break;
 		}
 		g.setFont(Constants.SELECTIONS_FONT);
@@ -1328,30 +1333,35 @@ class HighScoresPanel extends JPanel {
 		 * This code is for reading the high score file
 		 */
 		try {
-			Scanner file = new Scanner(highScoreList); //Open file
+			Scanner file = new Scanner(highScoreList); // Open file
 			String line = "error";
 			String[] fields = null;
 			String name, score, hsTime;
-			while (file.hasNext()) { //While not at the end of file
-				line = file.next(); //line is an entire line in the file
-				//Since we are using csv files (comma-seperated), we split
-				//the string in order to identify the different fields in the file
-				fields = line.split(","); 
-				name = fields[0]; //First string before comma is users name
-				score = fields[1]; //Second field after first comma is score
-				hsTime = fields[2]; //Third field after second comma is time in seconds
+			while (file.hasNext()) { // While not at the end of file
+				line = file.next(); // line is an entire line in the file
+				// Since we are using csv files (comma-seperated), we split
+				// the string in order to identify the different fields in the
+				// file
+				fields = line.split(",");
+				name = fields[0]; // First string before comma is users name
+				score = fields[1]; // Second field after first comma is score
+				hsTime = fields[2]; // Third field after second comma is time in
+									// seconds
 				/*
 				 * Draw the player name, score and time in high scores sub menu
 				 */
-				g.drawString(name, getWidth()/4, (getHeight() / 4) + metrics.getHeight() * i);
-				g.drawString(score, getWidth()/2, (getHeight() / 4) + metrics.getHeight() * i);
-				g.drawString(hsTime + "s", 3 * getWidth()/4, (getHeight() / 4) + metrics.getHeight() * i);
+				g.drawString(name, getWidth() / 4,
+						(getHeight() / 4) + metrics.getHeight() * i);
+				g.drawString(score, getWidth() / 2,
+						(getHeight() / 4) + metrics.getHeight() * i);
+				g.drawString(hsTime + "s", 3 * getWidth() / 4,
+						(getHeight() / 4) + metrics.getHeight() * i);
 				i++;
-				if(i == 11){ //Once 10 high scores have been displayed, stop
+				if (i == 11) { // Once 10 high scores have been displayed, stop
 					break;
 				}
 			}
-			file.close(); //close file
+			file.close(); // close file
 		} catch (FileNotFoundException exception) {
 			// TODO Auto-generated catch block
 			exception.printStackTrace();
@@ -1361,14 +1371,10 @@ class HighScoresPanel extends JPanel {
 }
 
 /*
- * This class will display the game over screen. Two possible
- * situations:
- * 1. 
- * User gets a high score, in this case the user will only be prompted
- * to enter a 3 character name.
- * 2.
- * User does not get a high score, in this case the screen will
- * show the user their score and their time and prompt them to play
+ * This class will display the game over screen. Two possible situations: 1.
+ * User gets a high score, in this case the user will only be prompted to enter
+ * a 3 character name. 2. User does not get a high score, in this case the
+ * screen will show the user their score and their time and prompt them to play
  * again or return to Main Menu
  */
 class GameOverPanel extends JPanel {
@@ -1398,8 +1404,12 @@ class GameOverPanel extends JPanel {
 				- metrics.stringWidth("Back to Main Menu") / 2; // Center text
 		int mainMenuY = playAgainY + metrics.getHeight() + 10;
 
-		if (!MainMenu.getGame().getIsHighScore() || MainMenu.isMultiplayer()) { // If user did not get
-													// highscore
+		if (!MainMenu.getGame().getIsHighScore() || MainMenu.isMultiplayer()) { // If
+																				// user
+																				// did
+																				// not
+																				// get
+			// highscore
 			g.drawString("Score: " + MainMenu.getGame().getScore(), 150, 100);
 			g.drawString("Time: " + MainMenu.getGame().getGameLength() / 60
 					+ " min " + MainMenu.getGame().getGameLength() % 60 + " s",

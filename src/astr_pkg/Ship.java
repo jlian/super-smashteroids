@@ -39,7 +39,7 @@ public class Ship {
 	
 	private ArrayList<Projectiles> projectiles;
 	
-	public static final int INVULNERABILITY_TIME = 1000;
+	public static final int INVULNERABILITY_TIME = 120;
 	public static final int RESPAWN_TIME = 80;
 	private int respawnTime, invulnerabilityTime;
 	
@@ -101,10 +101,14 @@ public class Ship {
 		}
 	}
 	
-	public void setScattershot() {
+	public void setScatterShot() {
 		if (scatterShot <= 1) {
 			scatterShot++;
 		}
+	}
+	
+	public void resetScatterShot(){
+		scatterShot = 0;
 	}
 	
 	public double getX(){

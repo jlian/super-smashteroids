@@ -10,6 +10,8 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
+import java.util.Iterator;
+import java.util.Scanner;
 
 import javax.sound.sampled.*;
 import javax.swing.ImageIcon;
@@ -35,8 +37,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private boolean blowup = true;
     private static ImageIcon shipExplosion = new ImageIcon("src/astr_pkg/explosion.gif");
     private static int count = 0;
-    private boolean isHighScore;
+    private boolean isHighScore = true;
     private int score;
+    private long gameStartTime, gameEndTime;
 	
     public void init(){
 		nextWave = false;
@@ -46,7 +49,9 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		scattershot = 1;
 		lifeup = 2;
 		level = 1;
-		numLivesP1 = 1000;
+
+		numLivesP1 = 1;
+
 		if(MainMenu.isMultiplayer()){
 			numLivesP2 = 3;
 		}else{
@@ -108,6 +113,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			e.printStackTrace();
 		}
 	}
+	public void gameReset(){
+		Alien.reset();
+		Asteroid.reset();
+		Alien.resetPlayerScore();
+		Asteroid.resetPlayerScore();
+		Constants.SHIP.resetScatterShot();
+	}
+	
 	public boolean getIsHighScore() {
 		return isHighScore;
 	}
@@ -292,7 +305,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+		gameStartTime = System.currentTimeMillis();
 		while (numLivesP1 > 0 || numLivesP2 > 0){
 			startTime = System.currentTimeMillis();
 			if(Constants.SHIP.isAlive()){
@@ -328,8 +341,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					}
 					rapidfire--;
 					if (scattershot == 0) {
-						Constants.SHIP.setScattershot();
-						scattershot =0;
+						Constants.SHIP.setScatterShot();
+						scattershot =3;
 					}
 					scattershot--;
 					if (lifeup ==0) {
@@ -377,7 +390,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			MainMenu.stopBackgroundMusic();
 			playGameOverSound();
 		}
+		gameEndTime = System.currentTimeMillis();
 		MainMenu.getMenu().gameOver();
+	}
+	
+	public long getGameLength(){
+		return (gameEndTime - gameStartTime)/1000;
 	}
 
 

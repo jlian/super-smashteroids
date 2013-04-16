@@ -521,6 +521,7 @@ public class MainMenu extends JFrame {
 						break;
 					case 1: // If first option selected "Single Player"
 						// Start a Single Player game
+						setMultiplayer(false);
 						menu.remove(Constants.PLAY_GAME_PANEL);
 						game = new AsteroidsGame();
 						game.gameReset();
@@ -536,7 +537,7 @@ public class MainMenu extends JFrame {
 						break;
 					case 2: // If second option selected "Multiplayer"
 						// Start a Multiplayer game
-						multiplayer = true;
+						setMultiplayer(true);
 						menu.remove(Constants.PLAY_GAME_PANEL);
 						game = new AsteroidsGame();
 						game.gameReset();
@@ -1021,6 +1022,10 @@ public class MainMenu extends JFrame {
 
 	public static boolean isMultiplayer() {
 		return multiplayer;
+	}
+	
+	public static void setMultiplayer(boolean isMulti) {
+		multiplayer = isMulti;
 	}
 
 	// Return the custom title Font

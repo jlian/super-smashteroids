@@ -1,6 +1,7 @@
 package astr_pkg;
 
 import java.awt.Font;
+import java.io.File;
 
 public interface Constants {
 
@@ -17,5 +18,8 @@ public interface Constants {
 	static final boolean LINUX = true;
 	static final Ship P2SHIP = new Ship(380, 300, Math.PI, 0.35, 0.98, .1);
 	static final GameOverPanel GAME_OVER_PANEL = new GameOverPanel();
+//	static final File HIGH_SCORE_EASY = new File("src/astr_pkg/hs_easy.csv");
+//	static final File HIGH_SCORE_MEDIUM = new File("src/astr_pkg/hs_medium.csv");
+//	static final File HIGH_SCORE_HARD = new File("src/astr_pkg/hs_hard.csv");
 
 }

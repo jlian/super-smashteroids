@@ -161,6 +161,17 @@ public class Alien {
     public double getY(){
     	return yPos;
     }
+    
+    public static void reset(){
+    	aliens.removeAll(aliens);
+    	numberOfAliens = 0;
+    }
+    
+    public static void resetPlayerScore(){
+    	pointsPlayer1 = 0;
+    	//PP2
+    }
+    
     public static void drawAlien(Graphics g){
 //        for(int i = 0; i < aliens.length; i++){
 //        	if(aliens[i] != null){

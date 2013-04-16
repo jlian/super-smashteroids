@@ -38,6 +38,7 @@ public class MainMenu extends JFrame {
 	private static int countOptions = 0; // Controls which option in the Options
 											// menu should be highlighted
 	private static int countGameOver = 0;
+	private static int countHSDifficulty = 0;
 	private static boolean musicVolume = true; // Controls if background music
 												// is on or off
 	private static boolean sfxVolume = true; // Controls if sound effects are on
@@ -720,8 +721,11 @@ public class MainMenu extends JFrame {
 								String[] fields = null;
 								String name, score, hsTime;
 								boolean insert = false, done = false;
-								while (file.hasNext()) {
+								while (true) {
 									if (!insert) {
+										if(!file.hasNext()){
+											break;
+										}
 										line = file.next();
 										fields = line.split(",");
 									}
@@ -885,6 +889,15 @@ public class MainMenu extends JFrame {
 		Constants.HIGH_SCORES_PANEL.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
+				case KeyEvent.VK_LEFT:
+					countHSDifficulty--;
+					if(countHSDifficulty < 0){
+						countHSDifficulty = 2;
+					}
+					break;
+				case KeyEvent.VK_RIGHT:
+					countHSDifficulty++;
+					break;
 				case KeyEvent.VK_ENTER:// If enter key pressed
 					if (sfxVolume && !Constants.LINUX) {
 						if (menu_validate.isRunning()) {
@@ -907,6 +920,7 @@ public class MainMenu extends JFrame {
 					Constants.MAIN_MENU_PANEL.requestFocusInWindow(); // from
 																		// the
 																		// keyboard
+					countHSDifficulty = 0;
 					break;
 				}
 
@@ -1002,6 +1016,10 @@ public class MainMenu extends JFrame {
 
 	public static int getGameOverPointerPosition() {
 		return countGameOver;
+	}
+	
+	public static int getHSDifficulty(){
+		return countHSDifficulty;
 	}
 
 	// Return true if background music option is "ON"
@@ -1504,9 +1522,9 @@ class HighScoresPanel extends JPanel {
 		FontMetrics metrics = g.getFontMetrics(Constants.MENU_FONT);
 		// X and Y positions of the Back to Main Menu option calculated
 		int highScoresX = getWidth() / 2
-				- (metrics.stringWidth("Back to Main Menu") / 2) - 50; // Center
+				- (metrics.stringWidth("Back to Main Menu") / 2); // Center
 																		// text
-		int highScoresY = 6 * getHeight() / 7;
+		int highScoresY = 9 * getHeight() / 10;
 
 		/*
 		 * This set of code is conditions to check where the pointer position is
@@ -1516,12 +1534,39 @@ class HighScoresPanel extends JPanel {
 		 */
 		g.setColor(Color.WHITE);
 		g.drawString("Back to Main Menu", highScoresX, highScoresY);
+		
+		
+		int i = 1;
+		File highScoreList = null;
+		switch(MainMenu.getHSDifficulty() % 3){
+		case 0:
+			highScoreList = new File("src/astr_pkg/hs_easy.csv");
+			g.setColor(Color.WHITE);
+			g.drawString("EASY", getWidth()/8, getHeight()/ 5);
+			g.setColor(Color.GRAY);
+			g.drawString("Medium", 2 * getWidth()/5, getHeight()/5);
+			g.drawString("HARD", 6 * getWidth() / 8, getHeight()/5);
+			break;
+		case 1:
+			highScoreList = new File("src/astr_pkg/hs_medium.csv");
+			g.setColor(Color.WHITE);
+			g.drawString("Medium", 2 * getWidth()/5, getHeight()/5);
+			g.setColor(Color.GRAY);
+			g.drawString("EASY", getWidth()/8, getHeight()/ 5);
+			g.drawString("HARD", 6 * getWidth() / 8, getHeight()/5);
+			break;
+		case 2:
+			highScoreList = new File("src/astr_pkg/hs_hard.csv");
+			g.setColor(Color.WHITE);
+			g.drawString("HARD", 6 * getWidth() / 8, getHeight()/5);
+			g.setColor(Color.GRAY);
+			g.drawString("EASY", getWidth()/8, getHeight()/ 5);
+			g.drawString("Medium", 2 * getWidth()/5, getHeight()/5);
+			break;
+		}
 		g.setFont(Constants.SELECTIONS_FONT);
 		metrics = g.getFontMetrics(Constants.SELECTIONS_FONT);
 		g.setColor(Color.WHITE);
-		
-		int i = 1;
-		File highScoreList = new File("src/astr_pkg/hs_easy.csv");
 		try {
 			Scanner file = new Scanner(highScoreList);
 			String line = "error";
@@ -1533,9 +1578,9 @@ class HighScoresPanel extends JPanel {
 				name = fields[0];
 				score = fields[1];
 				hsTime = fields[2];
-				g.drawString(name, getWidth()/4, metrics.getHeight() * i);
-				g.drawString(score, getWidth()/2, metrics.getHeight() * i);
-				g.drawString(hsTime, 3 * getWidth()/4, metrics.getHeight() * i);
+				g.drawString(name, getWidth()/4, (getHeight() / 4) + metrics.getHeight() * i);
+				g.drawString(score, getWidth()/2, (getHeight() / 4) + metrics.getHeight() * i);
+				g.drawString(hsTime + "s", 3 * getWidth()/4, (getHeight() / 4) + metrics.getHeight() * i);
 				i++;
 				if(i == 11){
 					break;
@@ -1577,7 +1622,7 @@ class GameOverPanel extends JPanel {
 				- metrics.stringWidth("Back to Main Menu") / 2; // Center text
 		int mainMenuY = playAgainY + metrics.getHeight() + 10;
 
-		if (!MainMenu.getGame().getIsHighScore()) { // If user did not get
+		if (!MainMenu.getGame().getIsHighScore() || MainMenu.isMultiplayer()) { // If user did not get
 													// highscore
 			g.drawString("Score: " + MainMenu.getGame().getScore(), 150, 100);
 			g.drawString("Time: " + MainMenu.getGame().getGameLength() / 60
@@ -1604,9 +1649,9 @@ class GameOverPanel extends JPanel {
 			int hsY = getHeight() / 3;
 
 			g.setColor(Color.RED);
-			g.drawString("_", hsFirstX, hsY);
-			g.drawString("_", hsSecondX, hsY);
-			g.drawString("_", hsThirdX, hsY);
+			g.drawString("__", hsFirstX, hsY);
+			g.drawString("__", hsSecondX, hsY);
+			g.drawString("__", hsThirdX, hsY);
 			switch (MainMenu.position) {
 			case 0:
 				hsFirstChar = (char) ('A' + MainMenu.letter);

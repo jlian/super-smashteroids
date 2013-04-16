@@ -107,6 +107,10 @@ public class Ship {
 		}
 	}
 	
+	public void setInvulnerability() {
+		this.invulnerabilityTime = 1000000;
+	}
+	
 	public double getX(){
 		return x;
 	}

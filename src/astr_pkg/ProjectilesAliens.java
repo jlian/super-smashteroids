@@ -22,7 +22,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class ProjectilesAliens {
 	//Initialization
 	private double x, y, theta, xVelocity, yVelocity;
-	private static Image pImage;
 	boolean onScreen;
 	private final int PROJECTILE_SPEED = 2;
 	private Rectangle2D rect;
@@ -33,6 +32,7 @@ public class ProjectilesAliens {
 		this.x = x;
 		this.y = y;
 		this.theta = theta;
+		onScreen = true;
 		/*These next two velocities are for the alien projectiles. To be realistic, we have
 		 *set them to always be faster than the current velocity of the alien that fired the shot at
 		 *the moment they are shot. We take the current alien velocity in x and y, then add the constant
@@ -40,11 +40,7 @@ public class ProjectilesAliens {
 		 */
 		xVelocity = alienVelocityX + PROJECTILE_SPEED * Math.cos(theta);
 		yVelocity = alienVelocityY + PROJECTILE_SPEED * Math.sin(theta);
-		
-		onScreen = true;
-		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
-		pImage = ii.getImage();
-		
+			
 		/*This bit of code is to turn the sound on and off depending on two factors:
 		 *First, if the player selects to turn off the sound in the Options menu, and
 		 *second if the game is running on a linux machine. Errors with sound files
@@ -88,9 +84,6 @@ public class ProjectilesAliens {
 	}
 	public boolean isOnScreen(){
 		return onScreen;
-	}
-	public Image getPImage(){
-		return pImage;
 	}
 	public Rectangle2D getProjectileBounds(){
 		rect = new Rectangle((int) getX()-2,  (int) getY()-2, 4, 4);

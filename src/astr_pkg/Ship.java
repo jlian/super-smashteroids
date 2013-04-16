@@ -99,7 +99,7 @@ public class Ship {
 	public ArrayList<Projectiles> getProjectiles() {
 		return projectiles;
 	}
-<<<<<<< HEAD
+
 	public double getXVelocity() {
 		return xVelocity;
 	}
@@ -109,20 +109,14 @@ public class Ship {
 	public double getAcceleration() {
 		return acceleration;
 	}
-	
-	public void setTurningLeft (boolean left) {
-		turningLeft = left;
-	}
-	public void setTurningRight (boolean right) {
-		turningRight = right;
-=======
+
 	public void setTurningLeft(boolean left){
 		this.turningLeft = left;
 	}
 	
 	public void setTurningRight(boolean right){
 		this.turningRight = right;
->>>>>>> c0496aefe6e48d3179abbc23fc3b4d1b229166c0
+
 	}
 	public void setAccelerating (boolean accelerating) {
 		this.accelerating = accelerating;

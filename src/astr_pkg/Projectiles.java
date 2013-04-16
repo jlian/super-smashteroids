@@ -24,7 +24,6 @@ public class Projectiles {
 	//Initialization
 	private Ship ship;
 	private double x, y, theta, xVelocity, yVelocity;
-	private static Image pImage;
 	boolean onScreen;
 	private final int PROJECTILE_SPEED = 10;
 	private Rectangle2D rect;
@@ -36,7 +35,7 @@ public class Projectiles {
 		this.y = y;
 		this.theta = theta;
 		this.ship = ship;
-		
+		onScreen = true;
 		/*These next two velocities are for the ship projectiles. To be realistic, we have
 		 *set them to always be faster than the current velocity of the ship when they
 		 *are fired. We take the current ship velocity in x and y, then add the constant
@@ -44,11 +43,7 @@ public class Projectiles {
 		 */
 		xVelocity = ship.getXVelocity() + PROJECTILE_SPEED * Math.cos(theta);
 		yVelocity = ship.getYVelocity() + PROJECTILE_SPEED * Math.sin(theta);
-		
-		onScreen = true;
-		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
-		pImage = ii.getImage();
-		
+			
 		/*This bit of code is to turn the sound on and off depending on two factors:
 		 *First, if the player selects to turn off the sound in the Options menu, and
 		 *second if the game is running on a linux machine. Errors with sound files
@@ -92,9 +87,6 @@ public class Projectiles {
 	}
 	public boolean isOnScreen(){
 		return onScreen;
-	}
-	public Image getPImage(){
-		return pImage;
 	}
 	public Rectangle2D getProjectileBounds(){
 		rect = new Rectangle((int) getX()-2,  (int) getY()-2, 4, 4);

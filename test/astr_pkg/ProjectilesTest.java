@@ -2,18 +2,15 @@ package astr_pkg;
 
 import static org.junit.Assert.*;
 
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-
-import javax.swing.ImageIcon;
 
 import org.junit.Test;
 
 public class ProjectilesTest {
 
 	Ship ship = new Ship(100, 150, 25, 10, 0, 6);
-	Projectiles p = new Projectiles(50,45,20,ship);
+	Projectiles p = new Projectiles(50, 45, Math.PI, ship);
 	double xVelocity = ship.getXVelocity() + 10 * Math.cos(p.getTheta());
 	double yVelocity = ship.getYVelocity() + 10 * Math.sin(p.getTheta());
 	int counter;
@@ -36,7 +33,7 @@ public class ProjectilesTest {
 
 	@Test
 	public void testGetTheta() {
-		assertTrue(p.getTheta() == 20);
+		assertTrue(p.getTheta() == Math.PI);
 	}
 
 	@Test
@@ -48,15 +45,7 @@ public class ProjectilesTest {
 	public void testIsOnScreen() {
 		//Testing for this method has been done in the move() method
 	}
-
-	@Test
-	public void testGetPImage() {
-		Image pImage;
-		ImageIcon ii = new ImageIcon("src/shipprojectile.png");
-		pImage = ii.getImage();
-		assertTrue("Return image test", p.getPImage() == pImage);
-	}
-
+	
 	@Test
 	public void testGetProjectileBounds() {
 		Rectangle expected = new Rectangle((int) p.getX()-2, (int) p.getY()-2, 4, 4);
@@ -74,7 +63,16 @@ public class ProjectilesTest {
 		double xExpected = p.getX() + xVelocity;
 		double yExpected = p.getY() + yVelocity;
 		
+		System.out.println(p.getX());
+		System.out.println(p.getY());
+		System.out.println(p.isOnScreen());
+		
 		p.move();
+		System.out.println(p.getX());
+		System.out.println(p.getY());
+		System.out.println(p.isOnScreen());
+		System.out.println(xExpected);
+		System.out.println(yExpected);
 		//Test for math and for x and y within the screen bounds
 		assertEquals("x velocity", xExpected, p.getX(), 0.0001);
 		assertEquals("y velocity", yExpected, p.getY(), 0.0001);

@@ -60,6 +60,7 @@ Known Issues
 ------------
 
 - Currently, if the program is compiled outside of Eclipse (our chosen IDE), any resources (fonts, images, music) cannot be used by the game due to directory issues. 
+- If running on Linux, change the `LINUX` boolean in `Constants.java` to `true`. If in a non-Linux OS, set it to `false`.
 
 Dependencies
 ------------

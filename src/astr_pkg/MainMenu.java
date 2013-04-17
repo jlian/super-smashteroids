@@ -25,6 +25,7 @@ import java.net.URL;
 
 import java.util.Scanner;
 
+//This is the class that handles all of our menus for the game
 public class MainMenu extends JFrame {
 
 	private static final ImageIcon background = new ImageIcon(

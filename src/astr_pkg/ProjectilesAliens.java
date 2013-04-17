@@ -18,7 +18,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-
+//This code handles the projectiles for the computer aliens
 public class ProjectilesAliens {
 	//Initialization
 	private double x, y, theta, xVelocity, yVelocity;

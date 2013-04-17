@@ -16,7 +16,7 @@ public interface Constants {
 	static final int WIDTH = 800;//sets width
 	static final int HEIGHT = 600;// sets height
 	static final int DEFAULT_RESPAWN_WAIT = 40;// sets frame rate
-	static final boolean LINUX = false;// detects if linux
+	static final boolean LINUX = true;// detects if linux
 	static final Ship P2SHIP = new Ship(380, 300, Math.PI, 0.35, 0.98, .1);// player 2 ship
 	static final GameOverPanel GAME_OVER_PANEL = new GameOverPanel();// game over panel
 }

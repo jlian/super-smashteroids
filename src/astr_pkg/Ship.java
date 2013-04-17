@@ -12,6 +12,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+//This code is for the player controlled ship(s), handling the drawing of the ship, the shooting and the movement
 public class Ship {
 	//Initialize the starting points of the ship shape
 	private final int[] initialXPts = {16, -11, -6, -11},

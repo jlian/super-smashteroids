@@ -33,7 +33,7 @@ public class Alien {
     private static Clip alienGoBoom;// sound
     private static Clip alienLaser;// sound
     private static ImageIcon alienExplosion = new ImageIcon("FX/graphics/explosion3.gif");// gives alienExplosion a source
-    private static ArrayList<Alien> aliens = new ArrayList<>();// array list that will contain aliens
+    private static ArrayList<Alien> aliens = new ArrayList();// array list that will contain aliens
     private ArrayList<ProjectilesAliens> projectiles;// creates an array list using the class ProjectilesALiens
     private Ellipse2D.Double circle;// creates a circle variable
     private double alienHeight, alienWidth;// creates variables for height and width
@@ -50,7 +50,7 @@ public class Alien {
         AlienImage = new ImageIcon("FX/graphics/AlienM.png").getImage();// sets the AlienImage to an image
         alienHeight = AlienImage.getHeight(null);// sets the height of the alien
         alienWidth = AlienImage.getWidth(null);// sets the width of the alien
-        projectiles = new ArrayList<>();// creates a new projectiles array list
+        projectiles = new ArrayList();// creates a new projectiles array list
         // function that sets the difficulty of the alien class
         if(MainMenu.getDifficulty()==1){
         	shootDelay = 100;
@@ -69,9 +69,22 @@ public class Alien {
     // method that creates the number of aliens needed
     public static void generateAliens(int numAliens, double alienX, double alienY, double shipX, double shipY){
     	numberOfAliens = numAliens;
-        for(int i = 0; i < numAliens; i++){
+    	if(MainMenu.isMultiplayer()){
+    		int p1Aliens = numAliens/2;
+        	int p2Aliens = numAliens - p1Aliens;
+        	
+        	for(int i = 0; i < p1Aliens; i++){
+	            aliens.add(new Alien(alienX, alienY, Constants.SHIP.getX(), Constants.SHIP.getY()));
+        	}
+        	for(int j = 0; j < p2Aliens; j++){
+	            aliens.add(new Alien(alienX, alienY, Constants.P2SHIP.getX(), Constants.P2SHIP.getY()));
+        	}
+    	}else{
+    		for(int i = 0; i < numAliens; i++){
             aliens.add(new Alien(alienX, alienY, shipX, shipY));
-        }
+    		}
+    	}
+        
         scoreX = new int[numAliens];
 		scoreY = new int[numAliens];
 		scoreTime = new int[numAliens];
@@ -84,11 +97,27 @@ public class Alien {
     	numberOfAliens = numAliens;// creats this many aliens
         double alienX, alienY;// two variabels used for the position of the alien
         // uses a random function
-        for(int i = 0; i < numAliens; i++){
-            alienX =  (Math.ceil(Math.random() * 500));
-            alienY =  (Math.ceil(Math.random() * 500));
-            aliens.add(new Alien(alienX, alienY, Constants.SHIP.getX(), Constants.SHIP.getY()));
+        if(!MainMenu.isMultiplayer()){
+        	for(int i = 0; i < numAliens; i++){
+        		alienX =  (Math.ceil(Math.random() * 500));
+	        	alienY =  (Math.ceil(Math.random() * 500));
+	            aliens.add(new Alien(alienX, alienY, Constants.SHIP.getX(), Constants.SHIP.getY()));
+        	}
+        }else{
+        	int p1Aliens = numAliens/2;
+        	int p2Aliens = numAliens - p1Aliens;
+        	for(int i = 0; i < p1Aliens; i++){
+        		alienX =  (Math.ceil(Math.random() * 500));
+	        	alienY =  (Math.ceil(Math.random() * 500));
+	            aliens.add(new Alien(alienX, alienY, Constants.SHIP.getX(), Constants.SHIP.getY()));
+        	}
+        	for(int j = 0; j < p2Aliens; j++){
+        		alienX =  (Math.ceil(Math.random() * 500));
+	        	alienY =  (Math.ceil(Math.random() * 500));
+	            aliens.add(new Alien(alienX, alienY, Constants.P2SHIP.getX(), Constants.P2SHIP.getY()));
+        	}
         }
+        
         scoreX = new int[numAliens];
 		scoreY = new int[numAliens];
 		scoreTime = new int[numAliens];
@@ -108,7 +137,13 @@ public class Alien {
 			AudioInputStream audioIn1 = AudioSystem.getAudioInputStream(alienShoot);
 			alienLaser = AudioSystem.getClip();
 			alienLaser.open(audioIn1);
-		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -215,7 +250,7 @@ public class Alien {
     			Math.sqrt(Math.pow((shipX - xPos), 2) + 
     					Math.pow((shipY - yPos), 2));
     	// keeps aliens 100 pixels away from the aliens
-    	if(alienDistance < 100){
+    	if(alienDistance < 150){
     		changeX(0);
     		changeY(0);
         // random function that tells the alien how to move
@@ -336,7 +371,7 @@ public class Alien {
 					this.playAlienHitSound();// plays a sound if they intersect
 				}
     			// updates the score array giving the player the points for hitting the alien
-                        scoreX[arrayPos] = (int) this.xPos;
+                scoreX[arrayPos] = (int) this.xPos;
     			scoreY[arrayPos] = (int) this.yPos;
     			scoreTime[arrayPos] = 80;
     			deathTimer[arrayPos] = 75;

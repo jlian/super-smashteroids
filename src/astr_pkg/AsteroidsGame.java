@@ -35,11 +35,13 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
     private static Clip gameOverSound;
     private static ImageIcon gameBackground = new ImageIcon("FX/graphics/BG-game.jpg");
     private static ImageIcon shipExplosion = new ImageIcon("FX/graphics/explosion.gif");
-    private boolean isHighScore = true;
+    private static int count = 0;
+
     private int score;
     private long gameStartTime, gameEndTime;
 	
     public void init(){
+    	//Initializes the game: this is where the game begins the run!
 		nextWave = false;
 		levelUp = true;
 		delay = 100;
@@ -49,17 +51,22 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		level = 1;
 
 		numLivesP1 = 3;
-
+		
+		//Start off multiplayer if selected as such
 		if(MainMenu.isMultiplayer()){
 			numLivesP2 = 3;
 		}else{
 			numLivesP2 = 0;
 		}
+		
+		//The number of asteroids, aliens, are specified with respect to difficulty
 		startAstr = MainMenu.getDifficulty() * 5;
 		numAliens = MainMenu.getDifficulty();
 		difficulty = MainMenu.getDifficulty();
 		
 		setScoreFont();
+		
+		//Sounds have issues on Linus systems, so this is our way around it
 		if(MainMenu.isSfxOn() && !Constants.LINUX){
 			initializeSounds();
 		}
@@ -70,8 +77,10 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		frameRate = 25;
 		respawnTime = 0;
 		addKeyListener(this);
+		//Make enemies
 		Asteroid.generateAsteroids(startAstr);
 		Alien.spawnAlienAtLocation(numAliens);
+		//This calls run() to run the game
         thread = new Thread(this);
 		thread.start();
 	}
@@ -112,6 +121,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		}
 	}
 	public void gameReset(){
+		//Resets the game
 		Alien.reset();
 		Asteroid.reset();
 		Alien.resetPlayerScore();
@@ -120,7 +130,48 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 	}
 	
 	public boolean getIsHighScore() {
-		return isHighScore;
+		File hs = null;
+		//Find which file to read high scores from based on difficulty
+		if(MainMenu.getDifficulty() == 1){
+			hs = new File("src/astr_pkg/hs_easy.csv");
+		}else if(MainMenu.getDifficulty() == 2){
+			hs = new File("src/astr_pkg/hs_medium.csv");
+		}else if(MainMenu.getDifficulty() == 3){
+			hs = new File("src/astr_pkg/hs_hard.csv");
+		}
+		try {
+			Scanner fread = new Scanner(hs); //open file
+			int i = 1;
+			String line = "error";
+			String[] fields = null;
+			String score;
+			while (fread.hasNext()) { //While not end of file
+				line = fread.next();
+				fields = line.split(",");
+				score = fields[1];
+				i++;
+				if(i == 11){ //Find the 10th high score position
+					int scoreInt = Integer.parseInt(score);
+					//If the high score in the 10th position is less than player score
+					if((Asteroid.getPointsP1() + Alien.getPointsP1()) > scoreInt){
+						fread.close();
+						return true; //Then player got a high score
+					}
+					break;
+				}
+			}
+			//If the high score does not have 10 high scores yet,
+			if(i < 11){
+				fread.close(); 
+				return true; //Player got a high score
+			}
+			fread.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false; //If none of the cases above hold, no high score
 	}
 	public int getScore() {
 		return score;
@@ -157,6 +208,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		//This is the key listener 
+		//It tells the ships what's up
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_A:
@@ -231,6 +284,8 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		//This is the revere of keyPressed() for event that the user release the key press
+		//That should make sure that the ship doesn't continue move forward
 		if(MainMenu.isControlWasd()){
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_A:
@@ -302,10 +357,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		// This method runs from init() and runs continuously until the players lose all of the lives.
 		gameStartTime = System.currentTimeMillis();
 		while (numLivesP1 > 0 || numLivesP2 > 0){
 			startTime = System.currentTimeMillis();
+			
+			//Move the ship!
 			if(Constants.SHIP.isAlive()){
 				Constants.SHIP.move(getWidth(), getHeight());
 			}
@@ -316,10 +373,12 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				Constants.P2SHIP.move(getWidth(), getHeight());
 			}
 			
+			//Move the asteroids
 			for(int i = 0; i < Asteroid.getAsteroids().size(); i++){
 				Asteroid.getAsteroids().get(i).move(getWidth(), getHeight());
 			}
 			if(Asteroid.getAsteroids().isEmpty() && Alien.getNumAliens() == 0){
+				//If all aliens and asteroids are destroyed, level up, difficulty up
 				nextWave = true;
 				if(levelUp){
 					level ++;
@@ -329,6 +388,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					delay--;
 				}
 				if(delay <= 0){
+					//With the increase of difficulty comes upgrades. Like scatter shot
 					delay = 100;
 					startAstr += difficulty;
 					numAliens += difficulty;
@@ -340,7 +400,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					rapidfire--;
 					if (scattershot == 0) {
 						Constants.SHIP.setScatterShot();
-						scattershot =3;
+						scattershot =0;
 					}
 					scattershot--;
 					if (lifeup ==0) {
@@ -355,7 +415,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				}
 			} 
 			
-//			for (int i = 0; i < numAliens; i++){
+			//Make the aliens do their thing: shoot at the player, follow the player, move, etc
 			for(int i = 0; i < Alien.getAliens().size(); i++){
 				Alien.getAliens().get(i).shipX = Constants.SHIP.getX();
 				Alien.getAliens().get(i).shipY = Constants.SHIP.getY();
@@ -363,17 +423,14 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				Alien.getAliens().get(i).shoot();
 				Alien.getAliens().get(i).move();
 				Alien.getAliens().get(i).detectEdges();
-//				if(Alien.getAliens()[i] != null){
-//					Alien.getAliens()[i].shipX = Constants.SHIP.getX();
-//					Alien.getAliens()[i].shipY = Constants.SHIP.getY();
-//					Alien.getAliens()[i].find();
-//					Alien.getAliens()[i].shoot();
-//					Alien.getAliens()[i].move();
-//					Alien.getAliens()[i].detectEdges();
-//				}
+
 			}
+			
+			//Draws the frame
 			repaint();
 			endTime = System.currentTimeMillis();
+			
+			//If the loop runs faster than the frame rate, lock to the frame rate for better consistency, visually
 			try {
 				if(frameRate - (endTime - startTime) > 0){
 					Thread.sleep(frameRate - (endTime - startTime));
@@ -388,10 +445,28 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			MainMenu.stopBackgroundMusic();
 			playGameOverSound();
 		}
+		
+		//If all lives are lost, go to game over.
 		gameEndTime = System.currentTimeMillis();
 		MainMenu.getMenu().gameOver();
 	}
 	
+	public static int getLevel() {
+		return level;
+	}
+
+	public static void setLevel(int level) {
+		AsteroidsGame.level = level;
+	}
+
+	public static int getDifficulty() {
+		return difficulty;
+	}
+
+	public static void setDifficulty(int difficulty) {
+		AsteroidsGame.difficulty = difficulty;
+	}
+
 	public long getGameLength(){
 		return (gameEndTime - gameStartTime)/1000;
 	}
@@ -399,18 +474,22 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
+		//This draw the frame
 		super.paintComponent(g);
 		
+		//Draw all the background, etc
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 800, 600);
 		g.drawImage(getGameBackground().getImage(), 0, 0, getWidth(), getHeight(), this);
 		Asteroid.drawAsteroid(g);
 		Alien.drawAlien(g);
        
+		//Draw the ship as long as it lives
 		if(Constants.SHIP.isAlive()){
         	Constants.SHIP.drawShip(g);
         }
+		//If the ship dies, do all of the following
+		//This really shouldn't be here but we could not find a better way to do this.
 		else if(!Constants.SHIP.isAlive() && numLivesP1 > 0){
         	if(Constants.SHIP.getRespawnTime() < 80){
 				Constants.SHIP.incrementRespawnTime();
@@ -419,6 +498,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 				//Still can't figure out how to make the animation play from the beginning each time
 				g.drawImage(getExplosion().getImage(), (int) Constants.SHIP.getX()-180, (int) Constants.SHIP.getY()-180, this);
 			}else{
+				//This puts the player back in the game with one life less
 				Constants.SHIP.reset();
 				Constants.SHIP.resetRespawnTime();
 				Constants.SHIP.resetInvulnerabilityTime();//If ship has just respawned, make invulnerable
@@ -434,6 +514,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
         	Constants.SHIP.incrementInvulnerabilityTime();
         }
         
+        //Draw all the projectiles
 		if(Constants.SHIP.getProjectiles().size() > 0){
 			for(int i = 0; i < Constants.SHIP.getProjectiles().size(); i++){
 					Constants.SHIP.getProjectiles().get(i).move();
@@ -474,20 +555,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 			}
 		}
 		
-		
-		/*
-		 * ADDED THIS
-		 */
-//		for(int i = 0; i < Alien.getAliens().length; i++){
-//			if(Alien.getAliens()[i] != null && 
-//					Alien.getAliens()[i].getShots().size() > 0){
-//				for(int j = 0; j < Alien.getAliens()[i].getShots().size(); j++){
-//					Alien.getAliens()[i].getShots().get(j).move();
-//				}
-//				ProjectilesAliens.drawProjectiles(g);
-//			}
-//		}
-		
+		//Draw alien projectiles, which are more powerful and scarier than regular ones
 		for(int i = 0; i < Alien.getAliens().size(); i++){
 			if(Alien.getAliens().get(i).getShots().size() > 0){
 				for(int j = 0; j < Alien.getAliens().get(i).getShots().size(); j++){
@@ -498,6 +566,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		}
 		
 		
+		//Draw the rest of the stuff
 		g.setColor(Color.CYAN);
 		g.setFont(scoreFont);
 

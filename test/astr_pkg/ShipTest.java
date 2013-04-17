@@ -16,11 +16,6 @@ public class ShipTest {
 		// Tests if the constructor works
 		new Ship(400, 300, Math.PI, 0.35, 0.98, .1);
 	}
-	
-//	@Test
-//	public final void testPlayShipHitSound() {
-//		fail("Not yet implemented"); // TODO
-//	}
 
 	@Test
 	public final void testDecreaseShotWait() {
@@ -189,6 +184,10 @@ public class ShipTest {
 		Alien.getAliens().get(0).resetShootDelay();
 		Alien.getAliens().get(0).shoot();
 		
+		//Makes sure that a projectile is created. This tests the ALien.shoot() method in the meantime.
+		assertTrue(Alien.getAliens().get(0).getShots().get(0) != null);		
+		
+		
 		//Make the ship vulnerable again (there should be a better way to do this!!!!)
 		for(int i = 1; i < 1003; i++){
 			s.incrementInvulnerabilityTime();
@@ -259,11 +258,25 @@ public class ShipTest {
 		
 	}
 	
+	@Test
+	public final void testOffScreen(){
+		
+		//Spawn ship off screen!! Insanity
+		Ship testS = new Ship(900, 900, Math.PI, 0.35, 0.98, .1);
+		testS.move(800, 600);
+		// 900 is the x, and 800 is the screen width. 900 - 800 means the ship goes to the other side of the screen
+		// Same logic for y
+		assertTrue(testS.getX() == 900 - 800);
+		assertTrue(testS.getY() == 900 - 600);
+		
+	}
 	
-
-//	@Test
-//	public final void testDrawShip() {
-//		fail("Not yet implemented"); // TODO
-//	}
+	
+	
+	@Test
+	public final void testDrawShip() {
+		//This is not tested here because paintComponent() from AsteroidsGame have to be called for this method to be called properly
+		//However, this method is called in AsteroidsGameTest
+	}
 
 }

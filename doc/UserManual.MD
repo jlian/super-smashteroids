@@ -53,6 +53,7 @@ Known Issues
 ------------
 
 - Currently, if the program is compiled outside of Eclipse (our chosen IDE), any resources (fonts, images, music) cannot be used by the game due to directory issues. 
+- Currently, the music/sound effect cannot play properly on Linux systems. The cause is unknown.
 
 Dependencies
 ------------

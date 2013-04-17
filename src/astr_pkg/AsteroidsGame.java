@@ -434,6 +434,22 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 		MainMenu.getMenu().gameOver();
 	}
 	
+	public static int getLevel() {
+		return level;
+	}
+
+	public static void setLevel(int level) {
+		AsteroidsGame.level = level;
+	}
+
+	public static int getDifficulty() {
+		return difficulty;
+	}
+
+	public static void setDifficulty(int difficulty) {
+		AsteroidsGame.difficulty = difficulty;
+	}
+
 	public long getGameLength(){
 		return (gameEndTime - gameStartTime)/1000;
 	}

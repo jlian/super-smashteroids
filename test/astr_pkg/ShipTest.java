@@ -16,11 +16,6 @@ public class ShipTest {
 		// Tests if the constructor works
 		new Ship(400, 300, Math.PI, 0.35, 0.98, .1);
 	}
-	
-//	@Test
-//	public final void testPlayShipHitSound() {
-//		fail("Not yet implemented"); // TODO
-//	}
 
 	@Test
 	public final void testDecreaseShotWait() {

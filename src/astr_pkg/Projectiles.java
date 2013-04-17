@@ -103,18 +103,13 @@ public class Projectiles {
 		x+= xVelocity;
 		y+= yVelocity;
 		
-		/*These two if statements ensure that our projectiles do not loop around the screen
+		/*This statement ensures that our projectiles do not loop around the screen
 		 *like other entities. Once they reach the end of the screen, they are removed from the game.
 		 */
-		if(x > Constants.WIDTH || x < 0){
+		if(x > Constants.WIDTH || x < 0 || y > Constants.HEIGHT || y < 0){
 			onScreen = false;
 			ship.getProjectiles().remove(this);
 		}
-		if(y > Constants.HEIGHT || y < 0){
-			onScreen = false;
-			ship.getProjectiles().remove(this);
-		}
-
 	}
 	
 	//Draw method for the projectiles

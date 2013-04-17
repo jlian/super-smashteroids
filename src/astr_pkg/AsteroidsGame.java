@@ -382,7 +382,7 @@ public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 					rapidfire--;
 					if (scattershot == 0) {
 						Constants.SHIP.setScatterShot();
-						scattershot =3;
+						scattershot =0;
 					}
 					scattershot--;
 					if (lifeup ==0) {

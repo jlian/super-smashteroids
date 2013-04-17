@@ -3,8 +3,6 @@ package astr_pkg;
 import static org.junit.Assert.*;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
-
 import org.junit.Test;
 
 public class ProjectilesTest {

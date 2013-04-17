@@ -35,6 +35,7 @@ public class Ship {
 	private int respawnTime, invulnerabilityTime;
 	private static Clip shipGoBoom;
 
+	//Constructor
 	public Ship (double x, double y, double theta, double acceleration,
 			double decelerationRate, double rotationSpeed) {
 		this.x = x;
@@ -55,6 +56,8 @@ public class Ship {
 		yThrusters = new int[6];
 		projectiles = new ArrayList<Projectiles>();
 		scatterShot = 0;
+		
+		//Initialize Sound
 		if (MainMenu.isSfxOn() && !Constants.LINUX) {
 			initializeSound();
 		}
@@ -92,7 +95,6 @@ public class Ship {
 		}
 	}
 	
-
 	public void setInvulnerability() {
 		this.invulnerabilityTime = 1000000;
 	}
@@ -180,6 +182,7 @@ public class Ship {
 		}
 	}
 	
+	//Resets the ship to the starting position (centre of the screen)
 	public void reset() {
 		x = 400;
 		y = 300;
@@ -286,6 +289,7 @@ public class Ship {
 			y += screenHeight;
 		}
 		
+		//These two methods are for updating the ship polygon parts (body+thruster)
 		for (int i = 0; i < 4; i++) {
 			xPts[i] = (int) (initialXPts[i] * Math.cos(theta) - 
 					initialYPts[i] * Math.sin(theta) + x + 0.5);

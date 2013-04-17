@@ -2,15 +2,8 @@ package astr_pkg;
 
 import static org.junit.Assert.*;
 
-import java.awt.Image;
 import java.awt.Rectangle;
 
-import javax.swing.ImageIcon;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ProjectilesAliensTest {

@@ -45,6 +45,13 @@ How to Play
 - Right: turn right
 - Space: shoot
 
+#### For Player 2 if multiplayer is selected
+
+- Up: accelerate
+- Left: turn left
+- Right: turn right
+- Enter: shoot
+
 ### Quitting
 
 - ESC: quit the game

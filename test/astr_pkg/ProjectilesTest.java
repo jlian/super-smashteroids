@@ -14,13 +14,12 @@ public class ProjectilesTest {
 	double xVelocity = ship.getXVelocity() + 10 * Math.cos(p.getTheta());
 	double yVelocity = ship.getYVelocity() + 10 * Math.sin(p.getTheta());
 	int counter;
-	
-//	@Test
-//	public void testProjectiles() {
-//		//How do I test this?
-//		fail("Not yet implemented");
-//	}
 
+	@Test
+	public void testProjectiles() {
+		Projectiles p = new Projectiles(50, 45, Math.PI, ship);
+	}
+	
 	@Test
 	public void testGetX() {
 		assertTrue(p.getX() == 50);
@@ -52,27 +51,13 @@ public class ProjectilesTest {
 		assertEquals(expected, p.getProjectileBounds());
 	}
 
-//	@Test
-//	public void testPlayShotSound() {
-//		//How do I test this?
-//		fail("Not yet implemented");
-//	}
-
 	@Test
 	public void testMove() {
 		double xExpected = p.getX() + xVelocity;
 		double yExpected = p.getY() + yVelocity;
 		
-		System.out.println(p.getX());
-		System.out.println(p.getY());
-		System.out.println(p.isOnScreen());
-		
 		p.move();
-		System.out.println(p.getX());
-		System.out.println(p.getY());
-		System.out.println(p.isOnScreen());
-		System.out.println(xExpected);
-		System.out.println(yExpected);
+
 		//Test for math and for x and y within the screen bounds
 		assertEquals("x velocity", xExpected, p.getX(), 0.0001);
 		assertEquals("y velocity", yExpected, p.getY(), 0.0001);
@@ -109,16 +94,9 @@ public class ProjectilesTest {
 		assertTrue("y larger than range", p7.isOnScreen() == false);
 	}
 
-	@Test
-	public void testDrawProjectiles() {
-		//test for-loop
-		ArrayList<Projectiles> shootArrayP1;
-		shootArrayP1 = Constants.SHIP.getProjectiles();
-		System.out.println(shootArrayP1.size());
-		for(int i = 0; i<shootArrayP1.size(); i++){
-			counter++;
-		}
-		assertEquals(0, counter);
-	}
-
+//	@Test
+//	public void testDrawProjectiles() {
+//		Not tested here. See AsteroidGameTest.java
+//	}
+//
 }

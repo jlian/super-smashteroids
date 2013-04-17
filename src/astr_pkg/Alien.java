@@ -33,7 +33,7 @@ public class Alien {
     private static Clip alienGoBoom;// sound
     private static Clip alienLaser;// sound
     private static ImageIcon alienExplosion = new ImageIcon("FX/graphics/explosion3.gif");// gives alienExplosion a source
-    private static ArrayList<Alien> aliens = new ArrayList<>();// array list that will contain aliens
+    private static ArrayList<Alien> aliens = new ArrayList();// array list that will contain aliens
     private ArrayList<ProjectilesAliens> projectiles;// creates an array list using the class ProjectilesALiens
     private Ellipse2D.Double circle;// creates a circle variable
     private double alienHeight, alienWidth;// creates variables for height and width
@@ -50,7 +50,7 @@ public class Alien {
         AlienImage = new ImageIcon("FX/graphics/AlienM.png").getImage();// sets the AlienImage to an image
         alienHeight = AlienImage.getHeight(null);// sets the height of the alien
         alienWidth = AlienImage.getWidth(null);// sets the width of the alien
-        projectiles = new ArrayList<>();// creates a new projectiles array list
+        projectiles = new ArrayList();// creates a new projectiles array list
         // function that sets the difficulty of the alien class
         if(MainMenu.getDifficulty()==1){
         	shootDelay = 100;
@@ -137,7 +137,13 @@ public class Alien {
 			AudioInputStream audioIn1 = AudioSystem.getAudioInputStream(alienShoot);
 			alienLaser = AudioSystem.getClip();
 			alienLaser.open(audioIn1);
-		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
+		} catch (UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}

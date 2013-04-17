@@ -17,6 +17,7 @@ import javax.sound.sampled.*;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+//This class is the main game class that handles the game loop
 public class AsteroidsGame extends JPanel implements Runnable, KeyListener{
 
 	long startTime, endTime, frameRate;

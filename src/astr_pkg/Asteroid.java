@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.*;
 
-
+//This class is for the generation and handling of the many asteroids in our game.
 public class Asteroid {
 	
 	private static ArrayList<Asteroid> arrayAsteroid = new ArrayList<Asteroid>();

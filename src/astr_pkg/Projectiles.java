@@ -19,7 +19,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-
+//This class handles the code for the player ship projectiles
 public class Projectiles {
 	//Initialization
 	private Ship ship;

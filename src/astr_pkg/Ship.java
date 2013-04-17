@@ -35,8 +35,8 @@ public class Ship {
 	private int respawnTime, invulnerabilityTime;
 	private static Clip shipGoBoom;
 
-	public Ship (double x, double y, double theta, double acceleration,
-			double decelerationRate, double rotationSpeed) {
+	public Ship (double x, double y, double theta, double acceleration, double decelerationRate, double rotationSpeed) {
+		//This constructs the ship
 		this.x = x;
 		this.y = y;
 		this.theta = theta;
@@ -147,6 +147,7 @@ public class Ship {
 		respawnTime = 0;
 	}
 	public boolean isInvulnerable() {
+		//Useful to know if the ship can be killed or not
 		if (invulnerabilityTime > INVULNERABILITY_TIME) {
 			return false;
 		}
@@ -172,15 +173,18 @@ public class Ship {
 		return rect;
 	}
 	public void makeItRain(boolean fire) {
+		//This is called in move() to actually fire projectiles
 		this.fire = fire;
 	}
 	public void setScattershot() {
+		//scatterShot counter for upgrades
 		if (scatterShot <= 1) {
 			scatterShot++;
 		}
 	}
 	
 	public void reset() {
+		//This puts the ship back to the starting position
 		x = 400;
 		y = 300;
 		theta = 0;
@@ -286,13 +290,15 @@ public class Ship {
 			y += screenHeight;
 		}
 		
+		//This creates the set of vertices for the bounds of the ship to be known
 		for (int i = 0; i < 4; i++) {
 			xPts[i] = (int) (initialXPts[i] * Math.cos(theta) - 
 					initialYPts[i] * Math.sin(theta) + x + 0.5);
 			yPts[i] = (int) (initialYPts[i] * Math.cos(theta) + 
 					initialXPts[i] * Math.sin(theta) + y + 0.5);
 		}
-
+		
+		//Set of vertices for the thrusters
 		for (int i = 0; i < 6; i++) {
 			xThrusters[i] = (int) (initialThrusterXPts[i] * Math.cos(theta) - 
 					initialThrusterYPts[i] * Math.sin(theta) + x + 0.5);

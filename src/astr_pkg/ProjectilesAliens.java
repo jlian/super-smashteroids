@@ -96,19 +96,17 @@ public class ProjectilesAliens {
 		x+= xVelocity;
 		y+= yVelocity;
 		
-		/*These two if statements ensure that our projectiles do not loop around the screen
+		/*These statements ensure that our projectiles do not loop around the screen
 		 * like other entities. Once they reach the end of the screen, they are removed from the game.
 		 */
-		//Does not work yet
-//		if(x > Constants.WIDTH || x < 0){
-//			onScreen = false;
-//			Alien.getShots().remove(this);
-//		}
-//		if(y > Constants.HEIGHT || y < 0){
-//			onScreen = false;
-//			Alien.getShots().remove(this);
-//		}
-
+		for (int i = 0; i < Alien.getAliens().size(); i++) {
+			for (int j = 0; j < Alien.getAliens().get(i).getShots().size(); j++) {
+				if(x > Constants.WIDTH || x < 0 || y > Constants.HEIGHT || y < 0){
+					onScreen = false;
+					Alien.getAliens().get(i).getShots().remove(j);
+				}
+			}
+		}
 	}
 	
 	//Draw method for the projectiles

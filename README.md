@@ -18,12 +18,6 @@ How to Run
 	javac astr_pkg/MainMenu.java
 	java astr_pkg/MainMenu
 
-### Or you could run directly from the our binaries:
-
-	git clone https://github.com/winter2013-ecse321-mcgill/team3.git
-	cd team3/bin
-	java astr_pkg/MainMenu
-	
 It would be preferable to have `javac -version` of 1.7.0 or above.
 
 How to Play 
